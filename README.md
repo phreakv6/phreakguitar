@@ -5,7 +5,7 @@ interface and play through amps and pedals whose analog circuits are solved
 in real time: every resistor, capacitor, diode, transistor and tube, the same
 netlists a SPICE simulator runs, checked against ngspice.
 
-**Live:** _coming soon_
+**Live:** https://phreakguitar.com
 
 ## What's in it
 
