@@ -1,0 +1,93 @@
+* The early-80s British 100 W master-volume head (2203 circuit): the preamp, solved as a
+* circuit; the EL34 power section is the *@power model.
+* First stage 100k / 2.7k with a small 0.68u bypass (bass kept out of the
+* distortion), 470k || 470p into the Pre-amp volume, the 10k "cold
+* clipper" second stage that gives the 800 its tight crunch, an 820R third
+* stage DC-coupled into the cathode follower, the British tone stack, and
+* the Master volume ahead of the phase inverter.
+*
+*@amp name="Brit 800" face=brit800 oversample=4
+*@control presence label="Presence" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.5
+*@control middle label="Middle" taper=lin default=0.6
+*@control treble label="Treble" taper=lin default=0.6
+*@control master label="Master" taper=audio default=0.6
+*@control preamp label="Pre-amp" taper=audio default=0.6
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=EL34 nfb=0.35 presence=presence headroom=30 count=4 pi=12AX7 rectifier=silicon bplus=470 cap=50 idle=140 full=450 rsource=25 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+Vb1 b1 0 DC 330
+Vb2 b2 0 DC 300
+
+* First stage.
+Rg1 in g1 68k
+XV1B p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rk1 k1 0 2.7k
+Ck1 k1 0 0.68u
+Rp1 b2 p1 100k
+
+* 470k || 470p into the Pre-amp volume.
+C1 p1 a1 22n
+Ra a1 pt 470k
+Cpk a1 pt 470p
+XPREAMP pt pw 0 POT R=1meg pos={preamp}
+
+* Second stage: the cold clipper (10k unbypassed cathode).
+XV1A p2 pw k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 pw k2 DGRID
+Rk2 k2 0 10k
+Rp2 b2 p2 100k
+
+* Third stage, DC-coupled into the cathode follower.
+C2 p2 g3 22n
+Rgl3 g3 0 470k
+XV2A p3 g3 k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 g3 k3 DGRID
+Rk3 k3 0 820
+Ck3 k3 0 0.68u
+Rp3 b2 p3 100k
+XV2B b1 p3 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 p3 k4 DGRID
+Rk4 k4 0 100k
+
+* British tone stack.
+C3 k4 t1 470p
+XTREBLE t1 tw tb POT R=220k pos={treble}
+Rslope k4 sl 33k
+C4 sl tb 22n
+C5 sl mt 22n
+XBASS tb tb mt POT R=1meg pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* Master volume, then the phase inverter's grid.
+Cm tw mtop 22n
+XMASTER mtop mw 0 POT R=1meg pos={master}
+Cpi mw out 22n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param presence=0.5
+.param bass=0.154
+.param middle=0.6
+.param treble=0.6
+.param master=0.2329
+.param preamp=0.2329
+.param response=0.5
+.end

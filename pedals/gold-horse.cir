@@ -1,0 +1,120 @@
+* The famous gold 'horse' transparent overdrive. Values from the original circuit as published in
+* Tiburonboy's symbolic MNA analysis (which splits it into paths for
+* superposition; joined back into one circuit here, its AC grounds tied
+* to the 4.5 V reference) and ElectroSmash's analysis.
+*
+* Input buffer -> gain stage whose gain pot is one gang of a dual 100k;
+* the other gang pans a clean path into the summing amp, less of it as
+* gain rises. Gain-stage output -> 1k -> 1N34A germanium diodes to Vref ->
+* summing amp (with two clean paths) -> active treble shelf -> the
+* Output pot. TL072s on the charge pump's +18 V / -9 V rails, biased
+* at 4.5 V: about +-13 V of swing, the famous clean headroom.
+*
+*@pedal name="Gold Horse" oversample=4
+*@control gain label="Gain" taper=lin default=0.3
+*@control treble label="Treble" taper=lin default=0.5
+*@control output label="Output" taper=lin default=0.5
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supplies: 9 V battery, the charge pump's +18 V and -9 V, 4.5 V reference.
+Vpos vpos 0 DC 18
+Vneg vneg 0 DC -9
+Vref vref 0 DC 4.5
+
+* Input buffer.
+R1 in n3 10k
+C1 n3 ib 100n
+R2 ib vref 1meg
+XU1A ib bo bo vpos vneg OPAMP
+
+* Gain stage (non-inverting). Gain gang A: ends at the + input's
+* shunt (g4) and the feedback leg (g5), wiper on Vref.
+C3 bo e3 100n
+R6 e3 g4 10k
+C5 e3 g4 68n
+XGAINA g5 vref g4 POT R=100k pos={gain}
+R10 g6 g5 2k
+R11 gm g6 15k
+C7 gm g6 82n
+R12 go gm 422k
+C8 go gm 390p
+XU1B g4 gm go vpos vneg OPAMP
+
+* Clean path 1 through gain gang B: as gain rises the wiper moves to Vref.
+R5 e3 c14 5.1k
+C4 e3 c14 68n
+R8 c14 vref 1.5k
+C6 c14 c15 390n
+R9 c15 vref 1k
+XGAINB vref c16 c14 POT R=100k pos={gain}
+
+* Clipping: germanium diodes to Vref.
+C9 go d9 1u
+R13 d9 dclip 1k
+D2 dclip vref D1N34A
+D3 vref dclip D1N34A
+C10 dclip d11 1u
+
+* Summing amplifier (inverting) mixing the clipped path and both clean paths.
+R16 d11 sum 47k
+C11 d11 d17 2.2n
+R15 d17 c16 22k
+R17 sum c16 27k
+R18 c16 d18 12k
+C12 sum d18 27n
+R7 e3 c13 1.5k
+C16 c13 vref 1u
+R24 sum c13 15k
+R20 so sum 392k
+C13 so sum 820p
+XU2A vref sum so vpos vneg OPAMP
+
+* Treble: active high shelf (inverting).
+R21 so t4 1.8k
+XTREBLE t4 tw t6 POT R=10k pos={treble}
+C14 tm tw 3.9n
+R22 tm so 100k
+R241 to tm 100k
+R23 to t6 4.7k
+XU2B vref tm to vpos vneg OPAMP
+
+* Output: the treble stage drives the Output pot; 560R and the output cap.
+* (The analysis's 68k/100k belong to the bypass path's leakage, not here.)
+XOUTPUT to vw vref POT R=10k pos={output}
+R25 vw v8 560
+C15 v8 out 4.7u
+* Amp input impedance.
+Rload out 0 1meg
+
+* 1N34A germanium point-contact diode.
+.model D1N34A D(IS=2.6u N=1.6 RS=1)
+.model DCLAMP D(IS=1e-14 N=1)
+
+* Op-amp macromodel (TL072-ish): 100 dB, ~3 MHz GBW, outputs clamp ~1 V
+* from the rails.
+.subckt OPAMP inp inn out vcc vee
+E1 g1 0 inp inn 100k
+R1 g1 g2 1k
+C1 g2 0 5.3u
+E2 o1 0 g2 0 1
+Rout o1 out 75
+Vhi rhi vcc DC -1.5
+Vlo rlo vee DC 1.5
+Dhi out rhi DCLAMP
+Dlo rlo out DCLAMP
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param gain=0.3
+.param treble=0.5
+.param output=0.5
+.end

@@ -1,0 +1,14 @@
+* The 1968 photocell vibe: a four-stage phaser built from
+* transistor phase splitters, each tuned by a light-dependent resistor
+* around one lamp driven by a slow oscillator: the throb of late-60s and
+* 70s psychedelic and blues-rock records.
+* A DSP model (engine/fx/PhotoVibe.cpp) after the DAFx-19 grey-box paper,
+* not a solved circuit: the lamp, LDRs and their housing are measured
+* behaviour there too. Chorus mixes the dry signal back in; Vibrato is
+* the pure pitch wobble.
+*
+*@pedal name="Photo Vibe" dsp=photovibe
+*@control speed label="Speed" taper=lin default=0.35
+*@control intensity label="Intensity" taper=lin default=0.6
+*@control volume label="Volume" taper=lin default=0.5
+*@control mode label="Mode" taper=lin default=0 positions="Chorus,Vibrato"

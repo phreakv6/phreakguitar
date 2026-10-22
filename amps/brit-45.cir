@@ -1,0 +1,89 @@
+* The first British 45 W head (1965 circuit, also in the 1962 combo): a British
+* copy of the '59 tweed bass amp. The preamp is the 5F6-A's - both V1 halves on
+* one 820R/250u cathode, 270k mixers, V2a DC-coupled into the V2b cathode
+* follower, the 56k-slope stack - with a 12AX7 in V1 where the tweed bass has
+* a 12AY7 (more gain: why it breaks up sooner), a 500p bright cap on the
+* High Treble channel and 22n stack caps. Two KT66s on a GZ34 rectifier.
+* The amp of the mid-60s British blues-rock records.
+*
+*@amp name="Brit 45" face=plexi oversample=4
+*@control presence label="Presence" taper=lin default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.5
+*@control treble label="Treble" taper=lin default=0.6
+*@control loud1 label="Loudness I" taper=audio default=0.5
+*@control loud2 label="Loudness II" taper=audio default=0.3
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=KT66 nfb=0.3 presence=presence headroom=30 count=2 pi=12AX7 rectifier=GZ34 bplus=430 cap=32 idle=90 full=230 rsource=70 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+Vb1 b1 0 DC 330
+Vb2 b2 0 DC 300
+
+* V1: 12AX7 (ECC83), both halves on a shared bypassed cathode.
+Rg1 in g1 68k
+XV1A p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rg2 in g2 68k
+XV1B p2 g2 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k1 DGRID
+Rk1 k1 0 820
+Ck1 k1 0 250u
+Rp1 b2 p1 100k
+Rp2 b2 p2 100k
+
+* Loudness II (Normal) and Loudness I (High Treble), mixed.
+C1 p1 n1 20n
+XLOUD2 n1 nw 0 POT R=1meg pos={loud2}
+Rm1 nw mix 270k
+C2 p2 br1 20n
+XLOUD1 br1 bw 0 POT R=1meg pos={loud1}
+Cbr br1 bw 500p
+Rm2 bw mix 270k
+
+* V2a gain stage DC-coupled into the V2b cathode follower.
+XV2A p3 mix k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 mix k3 DGRID
+Rk3 k3 0 820
+Rp3 b2 p3 100k
+XV2B b1 p3 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 p3 k4 DGRID
+Rk4 k4 0 100k
+
+* The tone stack (5F6-A layout, 22n caps), from the follower's cathode.
+C3 k4 t1 250p
+XTREBLE t1 tw tb POT R=250k pos={treble}
+Rslope k4 sl 56k
+C4 sl tb 22n
+C5 sl mt 22n
+XBASS tb tb mt POT R=1meg pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* Into the phase inverter's grid.
+Cpi tw out 20n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param presence=0.5
+.param middle=0.5
+.param bass=0.154
+.param treble=0.6
+.param loud1=0.1545
+.param loud2=0.0612
+.param response=0.5
+.end

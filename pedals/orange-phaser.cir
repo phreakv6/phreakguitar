@@ -1,0 +1,124 @@
+* The classic orange four-stage phaser, 1974 'script' circuit (no R28 feedback resistor), as
+* ElectroSmash analyses it. An op-amp input buffer; four all-pass stages,
+* each an inverting op-amp with a 47n / 24k high-pass on its + input,
+* and a 2N5952 JFET across the 24k as a voltage-controlled resistor (the
+* closer its gate gets to pinch-off, the higher the resistance and the
+* lower the stage's 90-degree point); a PNP mixer summing the dry signal
+* and the four-times-shifted one 50/50, so two notches sweep the band.
+*
+* The LFO is in the circuit too: U1b is a Schmitt trigger (R19 / R21
+* hysteresis) whose square output charges C10 (15u) through the Speed pot
+* (470k as a variable resistor); the triangle on C10 comes back to the
+* trigger through R24 (C7 smooths the switching). R22 (3M9) couples the
+* triangle onto the gates' bias, set by the trimmer through R20 (1M):
+* only about a fifth of it reaches the gates, which is all the 2N5952
+* needs near pinch-off.
+*
+* Kept out: the reverse-polarity diode, and the zener (a 5.1 V source
+* here: it sits behind 15u, so audio never sees its impedance). The
+* trimmer is set for the 2N5952 model below (VTO -2.02 V; LTspice's
+* standard.jft); real units are trimmed to their FETs the same way.
+* Op-amps: the single-pole macromodel used by the other pedals, on 9 V.
+*
+*@pedal name="Orange Phaser" oversample=2
+*@control speed label="Speed" taper=revaudio default=0.35
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supply: 9 V for the op-amps, 5.1 V reference (the zener) as their
+* virtual ground; the bias trimmer (250k) through R20 to the gates.
+Vcc vcc 0 DC 9
+Vref vref 0 DC 5.1
+RT1 vref tw 112k
+RT2 tw 0 138k
+R20 tw vbias 1meg
+C4 vbias vref 47n
+
+* Input buffer (U1a): R3, C5 (DC block), R14 biasing to Vref.
+R3 in i1 10k
+C5 i1 ip 10n
+R14 ip vref 470k
+XU1A ip b0 b0 vcc 0 OPAMP
+
+* Phase stages: out = -in + 2 V(+), V(+) = in through C, to Vref via R || JFET.
+R1 b0 m1 10k
+R5 m1 s1 10k
+C1 b0 p1 47n
+R6 p1 vref 24k
+J2 p1 vbias vref J2N5952
+XU2A p1 m1 s1 vcc 0 OPAMP
+
+R11 s1 m2 10k
+R10 m2 s2 10k
+C3 s1 p2 47n
+R25 p2 vref 24k
+J3 p2 vbias vref J2N5952
+XU2D p2 m2 s2 vcc 0 OPAMP
+
+R12 s2 m3 10k
+R13 m3 s3 10k
+C6 s2 p3 47n
+R26 p3 vref 24k
+J4 p3 vbias vref J2N5952
+XU2C p3 m3 s3 vcc 0 OPAMP
+
+R17 s3 m4 10k
+R18 m4 s4 10k
+C9 s3 p4 47n
+R23 p4 vref 24k
+J5 p4 vbias vref J2N5952
+XU2B p4 m4 s4 vcc 0 OPAMP
+
+* LFO (U1b).
+R19 vref lp 150k
+R21 lo lp 470k
+R24 tri lm 150k
+C7 lm lo 10n
+XU1B lp lm lo vcc 0 OPAMP
+* (R36s: the knob's top end stop. With no resistance left the trigger
+* runs at ~40 Hz; this keeps full speed near 15 Hz.)
+XSPEED tri spd spd POT R=470k pos={speed}
+R36s spd lo 4.7k
+C10 tri 0 15u
+R22 tri vbias 3.9meg
+
+* Output mixer: PNP common-emitter, R7 collector-base feedback; dry (R16)
+* and shifted (R8) summed at the base. C2 / R2 to the output.
+R16 b0 qb 150k
+R8 s4 qb 150k
+R7 qb qc 150k
+Q1 qc qb vref Q2N4125
+R4 qc 0 56k
+C2 qc out 47n
+R2 out 0 150k
+* Amp input impedance.
+Rload out 0 1meg
+
+.model J2N5952 NJF(VTO=-2.021 BETA=1.314m LAMBDA=4m)
+.model Q2N4125 PNP(IS=1e-14 BF=200 BR=4)
+.model DCLAMP D(IS=1e-14 N=1)
+
+* Op-amp macromodel: gain stage with a dominant pole at ~30 Hz
+* (100k x 30 Hz = 3 MHz GBW), unity buffer, 75R output, rail clamps.
+.subckt OPAMP inp inn out vcc vee
+E1 g1 0 inp inn 100k
+R1 g1 g2 1k
+C1 g2 0 5.3u
+E2 o1 0 g2 0 1
+Rout o1 out 75
+Vhi rhi vcc DC -1.5
+Vlo rlo vee DC 1.5
+Dhi out rhi DCLAMP
+Dlo rlo out DCLAMP
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param speed=0.35

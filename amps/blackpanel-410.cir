@@ -1,0 +1,78 @@
+* The 4x10 black-panel reverb amp (AB763 circuit), Vibrato channel: the same
+* preamp as the Twin's (same tone stack, Middle and all). Spring reverb
+* and optical Vibrato after it, then two 6L6s on a GZ34 tube rectifier
+* (~45 W: more give than the Twin's solid-state 85 W) into four 10"s.
+* V2A 100k/1.5k/25u, blackface stack from the plate: Treble 250k, Bass
+* 250k, Middle 10k, 100k slope, 250p/0.1u/0.047u; Volume; second stage.
+*
+*@amp name="Black Panel 4x10" face=blackpanel oversample=4
+*@control volume label="Volume" taper=audio default=0.4
+*@control treble label="Treble" taper=audio default=0.6
+*@control middle label="Middle" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.4
+*@control reverb label="Reverb" taper=lin default=0.3
+*@control speed label="Speed" taper=lin default=0.5
+*@control intensity label="Intensity" taper=lin default=0.0
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=6L6 nfb=0.45 headroom=36 count=2 pi=12AT7 rectifier=GZ34 bplus=460 cap=20 idle=90 full=240 rsource=70 response=response
+*@reverb control=reverb
+*@tremolo speed=speed intensity=intensity
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+Vb2 b2 0 DC 270
+
+* V2A: first stage.
+Rleak in 0 1meg
+Rg1 in g1 68k
+XV2A p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rk1 k1 0 1.5k
+Ck1 k1 0 25u
+Rp1 b2 p1 100k
+
+* Blackface tone stack, plate-driven.
+C1 p1 t1 250p
+XTREBLE t1 tw tb POT R=250k pos={treble}
+Rslope p1 sl 100k
+C2 sl tb 100n
+C3 sl mt 47n
+XBASS tb tb mt POT R=250k pos={bass}
+XMIDDLE mt mt 0 POT R=10k pos={middle}
+
+* Volume, then V2B: second stage.
+XVOLUME tw vw 0 POT R=1meg pos={volume}
+XV2B p2 vw k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 vw k2 DGRID
+Rk2 k2 0 1.5k
+Ck2 k2 0 22u
+Rp2 b2 p2 100k
+
+* On to the reverb mix and the phase inverter.
+Cout p2 out 20n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param volume=0.0816
+.param treble=0.2329
+.param middle=0.5
+.param bass=0.0816
+.param reverb=0.3
+.param speed=0.5
+.param intensity=0
+.param response=0.5
+.end

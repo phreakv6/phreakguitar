@@ -1,0 +1,94 @@
+* Round fuzz: the classic two-transistor silicon (NPN) fuzz, negative ground.
+* Classic topology: Q1 common-emitter into Q2, 100k DC feedback from Q2's
+* emitter to Q1's base, Fuzz pot sets how much of Q2's emitter resistance
+* the 20u cap bypasses. Values follow the common BC108-era build.
+*
+*@pedal name="Round Fuzz" oversample=4
+*@control fuzz label="Fuzz" taper=lin default=1.0
+*@control volume label="Volume" taper=audio default=0.6
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal (a round fuzz
+* is famously sensitive to what drives it).
+Vin src 0 0
+Rpickup src in 6k
+
+Vcc vcc 0 DC 9
+
+C1 in b1 2.2u
+Q1 c1 b1 0 SI70
+R1 vcc c1 33k
+
+Q2 c2 c1 e2 SI120
+R2 c2 j 470
+R3 j vcc 8.2k
+R4 e2 b1 100k
+
+* Fuzz: wiper at the top (pos=1) bypasses all of Q2's emitter resistor.
+XFUZZ e2 fw 0 POT R=1k pos={fuzz}
+C3 fw 0 20u
+
+C2 j va 10n
+XVOL va out 0 POT R=500k pos={volume}
+* Amp input impedance.
+Rload out 0 1meg
+
+* Silicon small-signal NPNs (BC108-ish) with the classic hFE pairing.
+.model SI70  NPN(IS=1.8e-14 BF=70  BR=5)
+.model SI120 NPN(IS=1.8e-14 BF=120 BR=5)
+
+* Schematic drawing for the viewer.
+*@sch flag 0 352 IN
+*@sch sym res 96 336 R90 Rpickup
+*@sch wire 80 352 128 352
+*@sch sym cap 192 336 R90 C1
+*@sch wire 192 352 256 352
+*@sch sym npn 256 304 R0 Q1
+*@sch wire 320 400 320 432
+*@sch flag 320 432 0
+*@sch sym res 304 144 R0 R1
+*@sch wire 320 128 320 160
+*@sch flag 320 128 9V
+*@sch wire 320 240 320 304
+*@sch wire 320 304 448 304
+*@sch sym npn 448 256 R0 Q2
+*@sch sym res 496 160 R0 R2
+*@sch sym res 496 64 R0 R3
+*@sch wire 512 48 512 80
+*@sch flag 512 48 9V
+*@sch wire 512 160 512 176
+*@sch wire 512 176 688 176
+*@sch sym cap 752 160 R90 C2
+*@sch wire 752 176 816 176
+*@sch sym pot 800 160 R0 XVOL
+*@sch wire 816 256 816 288
+*@sch flag 816 288 0
+*@sch wire 864 224 1088 224
+*@sch flag 1088 224 OUT
+*@sch sym res 960 208 R0 Rload
+*@sch wire 976 304 976 336
+*@sch flag 976 336 0
+*@sch wire 512 352 512 416
+*@sch sym pot 496 400 R0 XFUZZ
+*@sch wire 512 496 512 528
+*@sch flag 512 528 0
+*@sch wire 560 464 624 464
+*@sch sym cap 608 464 R0 C3
+*@sch wire 624 528 624 560
+*@sch flag 624 560 0
+*@sch wire 224 352 224 624
+*@sch wire 224 624 304 624
+*@sch sym res 400 608 R90 R4
+*@sch wire 384 624 448 624
+*@sch wire 448 624 448 384
+*@sch wire 448 384 512 384
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param fuzz=1.0
+.param volume=0.165
+.end

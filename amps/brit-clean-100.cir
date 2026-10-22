@@ -1,0 +1,116 @@
+* The 1970s British 100 W high-headroom head (DR103 circuit): the preamp, solved as a
+* circuit, per the component list at circuitcodex.com/amps/dr103. Normal
+* and Brilliant channels jumpered: V1 (two 12AX7 halves, 220k plates, one
+* 1.5k/100u cathode), the Brilliant channel coupled through only 1n (its
+* brightness), 470k volumes and 470k mixers into V2B (220k, unbypassed
+* 2.2k), DC into the V2A cathode follower (120k) that drives the tone stack
+* (100p / 220k Treble, 470k Bass, 22k Middle, 47n / 47n, 100k slope); the
+* Treble wiper through 220k to the 470k Master; V3B driver (100k, 2.2k
+* with 47n: a treble lift), then the V3A cathode follower (grid fed from
+* V3B's plate through 1.8M) into the 12AT7 phase inverter. Four EL34s on
+* a silicon bridge and 2x220u at 480 V: loud, clean and stiff.
+*
+*@amp name="Brit Clean 100" face=britclean oversample=4
+*@control normal label="Normal" taper=audio default=0.5
+*@control brilliant label="Brilliant" taper=audio default=0.3
+*@control bass label="Bass" taper=audio default=0.5
+*@control treble label="Treble" taper=lin default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control presence label="Presence" taper=lin default=0.4
+*@control master label="Master" taper=audio default=0.5
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=EL34 nfb=0.45 presence=presence headroom=40 count=4 pi=12AT7 rectifier=silicon bplus=480 cap=110 idle=150 full=460 rsource=20 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Preamp supplies (after the droppers).
+Vb5 b5 0 DC 320
+Vb3 b3 0 DC 400
+
+* V1: both channels, one shared bypassed cathode.
+R1s in g1 68k
+Rg1 g1 0 1meg
+R3s in g2 68k
+Rg2 g2 0 1meg
+XV1A p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+XV1B p2 g2 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k1 DGRID
+Rk1 k1 0 1.5k
+Ck1 k1 0 100u
+Rl1 b5 p1 220k
+Rl2 b5 p2 220k
+
+* Brilliant (1n coupling) and Normal (10n) volumes, mixed.
+C2 p1 v1t 1n
+XBRILLIANT v1t vw1 0 POT R=470k pos={brilliant}
+C3 p2 v2t 10n
+XNORMAL v2t vw2 0 POT R=470k pos={normal}
+Rm1 vw1 mix 470k
+Rm2 vw2 mix 470k
+
+* V2B gain stage, DC into the V2A cathode follower.
+XV2B p3 mix k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 mix k3 DGRID
+Rk2 k3 0 2.2k
+Rl3 b3 p3 220k
+XV2A b3 p3 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 p3 k4 DGRID
+Rkcf k4 0 120k
+
+* The tone stack, from the follower's cathode.
+C4 k4 t1 100p
+XTREBLE t1 tw tb POT R=220k pos={treble}
+Rslope k4 sl 100k
+C5 sl tb 47n
+C6 sl mt 47n
+XBASS tb tb mt POT R=470k pos={bass}
+XMIDDLE mt mt 0 POT R=22k pos={middle}
+
+* Treble wiper through 220k to the Master.
+Rtm tw mv 220k
+XMASTER mv mw 0 POT R=470k pos={master}
+
+* V3B driver, partly bypassed cathode.
+XV3B p5 mw k5 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG5 mw k5 DGRID
+Rk3 k5 0 2.2k
+Ck3 k5 0 47n
+Rl4 b3 p5 100k
+
+* V3A cathode follower: grid from V3B's plate (22n || 1.8M), 1M down.
+C8 p5 g6 22n
+R18 p5 g6 1.8meg
+Rg3 g6 0 1meg
+XV3A b3 g6 k6 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG6 g6 k6 DGRID
+Rkcf2 k6 0 220k
+
+* Into the phase inverter's grid.
+Cpi k6 out 100n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param normal=0.1545
+.param brilliant=0.0612
+.param bass=0.1545
+.param treble=0.5
+.param middle=0.5
+.param presence=0.4
+.param master=0.1545
+.param response=0.5
+.end

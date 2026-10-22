@@ -1,0 +1,126 @@
+* Boutique overdrive-special style. The originals were potted in epoxy, so
+* this follows the original ODS design as traced by builders (the "Dumb
+* Bell" notes at schematicheaven.net, ElectroSmash-era forum analyses):
+* a black-panel-derived clean channel - V1A (100k / 1.5k / 25u) into a plate-
+* driven tone stack (500p treble cap, 20n mid, 100n bass, 100k slope;
+* Treble 250k, Bass 250k, Middle 25k), the 1M Volume, then 220k bypassed by
+* 500p into V1B (100k / 1.5k) - and, with Overdrive switched in, two more
+* cascaded stages (10n couplings, 100k / 1.5k with partly bypassed
+* cathodes, the Drive pot between them) into the Level control (47p bright
+* cap). The switch picks clean or overdrive into the pre-PI Master. Four
+* 6L6s on a ~465 V silicon supply with a choke; presence in the feedback.
+* With overdrive in, the clean Volume becomes a gain control too: the
+* cascade the amp is famous for.
+*
+*@amp name="Boutique ODS" face=boutique oversample=4
+*@control volume label="Volume" taper=audio default=0.45
+*@control treble label="Treble" taper=lin default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.4
+*@control drive label="Drive" taper=lin default=0.5
+*@control level label="Level" taper=audio default=0.35
+*@control mode label="Mode" taper=lin default=0 positions="Clean,Overdrive"
+*@control master label="Master" taper=audio default=0.6
+*@control presence label="Presence" taper=lin default=0.4
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=6L6 nfb=0.4 presence=presence headroom=40 count=4 pi=12AX7 rectifier=silicon bplus=465 cap=100 idle=150 full=460 rsource=20 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Preamp supplies (the last two filter stages: ~323 V and ~361 V).
+Vb1 b1 0 DC 323
+Vb2 b2 0 DC 361
+
+* V1A: input stage.
+Rin in g1 68k
+Rgl g1 0 1meg
+XV1A p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rk1 k1 0 1.5k
+Ck1 k1 0 25u
+Rp1 b1 p1 100k
+
+* The tone stack, plate-driven.
+Ct p1 t1 500p
+XTREBLE t1 tw tb POT R=250k pos={treble}
+Rslope p1 sl 100k
+Cb sl tb 100n
+Cm sl mt 20n
+XBASS tb tb mt POT R=250k pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* Volume, then 220k || 500p into V1B.
+XVOLUME tw vw 0 POT R=1meg pos={volume}
+Rv vw g2 220k
+Cv vw g2 500p
+XV1B p2 g2 k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k2 DGRID
+Rk2 k2 0 1.5k
+Ck2 k2 0 25u
+Rp2 b1 p2 100k
+
+* Clean path out of V1B.
+Ccl p2 clean 22n
+Rcl clean 0 1meg
+
+* Overdrive: two cascaded stages, Drive between them.
+Co1 p2 g3 10n
+Rg3 g3 0 1meg
+XV2A p3 g3 k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 g3 k3 DGRID
+Rk3 k3 0 1.5k
+Ck3 k3 0 1u
+Rp3 b2 p3 100k
+Co2 p3 d1 10n
+Rd d1 dtop 100k
+XDRIVE dtop g4 0 POT R=100k pos={drive}
+XV2B p4 g4 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 g4 k4 DGRID
+Rk4 k4 0 1.5k
+Ck4 k4 0 1u
+Rp4 b2 p4 100k
+Co3 p4 lv 22n
+XLEVEL lv od 0 POT R=1meg pos={level}
+Clv lv od 47p
+
+* The Clean / Overdrive switch, then the pre-PI Master.
+XSWC clean pre SW pos={mode} k=0 n=2
+XSWO od pre SW pos={mode} k=1 n=2
+Rpre pre 0 1meg
+XMASTER pre mw 0 POT R=1meg pos={master}
+
+* Into the phase inverter's grid.
+Cpi mw out 100n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+* A switch throw: closed (1 ohm) at position k of n, open (1 Gohm) otherwise.
+.subckt SW a b pos=0 k=0 n=2
+R1 a b {abs(pos*(n-1)-k) < 0.5 ? 1 : 1e9}
+.ends
+
+.param volume=0.1063
+.param treble=0.5
+.param middle=0.5
+.param bass=0.0816
+.param drive=0.5
+.param level=0.079
+.param mode=0
+.param master=0.2329
+.param presence=0.4
+.param response=0.5
+.end

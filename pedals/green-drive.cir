@@ -1,0 +1,189 @@
+* The classic green overdrive (the '808 circuit): emitter-follower input buffer, op-amp
+* clipping amplifier with anti-parallel silicon diodes in its feedback loop,
+* 1k/0.22u low-pass, active tone stage, Level pot, emitter-follower output.
+* Topology and values follow the original as analysed by ElectroSmash and
+* drawn in Barbarach's LTspice model; op-amps are a single-pole macromodel
+* (100 dB open-loop gain, ~3 MHz gain-bandwidth, outputs clamp ~1 V from the
+* rails), standing in for the JRC4558.
+*
+*@pedal name="Green Drive" oversample=4
+*@control drive label="Drive" taper=audio default=0.3
+*@control tone label="Tone" taper=lin default=0.5
+*@control level label="Level" taper=audio default=0.8
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supply and the 4.5 V reference.
+Vcc vcc 0 DC 9
+R16 vcc vref 10k
+R17 vref 0 10k
+C9 vref 0 47u
+
+* Input buffer (emitter follower).
+R1 in n2 1k
+C1 n2 b1 20n
+R2 b1 vref 510k
+Q1 vcc b1 e1 Q2SC1815
+R3 e1 0 10k
+
+* Clipping amplifier: gain 1 + (51k + Drive) / 4.7k, diodes in the loop.
+C2 e1 p1 1u
+R4 p1 vref 10k
+XU1 p1 m1 o1 vcc 0 OPAMP
+R6 m1 g1 4.7k
+C3 g1 0 47n
+C11 o1 m1 51p
+D1 m1 o1 D1N4148
+D3 o1 m1 D1N4148
+R5 m1 dr 51k
+* Drive pot wired as a variable resistor (wiper tied to one end).
+XDRIVE dr dr o1 POT R=500k pos={drive}
+
+* Tone: 1k/0.22u low-pass into IC1b; the Tone pot runs from IC1b's (-)
+* input (pos=1, treble) to its (+) input (pos=0, bass), wiper to 220R + 0.22u.
+R7 o1 p2 1k
+C6 p2 0 220n
+R18 p2 vref 10k
+XU2 p2 m2 o2 vcc 0 OPAMP
+R8 o2 m2 1k
+XTONE m2 tw p2 POT R=20k pos={tone}
+C10 tw t2 220n
+R9 t2 0 220
+
+* Level and output buffer.
+C5 o2 c5 1u
+R10 c5 lv 1k
+XLEVEL lv lw 0 POT R=100k pos={level}
+C7 lw b2 100n
+R12 b2 vref 1meg
+Q2 vcc b2 e2 Q2SC1815
+R13 e2 0 10k
+R14 e2 ob 100
+C8 ob out 10u
+R15 out 0 10k
+* Amp input impedance.
+Rload out 0 1meg
+
+.model D1N4148 D(IS=2.52n N=1.752 RS=0.568)
+.model Q2SC1815 NPN(IS=1e-14 BF=250 BR=3)
+.model DCLAMP D(IS=1e-14 N=1)
+
+* Op-amp macromodel: gain stage with a dominant pole at ~30 Hz
+* (100k x 30 Hz = 3 MHz GBW), unity buffer, 75R output, rail clamps.
+.subckt OPAMP inp inn out vcc vee
+E1 g1 0 inp inn 100k
+R1 g1 g2 1k
+C1 g2 0 5.3u
+E2 o1 0 g2 0 1
+Rout o1 out 75
+Vhi rhi vcc DC -1.5
+Vlo rlo vee DC 1.5
+Dhi out rhi DCLAMP
+Dlo rlo out DCLAMP
+.ends
+
+* Schematic drawing for the viewer (laid out for this file; check with tools/check_sch.py).
+*@sch flag 0 0 IN
+*@sch sym res 96 -16 R90 RPICKUP
+*@sch sym res 176 -16 R90 R1
+*@sch sym cap 224 -16 R90 C1
+*@sch wire 224 0 288 0
+*@sch sym res 240 -16 R0 R2
+*@sch flag 256 80 Vref
+*@sch sym npn 288 -48 R0 Q1
+*@sch flag 352 -48 9V
+*@sch sym res 336 32 R0 R3
+*@sch flag 352 128 0
+*@sch wire 352 48 496 48
+*@sch sym polcap 560 32 R90 C2
+*@sch wire 560 48 640 48
+*@sch sym res 576 32 R0 R4
+*@sch flag 592 128 Vref
+*@sch sym opamp 672 -32 R0 XU1
+*@sch wire 672 0 672 -16
+*@sch flag 672 -16 9V
+*@sch wire 672 64 672 96
+*@sch flag 672 96 0
+*@sch sym res 656 -64 R90 R6
+*@sch sym cap 560 -64 R90 C3
+*@sch flag 496 -48 0
+*@sch wire 640 16 640 -288
+*@sch wire 704 32 880 32
+*@sch wire 832 32 832 -288
+*@sch sym cap 704 -112 R90 C11
+*@sch wire 704 -96 832 -96
+*@sch sym diode 656 -144 R270 D1
+*@sch wire 640 -160 656 -160
+*@sch wire 720 -160 832 -160
+*@sch sym diode 720 -240 R90 D3
+*@sch wire 640 -224 656 -224
+*@sch wire 720 -224 832 -224
+*@sch sym res 736 -304 R90 R5
+*@sch wire 720 -288 736 -288
+*@sch sym pot 720 -272 R270 XDRIVE
+*@sch wire 816 -288 832 -288
+*@sch wire 784 -336 736 -336
+*@sch wire 736 -336 736 -288
+*@sch sym res 976 16 R90 R7
+*@sch wire 960 32 1216 32
+*@sch sym cap 992 32 R0 C6
+*@sch flag 1008 96 0
+*@sch sym res 1072 16 R0 R18
+*@sch flag 1088 112 Vref
+*@sch wire 960 32 960 240
+*@sch sym opamp 1248 112 M180 XU2
+*@sch wire 1248 16 1248 -16
+*@sch flag 1248 -16 0
+*@sch wire 1248 80 1248 112
+*@sch flag 1248 112 9V
+*@sch wire 1216 64 1216 240
+*@sch sym res 1312 144 R90 R8
+*@sch wire 1296 160 1328 160
+*@sch wire 1328 48 1328 160
+*@sch sym pot 1056 224 R90 XTONE
+*@sch wire 1040 240 1216 240
+*@sch sym cap 976 288 R0 C10
+*@sch sym res 976 336 R0 R9
+*@sch flag 992 432 0
+*@sch wire 1280 48 1360 48
+*@sch sym polcap 1424 32 R90 C5
+*@sch sym res 1520 32 R90 R10
+*@sch wire 1504 48 1520 48
+*@sch sym pot 1504 32 R0 XLEVEL
+*@sch flag 1520 128 0
+*@sch sym cap 1632 80 R90 C7
+*@sch wire 1632 96 1664 96
+*@sch sym res 1632 80 R0 R12
+*@sch flag 1648 176 Vref
+*@sch sym npn 1664 48 R0 Q2
+*@sch flag 1728 48 9V
+*@sch sym res 1712 128 R0 R13
+*@sch flag 1728 224 0
+*@sch sym res 1824 128 R90 R14
+*@sch sym polcap 1872 128 R90 C8
+*@sch wire 1872 144 1904 144
+*@sch sym res 1872 128 R0 R15
+*@sch flag 1888 224 0
+*@sch flag 1904 144 OUT
+*@sch sym res 80 224 R0 R16
+*@sch flag 96 240 9V
+*@sch flag 96 320 Vref
+*@sch sym res 80 304 R0 R17
+*@sch flag 96 400 0
+*@sch wire 96 320 160 320
+*@sch sym polcap 144 320 R0 C9
+*@sch flag 160 384 0
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param drive=0.0612
+.param tone=0.5
+.param level=0.4896
+.end

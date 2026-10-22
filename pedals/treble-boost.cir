@@ -1,0 +1,44 @@
+* The 1960s British treble booster: one OC44 germanium PNP in
+* common emitter on a positive ground. The tiny 5n input cap passes mostly
+* treble and upper mids, so it boosts the top and pushes a British head or class-A combo
+* into a fat, cutting lead: Brian May, Tony Iommi, Rory Gallagher, and the
+* British blues of the '60s. Values per the original: 5n input, 470k/68k
+* base divider, 10k collector, 3.9k emitter with 47u bypass, 10n out,
+* Boost 10k at the output.
+*
+*@pedal name="Treble Booster" oversample=4
+*@control boost label="Boost" taper=audio default=0.7
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+* Positive ground: the supply sits 9 V below ground.
+Vcc vcc 0 DC -9
+
+C1 in b 5n
+R1 b vcc 470k
+R2 b 0 68k
+Q1 c b e OC44
+R3 c vcc 10k
+R4 e 0 3.9k
+C2 e 0 47u
+
+* Boost: the output level.
+C3 c v 10n
+XBOOST v out 0 POT R=10k pos={boost}
+* Amp input impedance.
+Ramp out 0 1meg
+
+* Germanium PNP (OC44-ish): ~0.2 V Vbe at 1 mA, hFE ~90.
+.model OC44 PNP(IS=4e-7 BF=90 BR=4)
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param boost=0.3385
+.end

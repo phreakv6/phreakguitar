@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    # The engine tests are plain C++ (no JUCE), but configuring the project
+    # fetches JUCE for the plugin; macOS has what it needs out of the box.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build the engine tests
+        run: cmake --build build --config Release --target dsp_tests -j 4
+      - name: Run them
+        run: ctest --test-dir build -C Release --output-on-failure
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install
+        working-directory: web
+        run: npm ci
+      - name: Build the engine (WebAssembly)
+        run: tools/build_wasm.sh
+      - name: Typecheck and build the site
+        working-directory: web
+        run: npx tsc --noEmit && npx vite build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: web/dist
+
+  deploy:
+    # Publishes main to Cloudflare Pages once the repository has the
+    # CLOUDFLARE_API_TOKEN (Pages: Edit) and CLOUDFLARE_ACCOUNT_ID secrets.
+    needs: [tests, web]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "No Cloudflare secrets yet: skipping the deploy."
+            exit 0
+          fi
+          npx --yes wrangler@4 pages deploy dist --project-name=phreakguitar --branch=main

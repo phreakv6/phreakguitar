@@ -1,0 +1,94 @@
+* The 30 W class-A combo's top-boost circuit, Brilliant channel: the preamp, solved as a circuit;
+* the EL84 power section (cathode-biased, no negative feedback, Cut
+* control) is the *@power model.
+* V1's two halves share a 1.5k/25u cathode, so the idle Normal half is
+* modelled too (it sets the bias). Brilliant volume with its 100p cap,
+* top-boost gain stage and cathode follower into the Treble/Bass stack
+* (the tweed bass topology with a fixed 10k for the missing Middle), 470k
+* mixer into V3, then on to the phase inverter.
+*
+*@amp name="Class A 30" face=classa oversample=4
+*@control volume label="Volume" taper=audio default=0.55
+*@control treble label="Treble" taper=audio default=0.6
+*@control bass label="Bass" taper=audio default=0.5
+*@control cut label="Cut" taper=lin default=0.3
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=EL84 nfb=0 cut=cut headroom=30 count=4 pi=12AX7 rectifier=GZ34 bplus=335 cap=32 idle=200 full=270 rsource=40 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supplies.
+Vb1 b1 0 DC 250
+Vb2 b2 0 DC 260
+Vb3 b3 0 DC 270
+
+* V1: Brilliant half (V1B) driven, Normal half (V1A) idle; shared cathode.
+Rleak in 0 1meg
+Rg1 in g1 68k
+XV1B p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rga ga 0 1meg
+XV1A pa ga k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+Rpa b1 pa 220k
+Rk1 k1 0 1.5k
+Ck1 k1 0 25u
+Rp1 b1 p1 220k
+
+* Brilliant volume with its brilliance cap.
+C1 p1 v1t 47n
+XVOLUME v1t vw 0 POT R=1meg pos={volume}
+Cbr v1t vw 100p
+Rs2 vw g2 100k
+
+* top-boost gain stage, DC-coupled into the cathode follower.
+XV2A p2 g2 k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k2 DGRID
+Rk2 k2 0 1.8k
+Ck2 k2 0 25u
+Rp2 b2 p2 220k
+XV2B b2 p2 k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 p2 k3 DGRID
+Rk3 k3 0 56k
+
+* Top-boost tone stack.
+Ct k3 t1 50p
+XTREBLE t1 tw tb POT R=1meg pos={treble}
+Rslope k3 sl 100k
+Cb sl tb 22n
+Cm sl mt 22n
+XBASS tb tb mt POT R=1meg pos={bass}
+Rmid mt 0 10k
+
+* 470k mixer (the Normal channel's mixer to ground) into V3.
+Rmix tw mix 470k
+Rmix2 mix 0 470k
+XV3 p4 mix k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 mix k4 DGRID
+Rk4 k4 0 1.5k
+Rp4 b3 p4 220k
+
+* Into the phase inverter's grid.
+Cpi p4 out 22n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param volume=0.2
+.param treble=0.2329
+.param bass=0.154
+.param cut=0.3
+.param response=0.5
+.end

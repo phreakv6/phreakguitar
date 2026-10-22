@@ -1,0 +1,39 @@
+* The classic one-transistor linear power booster: one NPN in common emitter,
+* the classic clean boost (gain ~ Rc/Re = 10k/390R, about +28 dB flat out).
+* Values per ElectroSmash's analysis of the original: 430k/43k base divider, 10k
+* collector, 390R emitter, 100n in and out, 100k Volume. 2N5088 stands in
+* for the original 2N5133 (both high-gain small-signal NPNs).
+*
+*@pedal name="Clean Boost" oversample=4
+*@control volume label="Volume" taper=audio default=0.5
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+Vcc vcc 0 DC 9
+
+C1 in b 100n
+R1 vcc b 430k
+R2 b 0 43k
+Q1 c b e Q2N5088
+R3 vcc c 10k
+R4 e 0 390
+
+* Volume: the boost's output level into the amp.
+C2 c v 100n
+XVOLUME v out 0 POT R=100k pos={volume}
+* Amp input impedance.
+Ramp out 0 1meg
+
+.model Q2N5088 NPN(IS=5.9e-15 BF=600 BR=4)
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param volume=0.1545
+.end

@@ -1,0 +1,104 @@
+* The first octave-up fuzz (a 1967 design, as traced and sold by a US
+* maker in 1973), drawn after Aion FX's Octagon build documentation of
+* that circuit. Q1 (PNP) is a high-gain stage: its emitter goes to
+* AC ground through 1k, 100u and the Drive pot (1kC as a variable
+* resistor: less resistance, more gain), and to DC feedback from Q3's
+* collector through 47k. Q2 follows Q1's collector and drives Q3, a
+* common-emitter stage (1k2 collector) that drives the transformer's
+* 600 ohm winding through 33u. The 1.5k winding is centre-tapped to
+* ground, so its two ends swing in opposite directions; a germanium diode
+* from each end into the Volume pot lets through only the positive halves
+* of both: full-wave rectification, which doubles the frequency (the
+* octave up) on top of the fuzz.
+*
+* The transformer: a 42TM022-type 1.5k CT : 600 ohm part (what nearly every clone uses now),
+* from its datasheet: 1.5k CT winding 570 mH / 65 ohm, 600 ohm winding
+* 195 mH / 45 ohm, here as three coupled inductors (each half of the
+* centre-tapped side a quarter of its inductance) at k = 0.99.
+*
+* The Octave switch is Aion's mod: Octave (both diodes), Fuzz (one diode,
+* the original's crossover-distorted non-octave sound), Fuzz without the
+* diode (bypassed by a jumper).
+*
+*@pedal name="Octave Fuzz" oversample=4
+*@control drive label="Drive" taper=revaudio default=0.7
+*@control volume label="Volume" taper=audio default=0.6
+*@control octave label="Octave" taper=lin default=0 positions="Octave,Fuzz,Clean fuzz"
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supply: 9 V less the reverse-polarity Schottky, then R11 / C8.
+Vcc vs 0 DC 8.7
+R11 vs va 100
+C8 va 0 100u
+
+* Input: pulldown, coupling cap, RF cap; Q1's base biased from a
+* filtered divider (R2 / C3, then R1 820k and R3 680k).
+RPD in 0 2.2meg
+C1 in b1 100n
+C2 b1 0 150p
+R2 va bt 180k
+C3 bt 0 33u
+R1 bt b1 820k
+R3 b1 0 680k
+
+* Q1 (PNP gain stage), R5 / C4 high-cut on its collector.
+Q1 c1 b1 e1 Q2N3906
+R4 c1 0 220k
+R5 c1 c4 220
+C4 c4 0 1n
+R8 e1 ef 1k
+C6 ef dr 100u
+XDRIVE dr 0 0 POT R=1k pos={drive}
+R9 ef c3 47k
+
+* Q2 (follower) into Q3 (common emitter, emitter bypassed).
+Q2 va c1 e2 Q2N3904
+R6 e2 0 22k
+Q3 c3 e2 e3 Q2N3904
+R7 e3 0 470
+C5 e3 0 220u
+R10 va c3 1.2k
+
+* The transformer, 600 ohm side driven, 1.5k CT side rectified.
+C7 c3 t6 33u
+RS t6 t6i 45
+LS t6i 0 195m
+RPA p1 p1i 32.5
+LPA p1i 0 142.5m
+LPB 0 p3i 142.5m
+RPB p3i p3 32.5
+K1 LS LPA 0.99
+K2 LS LPB 0.99
+K3 LPA LPB 0.99
+
+* The rectifier and the Octave switch.
+D2 p1 o D1N34A
+D3 p3 d3 D1N34A
+XOCT d3 o SW pos={octave} k=0 n=3
+XNOD p1 o SW pos={octave} k=2 n=3
+
+* Volume (500kA) and the amp's input.
+XVOL o out 0 POT R=500k pos={volume}
+Rload out 0 1meg
+
+.model Q2N3906 PNP(IS=1.41f BF=180.7 BR=4.977)
+.model Q2N3904 NPN(IS=6.734f BF=416.4 BR=0.7371)
+.model D1N34A D(IS=2.6u N=1.6 RS=1)
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.subckt SW a b pos=0 k=0 n=2
+R1 a b {abs(pos*(n-1)-k) < 0.5 ? 1 : 1e9}
+.ends
+
+.param drive=0.8
+.param volume=0.17
+.param octave=0

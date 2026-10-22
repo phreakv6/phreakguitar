@@ -1,0 +1,92 @@
+* The classic US four-stage fuzz, 1976-77 'version 3', from
+* ElectroSmash's analysis and its parts list: four common-emitter stages
+* (2N5088/BC239-class NPNs), two of them clipping through 1N914 pairs,
+* and the passive tone stack with its 1 kHz scoop.
+* Placement of the last 100k/10k (output-stage base divider) is inferred
+* from the parts list: every other part is accounted for.
+*
+*@pedal name="Ram Fuzz" oversample=4
+*@control sustain label="Sustain" taper=lin default=0.6
+*@control tone label="Tone" taper=lin default=0.5
+*@control volume label="Volume" taper=lin default=0.4
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+Vcc vcc 0 DC 9
+
+* Input booster (Q1): 39k input, shunt feedback, Miller cap.
+C1 in i1 1u
+R2 i1 b1 39k
+R14 b1 0 47k
+Q1 c1 b1 e1 NPN5088
+R22 e1 0 100
+R13 vcc c1 10k
+R9 c1 b1 470k
+C10 c1 b1 470p
+
+* Sustain: how hard the clipping stages are hit (1k keeps a floor).
+C5 c1 s1 100n
+XSUSTAIN s1 sw s2 POT R=100k pos={sustain}
+R23 s2 0 1k
+
+* First clipping stage (Q2).
+C13 sw i2 100n
+R11 i2 b2 10k
+R20 b2 0 100k
+Q2 c2 b2 e2 NPN5088
+R21 e2 0 150
+R19 vcc c2 10k
+R17 c2 b2 470k
+C11 c2 b2 470p
+C6 c2 dc2 1u
+D1 dc2 b2 D1N914
+D2 b2 dc2 D1N914
+
+* Second clipping stage (Q3).
+C3 c2 i3 100n
+R12 i3 b3 10k
+R16 b3 0 100k
+Q3 c3 b3 e3 NPN5088
+R10 e3 0 150
+R6b vcc c3 15k
+R15 c3 b3 470k
+C12 c3 b3 470p
+C7 c3 dc3 1u
+D3 dc3 b3 D1N914
+D4 b3 dc3 D1N914
+
+* Tone: low-pass (39k/10n) and high-pass (4n/22k) blended by the pot.
+R8 c3 lp 39k
+C8 lp 0 10n
+C9 c3 hp 4n
+R5 hp 0 22k
+XTONE hp tw lp POT R=100k pos={tone}
+
+* Output stage (Q4): plain common emitter, ~13 dB.
+C2 tw b4 100n
+R3 vcc b4 100k
+R18 b4 0 10k
+Q4 c4 b4 e4 NPN5088
+R4 e4 0 3.3k
+R6 vcc c4 15k
+C4 c4 v1 1u
+XVOLUME v1 out 0 POT R=100k pos={volume}
+* Amp input impedance.
+Rload out 0 1meg
+
+.model D1N914 D(IS=2.52n N=1.752 RS=0.568)
+.model NPN5088 NPN(IS=1e-14 BF=500 BR=5)
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param sustain=0.6
+.param tone=0.5
+.param volume=0.4
+.end

@@ -1,0 +1,31 @@
+# Build
+build/
+cmake-build-*/
+
+# Fetched tooling (re-fetch via tools/get_pluginval.sh)
+tools/pluginval*
+!tools/get_pluginval.sh
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.xcodeproj
+compile_commands.json
+
+# Python
+__pycache__/
+.venv/
+
+# Web
+web/node_modules/
+web/dist/
+web/public/engine.wasm
+
+# Diagnostic captures from the dev page ("Send to Claude")
+captures/
+
+# Generated into web/public (engine build, alphaTab assets)
+web/public/

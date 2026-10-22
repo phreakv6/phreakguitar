@@ -1,0 +1,89 @@
+* The '59 tweed bass amp (5F6-A circuit): the preamp, solved as a circuit; the 6L6
+* power section (presence in the feedback loop, GZ34 rectifier sag) is
+* the *@power model.
+* V1 is a 12AY7 (lower gain than a 12AX7: part of why the tweed bass stays
+* clean longer), both halves on one 820R/250u cathode, channels jumpered;
+* Bright volume with its bright cap, 270k mixers into V2a, DC-coupled into
+* the V2b cathode follower and the tweed tone stack.
+*
+*@amp name="Tweed Bass" face=tweed oversample=4
+*@control presence label="Presence" taper=lin default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.5
+*@control treble label="Treble" taper=lin default=0.6
+*@control bright label="Bright" taper=audio default=0.5
+*@control normal label="Normal" taper=audio default=0.4
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=6L6 nfb=0.3 presence=presence headroom=32 count=2 pi=12AX7 rectifier=GZ34 bplus=430 cap=40 idle=90 full=240 rsource=60 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+Vb1 b1 0 DC 330
+Vb2 b2 0 DC 300
+
+* V1: 12AY7, both halves on a shared bypassed cathode.
+Rg1 in g1 68k
+XV1A p1 g1 k1 TRIODE MU=41.78 EX=1.183 KG1=1283.7 KP=328.8 KVB=2847.7
+DG1 g1 k1 DGRID
+Rg2 in g2 68k
+XV1B p2 g2 k1 TRIODE MU=41.78 EX=1.183 KG1=1283.7 KP=328.8 KVB=2847.7
+DG2 g2 k1 DGRID
+Rk1 k1 0 820
+Ck1 k1 0 250u
+Rp1 b2 p1 100k
+Rp2 b2 p2 100k
+
+* Normal and Bright volumes, mixed.
+C1 p1 n1 20n
+XNORMAL n1 nw 0 POT R=1meg pos={normal}
+Rm1 nw mix 270k
+C2 p2 br1 20n
+XBRIGHT br1 bw 0 POT R=1meg pos={bright}
+Cbr br1 bw 100p
+Rm2 bw mix 270k
+
+* V2a gain stage DC-coupled into the V2b cathode follower.
+XV2A p3 mix k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 mix k3 DGRID
+Rk3 k3 0 820
+Rp3 b2 p3 100k
+XV2B b1 p3 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 p3 k4 DGRID
+Rk4 k4 0 100k
+
+* Tweed tone stack (5F6-A values), from the follower's cathode.
+C3 k4 t1 250p
+XTREBLE t1 tw tb POT R=250k pos={treble}
+Rslope k4 sl 56k
+C4 sl tb 20n
+C5 sl mt 20n
+XBASS tb tb mt POT R=1meg pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* Into the phase inverter's grid.
+Cpi tw out 20n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param presence=0.5
+.param middle=0.5
+.param bass=0.154
+.param treble=0.6
+.param bright=0.154
+.param normal=0.0816
+.param response=0.5
+.end

@@ -1,0 +1,91 @@
+* The late-'60s British 100 W "plexi" head (1959 circuit): the preamp,
+* solved as a circuit; the EL34 power section is the *@power model.
+* Both channels jumpered, the way it's usually played: the guitar feeds
+* V1a (High Treble, Loudness I, 5000p bright cap) and V1b (Normal,
+* Loudness II); 470k mixers into V2a, DC-coupled to the V2b cathode
+* follower that drives the British tone stack.
+*
+*@amp name="Brit Plexi 100" face=plexi oversample=4
+*@control presence label="Presence" taper=lin default=0.5
+*@control bass label="Bass" taper=audio default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control treble label="Treble" taper=lin default=0.6
+*@control loud1 label="Loudness I" taper=audio default=0.6
+*@control loud2 label="Loudness II" taper=audio default=0.4
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=EL34 nfb=0.35 presence=presence headroom=34 count=4 pi=12AX7 rectifier=silicon bplus=470 cap=50 idle=140 full=450 rsource=25 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supplies (B+ after the preamp dropping resistors).
+Vb1 b1 0 DC 330
+Vb2 b2 0 DC 300
+
+* V1a: High Treble channel.
+Rg1 in g1 68k
+XV1A p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+Rk1 k1 0 820
+Ck1 k1 0 0.68u
+Rp1 b2 p1 100k
+C1 p1 v1t 22n
+XLOUD1 v1t vw1 0 POT R=1meg pos={loud1}
+Cbr v1t vw1 5n
+Rm1 vw1 mix 470k
+
+* V1b: Normal channel.
+Rg2 in g2 68k
+XV1B p2 g2 k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k2 DGRID
+Rk2 k2 0 820
+Ck2 k2 0 250u
+Rp2 b2 p2 100k
+C2 p2 v2t 22n
+XLOUD2 v2t vw2 0 POT R=1meg pos={loud2}
+Rm2 vw2 mix 470k
+
+* V2a gain stage, DC-coupled into the V2b cathode follower.
+XV2A p3 mix k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 mix k3 DGRID
+Rk3 k3 0 820
+Rp3 b2 p3 100k
+XV2B b1 p3 k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 p3 k4 DGRID
+Rk4 k4 0 100k
+
+* British tone stack, driven from the follower's cathode.
+C3 k4 t1 470p
+XTREBLE t1 tw tb POT R=220k pos={treble}
+Rslope k4 sl 33k
+C4 sl tb 22n
+C5 sl mt 22n
+XBASS tb tb mt POT R=1meg pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* Into the phase inverter's grid.
+Cpi tw out 22n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param bass=0.154
+.param middle=0.5
+.param treble=0.6
+.param loud1=0.2329
+.param loud2=0.0816
+.param presence=0.5
+.param response=0.5
+.end

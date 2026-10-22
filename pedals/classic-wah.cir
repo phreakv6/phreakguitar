@@ -1,0 +1,74 @@
+* The classic wah (the late-60s V846 circuit), wired as R.G.
+* Keen describes it in "The Technology of Wah Pedals". Q1 is a common-
+* emitter stage (22k collector, 390R emitter: gain ~36) that biases itself
+* from its own collector through 470k / 82k, the current reaching its base
+* through the inductor (|| 33k, which sets the Q) and 1.5k; a 4.7u grounds
+* the inductor's far end for audio. The rocker pot is a volume divider on
+* Q1's collector; Q2, an emitter follower, buffers its wiper and drives a
+* 0.01u into the inductor / 1.5k junction: a capacitor whose apparent size
+* the pot sets (Miller effect), tuning the inductor's resonance. Output
+* from Q1's collector. Later versions' input buffer is left out (the 68k input
+* is the classic, slightly tone-sucking original front end).
+*
+*@pedal name="Classic Wah" oversample=4
+*@control wah label="Wah" taper=revaudio default=0.5
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+Vcc vcc 0 DC 9
+
+* Input: 0.01u and 68k into Q1's base.
+C1 in i1 10n
+R1 i1 b1 68k
+
+* Q1: common emitter, biased from its own collector.
+Q1 c1 b1 e1 QWAH
+R3 vcc c1 22k
+R4 e1 0 390
+R6 c1 t2 470k
+R8 t2 0 82k
+C3 t2 0 4.7u
+
+* The tank: 1.5k from Q1's base to the junction, then the inductor (with
+* ~60R of winding) || 33k down to the bypassed bias node.
+R2 b1 t1 1.5k
+L1 t1 tl 500m
+RL tl t2 60
+R7 t1 t2 33k
+
+* The rocker: a volume divider on Q1's collector; Q2 buffers the wiper.
+* Lug a is the ground end, so toe down (pos 1) takes the least signal: the
+* smallest capacitor, the highest note. The rocker only turns the pot
+* through part of its travel; the two fixed resistors stand in for those
+* end stops (about 450 Hz heel down, 1.6 kHz toe down).
+C4 c1 ptop 220n
+RTOP ptop pt 30k
+XWAH pb pw pt POT R=100k pos={wah}
+RBOT pb 0 3.3k
+C6 pw b2 220n
+R5 c1 b2 470k
+Q2 q2c b2 e2 QWAH
+R9 vcc q2c 1k
+R10 e2 0 10k
+* ... and drives the 0.01u into the tank: the variable capacitor.
+C2 e2 t1 10n
+
+* Out from Q1's collector.
+C5 c1 out 220n
+* Amp input impedance.
+Ramp out 0 1meg
+
+* High-gain small-signal NPNs (MPSA18 / BC109 class).
+.model QWAH NPN(IS=1e-14 BF=500 BR=4)
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param wah=0.8455
+.end

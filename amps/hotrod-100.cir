@@ -1,0 +1,159 @@
+* The late-80s hot-rod 100 W super-lead head (1987 circuit), the preamp solved as a
+* circuit from the revised schematic (Mar 1996 drawing with corrections,
+* el34world), including the builders' correction that the clean channel
+* is fed from before the lead channel's 2n || 470k network, and the 1n
+* across the Overdrive Preamp pot that real units have. Input V1b (220k /
+* 1.8k / 1u). Lead: 2n || 470k, Overdrive Preamp (500k), 470k into V2a
+* (100k / 1.8k / 1u), 470k into V2b - the cold stage: 39k unbypassed
+* cathode, 1n across its 100k plate load - whose clipping is its grind.
+* Clean: 470k into the Normal Volume and V1a (100k, 2.2k unbypassed) through
+* 2.2M || 120p. Both meet at 330k, then V3b (220k / 1.8k / 1u) with its
+* cathode follower, and the FX return stage (V4b 220k / 2.2k, V4a follower)
+* into the British-type stack (470p / 250k Treble, 47k slope, 20n / 20n,
+* 1M Bass, 25k Middle) and the two Masters. Optocouplers switch channels:
+* VR1 + VR4 on in Clean, VR2 + VR3 in Overdrive (here SW throws). Four 6L6s
+* on ~497 V silicon. Eight triodes: the heaviest amp here.
+*
+*@amp name="Hot Rod 100" face=hotrod oversample=4
+*@control normalvol label="Normal" taper=audio default=0.5
+*@control preamp label="Preamp" taper=audio default=0.6
+*@control bass label="Bass" taper=audio default=0.5
+*@control middle label="Middle" taper=lin default=0.5
+*@control treble label="Treble" taper=lin default=0.5
+*@control normmaster label="Norm Master" taper=audio default=0.5
+*@control odmaster label="OD Master" taper=audio default=0.4
+*@control mode label="Mode" taper=lin default=1 positions="Clean,Overdrive"
+*@control presence label="Presence" taper=lin default=0.4
+*@control response label="Response" taper=lin default=0.5
+*@power tubes=6L6 nfb=0.35 presence=presence headroom=36 count=4 pi=12AX7 rectifier=silicon bplus=497 cap=200 idle=160 full=480 rsource=20 response=response
+*@input Vin
+*@output out
+
+* The guitar.
+Vin src 0 0
+Rpickup src in 6k
+
+* Preamp supplies (B2, B3, B4 on the schematic).
+Vb2 b2 0 DC 378
+Vb3 b3 0 DC 350
+Vb4 b4 0 DC 359
+
+* V1b: input stage.
+R2 in g1 68k
+R1 g1 0 1meg
+XV1B p1 g1 k1 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG1 g1 k1 DGRID
+R3 k1 0 1.8k
+C1 k1 0 1u
+R4 b4 p1 220k
+C2 p1 a 20n
+
+* Lead channel: 2n || 470k, Overdrive Preamp (1n across it), 470k to V2a.
+C3 a b 2n
+R5 a b 470k
+XPREAMP b pw 0 POT R=500k pos={preamp}
+C100 b pw 1n
+R8 pw g2 470k
+XV2A p2 g2 k2 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG2 g2 k2 DGRID
+R9 k2 0 1.8k
+C4 k2 0 1u
+R11 b3 p2 100k
+C6 p2 c6 20n
+R12 c6 c 470k
+R13 c 0 1meg
+* VR1 (clean mode) shunts the lead path.
+XVR1 c 0 SW pos={mode} k=0 n=2
+
+* V2b: the cold stage.
+XV2B p3 c k3 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG3 c k3 DGRID
+R14 k3 0 39k
+R19 b3 p3 100k
+C9 b3 p3 1n
+C10 p3 d 20n
+R20 d 0 2.2meg
+
+* Clean channel (fed from before the 2n || 470k): 470k, Normal Volume, V1a.
+R10 a n1 470k
+XNORMAL n1 nw 0 POT R=500k pos={normalvol}
+XV1A p4 nw k4 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG4 nw k4 DGRID
+R16 k4 0 2.2k
+R15 b4 p4 100k
+C7 p4 e 20n
+R17 e x 2.2meg
+C8 e x 120p
+R18 x 0 330k
+* VR2 (overdrive mode) brings the lead channel in.
+XVR2 d x SW pos={mode} k=1 n=2
+
+* V3b gain stage, DC into the V3a cathode follower.
+R21 x g5 220k
+XV3B p5 g5 k5 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG5 g5 k5 DGRID
+R23 k5 0 1.8k
+C11 k5 0 1u
+R22 b2 p5 220k
+XV3A b2 p5 k6 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG6 p5 k6 DGRID
+R25 k6 0 100k
+
+* The FX loop (send normalled to return) into the return stage.
+C12 k6 r 1u
+R26 r 0 1meg
+XV4B p7 r k7 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG7 r k7 DGRID
+R27 k7 0 2.2k
+R28 b2 p7 220k
+XV4A b2 p7 k8 TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG8 p7 k8 DGRID
+R29 k8 0 100k
+
+* The tone stack, from V4a's cathode.
+C14 k8 t1 470p
+XTREBLE t1 tw tb POT R=250k pos={treble}
+R30 k8 sl 47k
+C15 sl tb 20n
+C16 sl mt 20n
+XBASS tb tb mt POT R=1meg pos={bass}
+XMIDDLE mt mt 0 POT R=25k pos={middle}
+
+* The two Masters; VR3 (overdrive) / VR4 (clean) pick one.
+XODMV tw ow 0 POT R=1meg pos={odmaster}
+XNORMMV tw nmw 0 POT R=1meg pos={normmaster}
+XVR3 ow y SW pos={mode} k=1 n=2
+XVR4 nmw y SW pos={mode} k=0 n=2
+Ry y 0 10meg
+
+* Into the phase inverter's grid.
+C17 y out 20n
+Rpi out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+* A switch throw: closed (1 ohm) at position k of n, open (1 Gohm) otherwise.
+.subckt SW a b pos=0 k=0 n=2
+R1 a b {abs(pos*(n-1)-k) < 0.5 ? 1 : 1e9}
+.ends
+
+.param normalvol=0.1545
+.param preamp=0.2310
+.param bass=0.1545
+.param middle=0.5
+.param treble=0.5
+.param normmaster=0.1545
+.param odmaster=0.0990
+.param mode=1
+.param presence=0.4
+.param response=0.5
+.end

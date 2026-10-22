@@ -1,0 +1,24 @@
+* One 12AX7 common-cathode gain stage: the building block of every tube
+* preamp here. Used to check the engine's Koren triode against ngspice.
+*@pedal name="12AX7 stage" oversample=4
+*@input Vin
+*@output out
+
+Vin in 0 0
+Rg in g 68k
+XV1 p g k TRIODE MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+DG g k DGRID
+Rk k 0 1.5k
+Ck k 0 22u
+Rp bplus p 100k
+Vb bplus 0 DC 300
+Cout p out 22n
+Rl out 0 1meg
+
+.model DGRID D(IS=1n N=1.5 RS=1k)
+
+* Koren triode for ngspice (the engine has it built in).
+.subckt TRIODE p g k MU=100 EX=1.4 KG1=1060 KP=600 KVB=300
+B1 p k I = { pwr(max(V(p,k)/KP*ln(1+exp(KP*(1/MU+V(g,k)/sqrt(KVB+V(p,k)*V(p,k))))), 0), EX) / KG1 }
+.ends
+.end

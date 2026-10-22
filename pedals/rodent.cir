@@ -1,0 +1,90 @@
+* The classic black-box distortion: a non-inverting LM308 stage with up to ~67 dB of gain, hard
+* silicon clipping to ground after it, a passive low-pass Filter and an
+* output buffer. Values per ElectroSmash's analysis of the original: 22n/1M input,
+* 1k/1n RF filter, Distortion 100k (log) || 100p in the feedback loop over
+* two RC legs to ground (560R + 4.7u, 47R + 2.2u), 4.7u + 1k into a pair of
+* 1N914s, Filter 1.5k + 100k (lin) into 3.3n, Volume 100k (log).
+* The LM308 is a single-pole macromodel with ~1 MHz gain-bandwidth (its
+* 30 pF compensation): at high Distortion the gain eats the bandwidth, the
+* the original's darkening. Its slew-rate limit isn't modelled. The JFET output
+* buffer is an ideal unity follower.
+*
+*@pedal name="Rodent" oversample=4
+*@control distortion label="Distortion" taper=audio default=0.5
+*@control filter label="Filter" taper=lin default=0.4
+*@control volume label="Volume" taper=audio default=0.5
+*@input Vin
+*@output out
+
+* The guitar: pickup DC resistance in series with the signal.
+Vin src 0 0
+Rpickup src in 6k
+
+* Supply and the 4.5 V reference.
+Vcc vcc 0 DC 9
+RA vcc vref 100k
+RB vref 0 100k
+CR vref 0 47u
+
+* Input: coupling and bias, then an RF filter at the op-amp's input.
+C1 in a 22n
+R1 a vref 1meg
+R2 a p1 1k
+C2 p1 0 1n
+
+* Gain stage: 1 + Distortion / (the two RC legs), Distortion || 100p.
+XU1 p1 m1 o1 vcc 0 LM308
+XDIST m1 m1 o1 POT R=100k pos={distortion}
+C3 m1 o1 100p
+R3 m1 l1 560
+C4 l1 0 4.7u
+R4 m1 l2 47
+C5 l2 0 2.2u
+
+* Hard clipping to ground.
+C6 o1 k 4.7u
+R5 k cl 1k
+D1 cl 0 D1N914
+D2 0 cl D1N914
+
+* Filter: more knob, more resistance, darker.
+R6 cl f1 1.5k
+XFILTER f1 f1 f2 POT R=100k pos={filter}
+C7 f2 0 3.3n
+
+* Output buffer (the JFET source follower, as an ideal follower).
+C8 f2 g 22n
+R7 g vref 1meg
+E1 bo 0 g 0 1
+C9 bo vo 1u
+XVOLUME vo out 0 POT R=100k pos={volume}
+* Amp input impedance.
+Ramp out 0 1meg
+
+.model D1N914 D(IS=2.52n N=1.752 RS=0.568)
+.model DCLAMP D(IS=1e-14 N=1)
+
+* LM308 macromodel: 100 dB open-loop gain, dominant pole at 10 Hz (1k x
+* 15.9u: 1 MHz gain-bandwidth), 75R output, outputs clamp ~1.5 V from the
+* rails.
+.subckt LM308 inp inn out vcc vee
+E1 g1 0 inp inn 100k
+R1 g1 g2 1k
+C1 g2 0 15.9u
+E2 o1 0 g2 0 1
+Rout o1 out 75
+Vhi rhi vcc DC -1.5
+Vlo rlo vee DC 1.5
+Dhi out rhi DCLAMP
+Dlo rlo out DCLAMP
+.ends
+
+.subckt POT a w b R=10k pos=0.5
+Ra a w {R*(1-pos)+1}
+Rb w b {R*pos+1}
+.ends
+
+.param distortion=0.1545
+.param filter=0.4
+.param volume=0.1545
+.end
