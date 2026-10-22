@@ -6,6 +6,7 @@
 // automated access.
 
 import type * as AlphaTab from '@coderline/alphatab';
+import { track } from './analytics.ts';
 import { migrated } from './migrate.ts';
 
 interface TabState {
@@ -202,6 +203,7 @@ export function buildTabs(host: TabsHost): { el: HTMLElement; toggle(): boolean;
   async function load(bytes: ArrayBuffer): Promise<void> {
     const a = await ensureApi();
     a.load(new Uint8Array(bytes));
+    track('tab_loaded', { format: state.file?.name.split('.').pop()?.toLowerCase() ?? 'unknown' });
   }
 
   async function refreshList(select?: string): Promise<void> {

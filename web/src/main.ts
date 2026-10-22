@@ -1,5 +1,6 @@
 import './style.css';
 import './migrate.ts'; // first: moves data saved by earlier versions
+import { kindOf, track } from './analytics.ts';
 import { Param, numPedalSlots } from './engine.ts';
 import { Rig, type Meters } from './rig.ts';
 import { Knob, type KnobSpec } from './ui/knob.ts';
@@ -365,17 +366,26 @@ async function powerOn(): Promise<void> {
     tunerBtn.title = 'Tuner';
     $<HTMLButtonElement>('#send-capture').disabled = !import.meta.env.DEV;
     setStatus(`Playing · ${rig.inputLabel() || 'default input'} · ${rig.ctx.sampleRate / 1000} kHz`, 'on');
+    poweredAt = performance.now();
+    track('power_on', {
+      sample_rate: rig.ctx.sampleRate,
+      latency_ms: Math.round((rig.ctx.baseLatency + (rig.ctx.outputLatency || 0)) * 1000),
+      buffer: settings.buffer, amp: settings.amp, preset: settings.preset ?? null,
+    });
   } catch (err) {
     await rig?.stop();
     rig = null;
     setStatus(describeError(err), 'error');
+    track('power_on_failed', { error: err instanceof DOMException || err instanceof Error ? err.name : 'unknown' });
   } finally {
     powerBtn.disabled = false;
     powerBtn.classList.remove('starting');
   }
 }
 
+let poweredAt = 0;
 async function powerOff(): Promise<void> {
+  if (rig) track('power_off', { minutes_on: Math.round((performance.now() - poweredAt) / 6000) / 10 });
   tuner.close();
   tunerBtn.disabled = true;
   tunerBtn.title = 'Tuner (power on first)';
@@ -452,6 +462,7 @@ cabSel.addEventListener('change', async () => {
   settings.cab = cabSel.value;
   saveSettings();
   logEvent('cab', cabSel.value);
+  track('cab_changed', { cab: cabSel.value.startsWith('builtin:') ? cabSel.value : kindOf(cabSel.value) });
   await applyCab();
 });
 
@@ -591,6 +602,7 @@ ampSel.addEventListener('change', async () => {
   cabSel.value = settings.cab;
   saveSettings();
   logEvent('amp', ampSel.value);
+  track('amp_changed', { amp: ampSel.value });
   renderAmp();
   await applyAmp();
   await applyCab();
@@ -636,6 +648,7 @@ function looperCommand(cmd: number): void {
   }
   rig.looperCommand(cmd);
   logEvent('looper', ['press', 'stop', 'undo', 'clear'][cmd]);
+  if (cmd === 0 && (!looperStatus || looperStatus.state === 'empty')) track('looper_recorded');
 }
 const looperView = buildLooper({
   enabled: () => !!settings.looperOn,
@@ -815,6 +828,7 @@ function renderStomp(slot: number): HTMLElement {
     if (sel.value === 'none' && settings.circuitSlot === slot) settings.circuitSlot = null;
     saveSettings();
     logEvent(`pedal${slot}.type`, sel.value);
+    track('pedal_changed', { slot, pedal: sel.value.startsWith('my-') ? 'my-pedal' : sel.value });
     renderBoard();
     await applySlot(slot);
   });
@@ -1052,6 +1066,7 @@ function forkPedal(slot: number): void {
   settings.circuitSlot = slot;
   saveSettings();
   logEvent(`pedal${slot}.fork`, p.id);
+  track('pedal_forked', { pedal: p.id.startsWith('my-') ? 'my-pedal' : p.id });
   renderBoard();
   void applySlot(slot);
 }
@@ -1168,6 +1183,7 @@ tabsBtn.setAttribute('aria-pressed', String(tabs.isOpen()));
 tabsBtn.addEventListener('click', () => {
   tabsBtn.setAttribute('aria-pressed', String(tabs.toggle()));
   logEvent('tabs.open', tabs.isOpen());
+  if (tabs.isOpen()) track('tabs_opened');
   layoutPractice();
 });
 
@@ -1186,7 +1202,7 @@ const tuner = new Tuner({
 $('#tuner-slot').append(tuner.el);
 tunerBtn.addEventListener('click', () => {
   if (tuner.isOpen) tuner.close();
-  else tuner.open();
+  else { tuner.open(); track('tuner_opened'); }
   tunerBtn.setAttribute('aria-pressed', String(tuner.isOpen));
 });
 tuner.el.addEventListener('close', () => {
@@ -1321,6 +1337,7 @@ presetSel.addEventListener('change', async () => {
   const p = presetById(settings.preset);
   renderPresets();
   if (p) await applyPreset(p);
+  if (p) track('preset_selected', { preset: settings.preset!.startsWith('user:') ? 'user' : p.name, group: p.group ?? null });
   showPresetEdited();
 });
 
@@ -1340,6 +1357,7 @@ function savePreset(name: string): void {
     settings.preset = `user:${id}`;
   }
   ab = null;
+  track('preset_saved', { amp: settings.amp });
   saveUserPresets(userPresets);
   saveSettings();
   renderPresets();
@@ -1695,7 +1713,7 @@ function openStage(open: boolean): void {
   stageEl.hidden = !open;
   document.body.classList.toggle('staging', open);
   $('#stage-btn').setAttribute('aria-pressed', String(open));
-  if (open) fullStage.refresh();
+  if (open) { fullStage.refresh(); track('stage_opened'); }
 }
 $('#stage-btn').addEventListener('click', () => openStage(Boolean(stageEl.hidden)));
 
@@ -1762,8 +1780,8 @@ function showWelcome(): void {
       <button class="link welcome-ok">Got it</button>
     </div>`;
   const done = () => { settings.welcomed = true; saveSettings(); card.remove(); };
-  card.querySelector('.welcome-ok')!.addEventListener('click', done);
-  card.querySelector('.welcome-devices')!.addEventListener('click', () => { done(); openDrawer(true); });
+  card.querySelector('.welcome-ok')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'ok' }); });
+  card.querySelector('.welcome-devices')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'devices' }); openDrawer(true); });
   $('main').prepend(card);
 }
 
@@ -1772,6 +1790,7 @@ const unsupported = !('AudioWorkletNode' in window) || !navigator.mediaDevices?.
 if (unsupported) {
   setStatus('This browser can\'t run the rig (it needs AudioWorklet, WebAssembly and microphone access). Try Chrome or Edge.', 'error');
   powerBtn.disabled = true;
+  track('unsupported_browser');
 } else if (firstVisit && !settings.welcomed) showWelcome();
 
 // Last, once everything above exists: power back up if it was on.

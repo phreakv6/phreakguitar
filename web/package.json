@@ -16,6 +16,7 @@
     "vite": "^8.3.4"
   },
   "dependencies": {
-    "@coderline/alphatab": "^1.8.4"
+    "@coderline/alphatab": "^1.8.4",
+    "posthog-js": "^1.438.14"
   }
 }

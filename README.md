@@ -35,7 +35,10 @@ netlists a SPICE simulator runs, checked against ngspice.
 - Chrome or Edge on a desktop is best (they let you pick the output
   device). Safari and Firefox mostly work.
 - Your audio never leaves your computer: everything runs in the browser, and
-  presets, IRs and tabs are stored in it.
+  presets, IRs and tabs are stored in it. The public site counts anonymous
+  usage (page views, power on/off, which amps, pedals and presets get picked)
+  with PostHog: no cookies, no recordings, no file names. Add `?notrack` to
+  the address to opt out; builds you run yourself send nothing.
 
 ## Running it locally
 

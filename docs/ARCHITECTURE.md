@@ -107,8 +107,10 @@ blocks an amp file can declare.
 - Loading a pedal or amp builds and biases its circuit on the audio thread
   (milliseconds); replacing a pedal crossfades from the old one over 20 ms.
 - Settings, presets, your pedals (as netlists) and tab state live in
-  `localStorage`; loaded IRs and tab files in IndexedDB. Nothing leaves the
-  browser.
+  `localStorage`; loaded IRs and tab files in IndexedDB. None of it leaves
+  the browser.
+- Analytics (`web/src/analytics.ts`): on the public site only, anonymous
+  PostHog events for page views and the main actions; never audio or files.
 - The pedal designer edits a pedal's netlist directly (parts list, models,
   added parts drawn on the schematic) and re-solves it as you play.
 - Tabs: alphaTab renders and plays Guitar Pro / MusicXML files you open.
