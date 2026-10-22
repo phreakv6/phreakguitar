@@ -160,46 +160,45 @@ input[type='text']:focus { outline: none; border-color: var(--accent); }
   box-shadow: 0 0 14px 3px rgba(240, 70, 40, 0.55);
 }
 
-/* Power: a red pilot light while off, green while on, amber while it
-   powers up; the button's edge and halo follow the light. */
+/* Power: the button is the pilot light. Red and haloed while off (the
+   first thing to press), green while on, amber while it powers up. */
 .power {
-  --led: #e0402a;
-  --led-hi: #ffb3a0;
-  --led-glow: rgba(240, 70, 40, 0.45);
-  display: inline-flex; align-items: center; gap: 9px;
-  background: #1d150e;
-  color: var(--plate-text);
-  border-color: color-mix(in srgb, var(--led) 55%, #5a4430);
-  box-shadow: 0 0 10px -2px var(--led-glow), inset 0 0 8px -4px var(--led-glow);
+  --led: #d23a24;
+  --led-hi: #f0624a;
+  --led-lo: #9a2414;
+  --led-glow: rgba(240, 70, 40, 0.55);
+  min-width: 76px;
+  background: linear-gradient(180deg, var(--led-hi), var(--led) 55%, var(--led-lo));
+  color: #fff;
+  border-color: var(--led-hi);
+  box-shadow: 0 0 16px 0 var(--led-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
   font: 600 14px Oswald, sans-serif;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 10px 18px 10px 14px;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  padding: 10px 18px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-.power::before {
-  content: '';
-  width: 10px; height: 10px; flex: none;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--led-hi), var(--led) 50%, color-mix(in srgb, var(--led) 45%, #000));
-  box-shadow: 0 0 8px 2px var(--led-glow);
-  transition: background 0.3s, box-shadow 0.3s;
+.power:not(:disabled):hover {
+  border-color: #fff8;
+  box-shadow: 0 0 24px 2px var(--led-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
-.power:hover:not(:disabled) { border-color: var(--led); box-shadow: 0 0 16px 0 var(--led-glow), inset 0 0 10px -4px var(--led-glow); }
 .powered .power {
-  --led: #3fcf5a;
-  --led-hi: #d4ffd8;
+  --led: #2f9e44;
+  --led-hi: #4cc464;
+  --led-lo: #1d6b2c;
   --led-glow: rgba(70, 220, 100, 0.5);
 }
-.power:disabled {
-  --led: #e2a63a;
-  --led-hi: #ffe7b0;
-  --led-glow: rgba(240, 170, 50, 0.45);
+.power.starting {
+  --led: #c98a1f;
+  --led-hi: #e8ad45;
+  --led-lo: #8a5c10;
+  --led-glow: rgba(240, 170, 50, 0.5);
   opacity: 1;
+  animation: power-pulse 0.8s ease-in-out infinite alternate;
 }
-.power:disabled::before { animation: power-blink 0.8s ease-in-out infinite alternate; }
-@keyframes power-blink { from { opacity: 0.35; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .power:disabled::before { animation: none; } }
+@keyframes power-pulse { from { box-shadow: 0 0 6px 0 var(--led-glow); } to { box-shadow: 0 0 22px 2px var(--led-glow); } }
+@media (prefers-reduced-motion: reduce) { .power.starting { animation: none; } }
 
 /* --- tuner ---------------------------------------------------------------- */
 

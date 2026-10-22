@@ -315,6 +315,7 @@ function setStatus(text: string, kind: 'idle' | 'on' | 'error' = 'idle'): void {
 
 async function powerOn(): Promise<void> {
   powerBtn.disabled = true;
+  powerBtn.classList.add('starting');
   setStatus('Starting…');
   try {
     rig = await Rig.start({
@@ -357,7 +358,8 @@ async function powerOn(): Promise<void> {
     await listDevices(); // labels only appear after mic permission
     refreshChannelOptions();
     document.body.classList.add('powered');
-    powerBtn.textContent = 'Standby';
+    powerBtn.textContent = 'On';
+    powerBtn.title = 'Power: on (click to switch off)';
     measureBtn.disabled = false;
     tunerBtn.disabled = false;
     tunerBtn.title = 'Tuner';
@@ -369,6 +371,7 @@ async function powerOn(): Promise<void> {
     setStatus(describeError(err), 'error');
   } finally {
     powerBtn.disabled = false;
+    powerBtn.classList.remove('starting');
   }
 }
 
@@ -379,7 +382,8 @@ async function powerOff(): Promise<void> {
   await rig?.stop();
   rig = null;
   document.body.classList.remove('powered');
-  powerBtn.textContent = 'Power';
+  powerBtn.textContent = 'Off';
+  powerBtn.title = 'Power: off (click to switch on)';
   measureBtn.disabled = true;
   $<HTMLButtonElement>('#send-capture').disabled = true;
   for (const k of Object.keys(held)) delete held[k];
@@ -1750,7 +1754,7 @@ function showWelcome(): void {
     <ul>
       <li><b>Use an audio interface, and headphones or speakers.</b> A laptop's built-in microphone
         with its speakers will howl with feedback.</li>
-      <li>Pick your interface in <b>⚙ Settings</b> (input, channel, output), then press <b>Power</b>.</li>
+      <li>Pick your interface in <b>⚙ Settings</b> (input, channel, output), then press the red <b>Off</b> button to switch on.</li>
       <li>Master starts at −12 dB. Turn it up slowly. Your audio stays on this computer.</li>
     </ul>
     <div class="welcome-actions">
