@@ -8,7 +8,7 @@ const projectKey = 'phc_yqi4FYzwPr44C260DHnrRMuNmRzBNtTplqv1R5leQ83'; // public,
 const publicHosts = ['phreakguitar.com', 'www.phreakguitar.com', 'phreakguitar.pages.dev'];
 
 type Props = Record<string, string | number | boolean | null | undefined>;
-type Client = { capture(event: string, props?: Props): void };
+type Client = { capture(event: string, props?: Props, options?: { transport?: 'sendBeacon' }): void };
 
 const enabled = publicHosts.includes(location.hostname)
   && !new URLSearchParams(location.search).has('notrack');
@@ -33,9 +33,10 @@ if (enabled) {
   }).catch(() => { /* blocked by an extension: fine */ });
 }
 
-export function track(event: string, props?: Props): void {
+/** `closing`: sent as the tab goes away, by a beacon that outlives it. */
+export function track(event: string, props?: Props, closing = false): void {
   if (!enabled) return;
-  if (client) client.capture(event, props);
+  if (client) client.capture(event, props, closing ? { transport: 'sendBeacon' } : undefined);
   else if (queue.length < 100) queue.push([event, props]);
 }
 

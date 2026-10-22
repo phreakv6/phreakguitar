@@ -20,7 +20,11 @@
           <button id="tuner-btn" class="tuner-btn" disabled title="Tuner (power on first)">Tuner</button>
           <button id="stage-btn" class="tuner-btn" title="Stage view: big presets and footswitches (S)">Stage</button>
           <button id="settings-btn" class="tuner-btn icon" aria-controls="settings" aria-expanded="false" title="Settings: audio devices, levels, latency">⚙</button>
-          <button id="power" class="power" title="Power: off (click to switch on)">Off</button>
+          <button id="power" class="power" aria-pressed="false" aria-label="Power: off" title="Power: off (click to switch on)">
+            <span class="power-jewel" aria-hidden="true"></span>
+            <span class="power-toggle" aria-hidden="true"><span class="power-bat"></span></span>
+            <span class="power-legend" aria-hidden="true"><b class="on">On</b><b class="off">Off</b></span>
+          </button>
         </div>
       </div>
       <div class="topbar-row rigbar">

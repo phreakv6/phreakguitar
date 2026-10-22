@@ -314,7 +314,62 @@ function setStatus(text: string, kind: 'idle' | 'on' | 'error' = 'idle'): void {
   statusEl.dataset.kind = kind;
 }
 
+// The power switch shows its state by lever, lamp and legend (CSS, from
+// body.powered); this keeps what it says to screen readers in step.
+function showPower(on: boolean): void {
+  powerBtn.setAttribute('aria-pressed', String(on));
+  powerBtn.setAttribute('aria-label', on ? 'Power: on' : 'Power: off');
+  powerBtn.title = on ? 'Power: on (click to switch off)' : 'Power: off (click to switch on)';
+}
+
+// Phones and tablets: the rig works there with an interface (and
+// headphones), but most visitors on one are only looking around.
+const onPhone = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 820;
+
+// Before the browser's own microphone prompt, say why it's coming: half of
+// first power-ups used to stop at that prompt. Skipped once it's allowed.
+async function micGranted(): Promise<boolean> {
+  try {
+    return (await navigator.permissions.query({ name: 'microphone' as PermissionName })).state === 'granted';
+  } catch {
+    return false; // browsers that can't say: explain anyway
+  }
+}
+function micDialog(kind: 'ask' | 'blocked'): Promise<boolean> {
+  const d = document.createElement('dialog');
+  d.className = 'mic-dialog';
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const howToAllow = ios
+    ? 'tap <b>aA</b> in the address bar → <b>Website Settings</b> → <b>Microphone</b> → <b>Allow</b>, then reload'
+    : onPhone
+      ? 'tap the icon at the left of the address bar → <b>Permissions</b> → <b>Microphone</b> → <b>Allow</b>'
+      : 'click the icon at the left of the address bar and allow the <b>Microphone</b>';
+  d.innerHTML = kind === 'ask'
+    ? `<h2>Plug in, then allow the microphone</h2>
+       <p>Your browser will now ask to use the <b>microphone</b>. Choose <b>Allow</b>: that's how your guitar
+         gets in, through your audio interface's input.</p>
+       <p class="mic-small">Everything is processed right here in this tab. Nothing is recorded, uploaded or sent anywhere.</p>
+       <div class="welcome-actions"><button class="go">Continue</button><button class="link no">Not now</button></div>`
+    : `<h2>The microphone is blocked</h2>
+       <p>The rig can't hear your guitar without it. To allow it, ${howToAllow}, and switch on again.</p>
+       <div class="welcome-actions"><button class="go">OK</button></div>`;
+  document.body.append(d);
+  return new Promise((resolve) => {
+    const done = (ok: boolean) => { d.close(); d.remove(); resolve(ok); };
+    d.querySelector('.go')!.addEventListener('click', () => done(true));
+    d.querySelector('.no')?.addEventListener('click', () => done(false));
+    d.addEventListener('cancel', (e) => { e.preventDefault(); done(false); });
+    d.showModal();
+  });
+}
+
+let stillPlaying = 0;
 async function powerOn(): Promise<void> {
+  if (!(await micGranted())) {
+    const go = await micDialog('ask');
+    track('mic_explained', { choice: go ? 'continue' : 'not now' });
+    if (!go) { settings.powered = false; saveSettings(); return; }
+  }
   powerBtn.disabled = true;
   powerBtn.classList.add('starting');
   setStatus('Starting…');
@@ -359,14 +414,17 @@ async function powerOn(): Promise<void> {
     await listDevices(); // labels only appear after mic permission
     refreshChannelOptions();
     document.body.classList.add('powered');
-    powerBtn.textContent = 'On';
-    powerBtn.title = 'Power: on (click to switch off)';
+    showPower(true);
     measureBtn.disabled = false;
     tunerBtn.disabled = false;
     tunerBtn.title = 'Tuner';
     $<HTMLButtonElement>('#send-capture').disabled = !import.meta.env.DEV;
     setStatus(`Playing · ${rig.inputLabel() || 'default input'} · ${rig.ctx.sampleRate / 1000} kHz`, 'on');
     poweredAt = performance.now();
+    // Most people close the tab rather than switch off: a ping now and
+    // then (and one as the tab closes) says how long they played.
+    clearInterval(stillPlaying);
+    stillPlaying = window.setInterval(() => track('still_playing', { minutes_on: minutesOn() }), 5 * 60_000);
     track('power_on', {
       sample_rate: rig.ctx.sampleRate,
       latency_ms: Math.round((rig.ctx.baseLatency + (rig.ctx.outputLatency || 0)) * 1000),
@@ -377,6 +435,10 @@ async function powerOn(): Promise<void> {
     rig = null;
     setStatus(describeError(err), 'error');
     track('power_on_failed', { error: err instanceof DOMException || err instanceof Error ? err.name : 'unknown' });
+    settings.powered = false;
+    saveSettings();
+    // The status line is hidden on phones: say this one out loud.
+    if (err instanceof DOMException && err.name === 'NotAllowedError') void micDialog('blocked');
   } finally {
     powerBtn.disabled = false;
     powerBtn.classList.remove('starting');
@@ -384,16 +446,18 @@ async function powerOn(): Promise<void> {
 }
 
 let poweredAt = 0;
+const minutesOn = () => Math.round((performance.now() - poweredAt) / 6000) / 10;
+addEventListener('pagehide', () => { if (rig) track('power_off', { minutes_on: minutesOn(), how: 'closed' }, true); });
 async function powerOff(): Promise<void> {
-  if (rig) track('power_off', { minutes_on: Math.round((performance.now() - poweredAt) / 6000) / 10 });
+  if (rig) track('power_off', { minutes_on: minutesOn(), how: 'switch' });
+  clearInterval(stillPlaying);
   tuner.close();
   tunerBtn.disabled = true;
   tunerBtn.title = 'Tuner (power on first)';
   await rig?.stop();
   rig = null;
   document.body.classList.remove('powered');
-  powerBtn.textContent = 'Off';
-  powerBtn.title = 'Power: off (click to switch on)';
+  showPower(false);
   measureBtn.disabled = true;
   $<HTMLButtonElement>('#send-capture').disabled = true;
   for (const k of Object.keys(held)) delete held[k];
@@ -408,7 +472,7 @@ async function powerOff(): Promise<void> {
 
 function describeError(err: unknown): string {
   if (err instanceof DOMException && err.name === 'NotAllowedError')
-    return 'Microphone permission denied: allow it in the address bar to play.';
+    return 'Microphone blocked: allow it in the address bar, then switch on again.';
   if (err instanceof DOMException && err.name === 'OverconstrainedError')
     return 'That input device is unavailable. Pick another one.';
   return err instanceof Error ? err.message : String(err);
@@ -1772,13 +1836,16 @@ function showWelcome(): void {
     <ul>
       <li><b>Use an audio interface, and headphones or speakers.</b> A laptop's built-in microphone
         with its speakers will howl with feedback.</li>
-      <li>Pick your interface in <b>⚙ Settings</b> (input, channel, output), then press the red <b>Off</b> button to switch on.</li>
+      <li>Pick your interface in <b>⚙ Settings</b> (input, channel, output), then flip the <b>power switch</b> at the top right.</li>
       <li>Master starts at −12 dB. Turn it up slowly. Your audio stays on this computer.</li>
     </ul>
     <div class="welcome-actions">
       <button class="welcome-devices">Choose my interface</button>
       <button class="link welcome-ok">Got it</button>
     </div>`;
+  if (onPhone) card.querySelector('ul')!.insertAdjacentHTML('afterbegin',
+    `<li class="welcome-phone"><b>On a phone?</b> Have a look around the amps, pedals and presets. To play, you'll want a
+      computer (or a phone with an audio interface that plugs into it) and headphones.</li>`);
   const done = () => { settings.welcomed = true; saveSettings(); card.remove(); };
   card.querySelector('.welcome-ok')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'ok' }); });
   card.querySelector('.welcome-devices')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'devices' }); openDrawer(true); });
