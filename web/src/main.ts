@@ -301,7 +301,32 @@ async function listDevices(): Promise<void> {
   fill(inputSel, 'audioinput', settings.inputDeviceId);
   fill(outputSel, 'audiooutput', settings.outputDeviceId);
   outputSel.disabled = !('setSinkId' in AudioContext.prototype);
+  deviceAccess.hidden = devicesListed(devices);
 }
+
+// Until the microphone is allowed, browsers hide which devices there are
+// (no names, often just one stand-in), so picking an interface comes after
+// allowing it: ask for it briefly, then list them.
+const deviceAccess = $('#device-access');
+const devicesListed = (devices: MediaDeviceInfo[]) => devices.some((d) => d.kind === 'audioinput' && d.label);
+async function showDevices(): Promise<void> {
+  if (!(await micGranted())) {
+    const go = await micDialog('ask');
+    track('mic_explained', { choice: go ? 'continue' : 'not now', from: 'devices' });
+    if (!go) return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach((t) => t.stop());
+  } catch (err) {
+    track('devices_blocked', { error: err instanceof Error ? err.name : 'unknown' });
+    if (err instanceof DOMException && err.name === 'NotAllowedError') void micDialog('blocked');
+    return;
+  }
+  await listDevices();
+  track('devices_shown');
+}
+$('#device-allow').addEventListener('click', () => void showDevices());
 
 function refreshChannelOptions(): void {
   const count = rig?.inputChannelCount() ?? 2;
@@ -351,7 +376,7 @@ function micDialog(kind: 'ask' | 'blocked'): Promise<boolean> {
        <p class="mic-small">Everything is processed right here in this tab. Nothing is recorded, uploaded or sent anywhere.</p>
        <div class="welcome-actions"><button class="go">Continue</button><button class="link no">Not now</button></div>`
     : `<h2>The microphone is blocked</h2>
-       <p>The rig can't hear your guitar without it. To allow it, ${howToAllow}, and switch on again.</p>
+       <p>The rig can't hear your guitar without it. To allow it, ${howToAllow}, and try again.</p>
        <div class="welcome-actions"><button class="go">OK</button></div>`;
   document.body.append(d);
   return new Promise((resolve) => {
@@ -1836,7 +1861,8 @@ function showWelcome(): void {
     <ul>
       <li><b>Use an audio interface, and headphones or speakers.</b> A laptop's built-in microphone
         with its speakers will howl with feedback.</li>
-      <li>Pick your interface in <b>⚙ Settings</b> (input, channel, output), then flip the <b>power switch</b> at the top right.</li>
+      <li>Press <b>Choose my interface</b> below (it's also in <b>⚙ Settings</b>): allow the microphone so your browser
+        can list your interface, pick its input, channel and output, then flip the <b>power switch</b> at the top right.</li>
       <li>Master starts at −12 dB. Turn it up slowly. Your audio stays on this computer.</li>
     </ul>
     <div class="welcome-actions">
@@ -1848,7 +1874,12 @@ function showWelcome(): void {
       computer (or a phone with an audio interface that plugs into it) and headphones.</li>`);
   const done = () => { settings.welcomed = true; saveSettings(); card.remove(); };
   card.querySelector('.welcome-ok')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'ok' }); });
-  card.querySelector('.welcome-devices')!.addEventListener('click', () => { done(); track('welcome_done', { choice: 'devices' }); openDrawer(true); });
+  card.querySelector('.welcome-devices')!.addEventListener('click', () => {
+    done();
+    track('welcome_done', { choice: 'devices' });
+    openDrawer(true);
+    if (!deviceAccess.hidden) void showDevices();
+  });
   $('main').prepend(card);
 }
 
