@@ -12,6 +12,7 @@ import { buildLooper, looperLabel } from './looperui.ts';
 import type { LooperStatus } from './engine.ts';
 import { amps, type AmpInfo } from './amps.ts';
 import { buildFace } from './faces.ts';
+import { rename, renameMode } from './names.ts';
 import { buildTubes, type TubeView } from './tubes.ts';
 import { Tuner } from './tuner.ts';
 import { forgetIR, loadSavedIR, saveIR, savedIRNames } from './irstore.ts';
@@ -613,6 +614,7 @@ const ampKnobValue = (a: AmpInfo, i: number) =>
 
 function renderAmp(): void {
   const a = currentAmp();
+  $('#amp-based').textContent = a.basedOn ? `Based on the ${a.basedOn}` : '';
   let faceKnobs: HTMLElement[];
   if (!a.netlist) {
     // The built-in tweed stages (no circuit file): their knobs.
@@ -683,6 +685,14 @@ async function applyAmp(): Promise<void> {
   const error = await rig.loadAmp(a.netlist, a.controls.map((_, i) => ampKnobValue(a, i)));
   ampStatus.textContent = error ? `Couldn't load: ${error}` : '';
 }
+
+// Your own names (?rename): kept in this browser only, see names.ts.
+$('#amp-rename').hidden = !renameMode;
+$('#amp-rename').addEventListener('click', () => rename(currentAmp().id, currentAmp().name));
+$('#pedal-rename').addEventListener('click', () => {
+  const p = settings.circuitSlot != null ? pedalInfo(settings.circuitSlot) : undefined;
+  if (p) rename(p.id, p.name);
+});
 
 ampSel.addEventListener('change', async () => {
   settings.amp = ampSel.value;
@@ -894,7 +904,7 @@ function renderStomp(slot: number): HTMLElement {
   box.innerHTML = `
     <div class="stomp-head">
       <button class="slot-move" data-dir="-1" aria-label="Move pedal ${slot + 1} earlier" title="Move earlier" ${slot === 0 || !p ? 'disabled' : ''}>◀</button>
-      <label class="stomp-name" title="${p ? `${p.name.replace(/"/g, '')}: change pedal` : 'Add a pedal'}"><span>${p ? p.name.replace(/[&<>"]/g, '') : '+'}</span>${p ? '<i aria-hidden="true">▾</i>' : ''}
+      <label class="stomp-name" title="${p ? `${p.name.replace(/"/g, '')}${p.basedOn ? ` (based on the ${p.basedOn.replace(/"/g, '')})` : ''}: change pedal` : 'Add a pedal'}"><span>${p ? p.name.replace(/[&<>"]/g, '') : '+'}</span>${p ? '<i aria-hidden="true">▾</i>' : ''}
         <select aria-label="Pedal ${slot + 1}"></select></label>
       <button class="slot-move" data-dir="1" aria-label="Move pedal ${slot + 1} later" title="Move later" ${slot === numPedalSlots - 1 || !p ? 'disabled' : ''}>▶</button>
     </div>
@@ -1011,6 +1021,9 @@ function renderCircuit(): void {
     return;
   }
   $('#circuit-title').textContent = `${p.name} (pedal ${slot! + 1})`;
+  $('#circuit-based').textContent = p.basedOn ? `Based on the ${p.basedOn}` : '';
+  $('#circuit-based').hidden = !p.basedOn;
+  $('#pedal-rename').hidden = !renameMode || p.id.startsWith('my-');
   if (probe && (probe.slot !== slot || probe.pedal !== p.id)) stopProbe();
   circuitSvg = hasSchematic(p) ? renderSchematic(p, { onNode: (n, at) => onWire(slot!, n, at) }) : null;
   $('#circuit-view').replaceChildren(...(circuitSvg ? [circuitSvg] : []));

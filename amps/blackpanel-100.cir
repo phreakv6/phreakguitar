@@ -6,7 +6,7 @@
 * plate (no cathode follower): Treble 250k, Bass 250k, Middle 10k, 100k
 * slope, 250p/0.1u/0.047u; Volume; second gain stage.
 *
-*@amp name="Black Panel 100" face=blackpanel oversample=4
+*@amp name="Black Panel 100" based="Fender Twin Reverb (AB763)" face=blackpanel oversample=4
 *@control volume label="Volume" taper=audio default=0.4
 *@control treble label="Treble" taper=audio default=0.6
 *@control middle label="Middle" taper=lin default=0.5

@@ -6,7 +6,7 @@
 * stage DC-coupled into the cathode follower, the British tone stack, and
 * the Master volume ahead of the phase inverter.
 *
-*@amp name="Brit 800" face=brit800 oversample=4
+*@amp name="Brit 800" based="Marshall JCM800 2203" face=brit800 oversample=4
 *@control presence label="Presence" taper=lin default=0.5
 *@control bass label="Bass" taper=audio default=0.5
 *@control middle label="Middle" taper=lin default=0.6

@@ -14,7 +14,7 @@
 * VR1 + VR4 on in Clean, VR2 + VR3 in Overdrive (here SW throws). Four 6L6s
 * on ~497 V silicon. Eight triodes: the heaviest amp here.
 *
-*@amp name="Hot Rod 100" face=hotrod oversample=4
+*@amp name="Hot Rod 100" based="Soldano SLO-100" face=hotrod oversample=4
 *@control normalvol label="Normal" taper=audio default=0.5
 *@control preamp label="Preamp" taper=audio default=0.6
 *@control bass label="Bass" taper=audio default=0.5

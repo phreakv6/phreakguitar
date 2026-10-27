@@ -12,7 +12,7 @@
 * With overdrive in, the clean Volume becomes a gain control too: the
 * cascade the amp is famous for.
 *
-*@amp name="Boutique ODS" face=boutique oversample=4
+*@amp name="Boutique ODS" based="Dumble Overdrive Special" face=boutique oversample=4
 *@control volume label="Volume" taper=audio default=0.45
 *@control treble label="Treble" taper=lin default=0.5
 *@control middle label="Middle" taper=lin default=0.5

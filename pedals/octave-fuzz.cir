@@ -20,7 +20,7 @@
 * the original's crossover-distorted non-octave sound), Fuzz without the
 * diode (bypassed by a jumper).
 *
-*@pedal name="Octave Fuzz" oversample=4
+*@pedal name="Octave Fuzz" based="Tycobrahe Octavia" oversample=4
 *@control drive label="Drive" taper=revaudio default=0.7
 *@control volume label="Volume" taper=audio default=0.6
 *@control octave label="Octave" taper=lin default=0 positions="Octave,Fuzz,Clean fuzz"

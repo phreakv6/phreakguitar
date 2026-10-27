@@ -6,7 +6,7 @@
 * base divider, 10k collector, 3.9k emitter with 47u bypass, 10n out,
 * Boost 10k at the output.
 *
-*@pedal name="Treble Booster" oversample=4
+*@pedal name="Treble Booster" based="Dallas Rangemaster" oversample=4
 *@control boost label="Boost" taper=audio default=0.7
 *@input Vin
 *@output out

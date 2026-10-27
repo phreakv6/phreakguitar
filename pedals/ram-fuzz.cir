@@ -5,7 +5,7 @@
 * Placement of the last 100k/10k (output-stage base divider) is inferred
 * from the parts list: every other part is accounted for.
 *
-*@pedal name="Ram Fuzz" oversample=4
+*@pedal name="Ram Fuzz" based="Electro-Harmonix Big Muff Pi" oversample=4
 *@control sustain label="Sustain" taper=lin default=0.6
 *@control tone label="Tone" taper=lin default=0.5
 *@control volume label="Volume" taper=lin default=0.4

@@ -6,7 +6,7 @@
 * (100 dB open-loop gain, ~3 MHz gain-bandwidth, outputs clamp ~1 V from the
 * rails), standing in for the JRC4558.
 *
-*@pedal name="Green Drive" oversample=4
+*@pedal name="Green Drive" based="Ibanez TS808 Tube Screamer" oversample=4
 *@control drive label="Drive" taper=audio default=0.3
 *@control tone label="Tone" taper=lin default=0.5
 *@control level label="Level" taper=audio default=0.8

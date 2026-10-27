@@ -6,7 +6,7 @@
 * Bright volume with its bright cap, 270k mixers into V2a, DC-coupled into
 * the V2b cathode follower and the tweed tone stack.
 *
-*@amp name="Tweed Bass" face=tweed oversample=4
+*@amp name="Tweed Bass" based="Fender 5F6-A Bassman" face=tweed oversample=4
 *@control presence label="Presence" taper=lin default=0.5
 *@control middle label="Middle" taper=lin default=0.5
 *@control bass label="Bass" taper=audio default=0.5

@@ -6,7 +6,7 @@
 * High Treble channel and 22n stack caps. Two KT66s on a GZ34 rectifier.
 * The amp of the mid-60s British blues-rock records.
 *
-*@amp name="Brit 45" face=plexi oversample=4
+*@amp name="Brit 45" based="Marshall JTM45" face=plexi oversample=4
 *@control presence label="Presence" taper=lin default=0.5
 *@control middle label="Middle" taper=lin default=0.5
 *@control bass label="Bass" taper=audio default=0.5

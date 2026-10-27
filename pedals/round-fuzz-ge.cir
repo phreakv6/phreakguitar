@@ -7,7 +7,7 @@
 * Q2's emitter resistance the 20u cap bypasses. hFE ~70 / ~120.
 * Germanium leakage (which real units are biased around) isn't modelled.
 *
-*@pedal name="Round Fuzz Ge" oversample=4
+*@pedal name="Round Fuzz Ge" based="Dallas Arbiter Fuzz Face (germanium)" oversample=4
 *@control fuzz label="Fuzz" taper=lin default=1.0
 *@control volume label="Volume" taper=audio default=0.6
 *@input Vin

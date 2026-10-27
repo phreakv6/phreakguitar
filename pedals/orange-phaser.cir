@@ -20,7 +20,7 @@
 * standard.jft); real units are trimmed to their FETs the same way.
 * Op-amps: the single-pole macromodel used by the other pedals, on 9 V.
 *
-*@pedal name="Orange Phaser" oversample=2
+*@pedal name="Orange Phaser" based="MXR Phase 90 (script)" oversample=2
 *@control speed label="Speed" taper=revaudio default=0.35
 *@input Vin
 *@output out

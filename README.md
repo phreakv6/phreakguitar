@@ -39,6 +39,9 @@ netlists a SPICE simulator runs, checked against ngspice.
   usage (page views, power on/off, which amps, pedals and presets get picked)
   with PostHog: no cookies, no recordings, no file names. Add `?notrack` to
   the address to opt out; builds you run yourself send nothing.
+- Add `?rename` to the address to give the amps and pedals your own names
+  (a Rename button by the amp and on the open pedal circuit). They're kept
+  in your browser only; a blank name restores the built-in one.
 
 ## Running it locally
 
@@ -77,7 +80,8 @@ engine. What's next: [docs/ROADMAP.md](docs/ROADMAP.md).
 GPLv3, see [LICENSE](LICENSE). Third-party components and their licenses:
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-Amp and pedal models are named for the kind of gear they are. Where source
-comments mention original products or circuits, the names are trademarks of
-their owners, used only to identify what a model is based on. PhreakGuitar is
+Amp and pedal models are named for the kind of gear they are, and each says
+which original it's based on. Those product names (in the app and in source
+comments) are trademarks of their owners, used only to identify the circuits
+a model studies. PhreakGuitar is
 not affiliated with or endorsed by any manufacturer.

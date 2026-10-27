@@ -67,7 +67,8 @@
       </section>
 
       <section id="circuit-panel" class="card circuit" hidden aria-label="Pedal circuit">
-        <h2>Circuit · <span id="circuit-title"></span></h2>
+        <h2>Circuit · <span id="circuit-title"></span> <button id="pedal-rename" class="link" hidden>Rename</button></h2>
+        <p id="circuit-based" class="hint" hidden></p>
         <div id="circuit-view" class="circuit-view"></div>
         <p id="circuit-hint" class="hint">The exact circuit the engine solves, part for part. Hover a part for its name; click to zoom.</p>
         <div id="circuit-probe" class="probe"></div>
@@ -77,6 +78,8 @@
       <section class="amp" aria-label="Amplifier">
         <div class="amp-picker">
           <label>Amp <select id="amp-type"></select></label>
+          <button id="amp-rename" class="link" hidden>Rename</button>
+          <span id="amp-based" class="hint"></span>
           <span id="amp-status" class="hint"></span>
         </div>
         <div id="amp-face"></div>
@@ -87,6 +90,10 @@
         <div id="fx-boards" class="fx-boards"></div>
       </section>
     </main>
+    <footer class="site-foot hint">
+      Product names are trademarks of their owners, named only to say which circuit each model
+      studies. PhreakGuitar isn't affiliated with or endorsed by any of them.
+    </footer>
 
     <!-- Set once: devices, levels, latency, backups. -->
     <aside id="settings" class="drawer" hidden aria-label="Settings">

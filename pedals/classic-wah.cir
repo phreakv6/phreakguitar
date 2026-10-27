@@ -10,7 +10,7 @@
 * from Q1's collector. Later versions' input buffer is left out (the 68k input
 * is the classic, slightly tone-sucking original front end).
 *
-*@pedal name="Classic Wah" oversample=4
+*@pedal name="Classic Wah" based="Vox V846 wah" oversample=4
 *@control wah label="Wah" taper=revaudio default=0.5
 *@input Vin
 *@output out

@@ -11,7 +11,7 @@
 * choke and 0.47u to ground, a series resonance near 5 kHz that bypasses
 * the cathode there. Into the cathodyne; four EL34s on a silicon bridge.
 *
-*@amp name="Graphic 120" face=graphic oversample=4
+*@amp name="Graphic 120" based="Orange Graphic 120 Mk II" face=graphic oversample=4
 *@control gain label="Gain" taper=audio default=0.5
 *@control bass label="Bass" taper=audio default=0.5
 *@control treble label="Treble" taper=audio default=0.5

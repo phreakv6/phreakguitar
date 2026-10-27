@@ -7,7 +7,7 @@
 * (the tweed bass topology with a fixed 10k for the missing Middle), 470k
 * mixer into V3, then on to the phase inverter.
 *
-*@amp name="Class A 30" face=classa oversample=4
+*@amp name="Class A 30" based="Vox AC30 Top Boost" face=classa oversample=4
 *@control volume label="Volume" taper=audio default=0.55
 *@control treble label="Treble" taper=audio default=0.6
 *@control bass label="Bass" taper=audio default=0.5

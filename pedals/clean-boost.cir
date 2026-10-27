@@ -4,7 +4,7 @@
 * collector, 390R emitter, 100n in and out, 100k Volume. 2N5088 stands in
 * for the original 2N5133 (both high-gain small-signal NPNs).
 *
-*@pedal name="Clean Boost" oversample=4
+*@pedal name="Clean Boost" based="Electro-Harmonix LPB-1" oversample=4
 *@control volume label="Volume" taper=audio default=0.5
 *@input Vin
 *@output out

@@ -10,7 +10,7 @@
 * V3B's plate through 1.8M) into the 12AT7 phase inverter. Four EL34s on
 * a silicon bridge and 2x220u at 480 V: loud, clean and stiff.
 *
-*@amp name="Brit Clean 100" face=britclean oversample=4
+*@amp name="Brit Clean 100" based="Hiwatt DR103" face=britclean oversample=4
 *@control normal label="Normal" taper=audio default=0.5
 *@control brilliant label="Brilliant" taper=audio default=0.3
 *@control bass label="Bass" taper=audio default=0.5

@@ -9,7 +9,7 @@
 * the original's darkening. Its slew-rate limit isn't modelled. The JFET output
 * buffer is an ideal unity follower.
 *
-*@pedal name="Rodent" oversample=4
+*@pedal name="Rodent" based="ProCo RAT" oversample=4
 *@control distortion label="Distortion" taper=audio default=0.5
 *@control filter label="Filter" taper=lin default=0.4
 *@control volume label="Volume" taper=audio default=0.5

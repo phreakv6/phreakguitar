@@ -3,7 +3,7 @@
 * emitter to Q1's base, Fuzz pot sets how much of Q2's emitter resistance
 * the 20u cap bypasses. Values follow the common BC108-era build.
 *
-*@pedal name="Round Fuzz" oversample=4
+*@pedal name="Round Fuzz" based="Dallas Arbiter Fuzz Face (silicon)" oversample=4
 *@control fuzz label="Fuzz" taper=lin default=1.0
 *@control volume label="Volume" taper=audio default=0.6
 *@input Vin

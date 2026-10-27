@@ -6,7 +6,7 @@
 * V2A 100k/1.5k/25u, blackface stack from the plate: Treble 250k, Bass
 * 250k, 6.8k mid, 100k slope, 250p/0.1u/0.047u; Volume; second stage.
 *
-*@amp name="Black Panel 22" face=blackpanel oversample=4
+*@amp name="Black Panel 22" based="Fender Deluxe Reverb (AB763)" face=blackpanel oversample=4
 *@control volume label="Volume" taper=audio default=0.4
 *@control treble label="Treble" taper=audio default=0.6
 *@control bass label="Bass" taper=audio default=0.4

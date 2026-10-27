@@ -5,7 +5,7 @@
 * Loudness II); 470k mixers into V2a, DC-coupled to the V2b cathode
 * follower that drives the British tone stack.
 *
-*@amp name="Brit Plexi 100" face=plexi oversample=4
+*@amp name="Brit Plexi 100" based="Marshall 1959 Super Lead (plexi)" face=plexi oversample=4
 *@control presence label="Presence" taper=lin default=0.5
 *@control bass label="Bass" taper=audio default=0.5
 *@control middle label="Middle" taper=lin default=0.5

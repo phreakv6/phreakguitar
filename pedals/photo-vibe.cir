@@ -7,7 +7,7 @@
 * behaviour there too. Chorus mixes the dry signal back in; Vibrato is
 * the pure pitch wobble.
 *
-*@pedal name="Photo Vibe" dsp=photovibe
+*@pedal name="Photo Vibe" based="Shin-ei Uni-Vibe" dsp=photovibe
 *@control speed label="Speed" taper=lin default=0.35
 *@control intensity label="Intensity" taper=lin default=0.6
 *@control volume label="Volume" taper=lin default=0.5

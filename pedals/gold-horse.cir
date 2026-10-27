@@ -10,7 +10,7 @@
 * Output pot. TL072s on the charge pump's +18 V / -9 V rails, biased
 * at 4.5 V: about +-13 V of swing, the famous clean headroom.
 *
-*@pedal name="Gold Horse" oversample=4
+*@pedal name="Gold Horse" based="Klon Centaur" oversample=4
 *@control gain label="Gain" taper=lin default=0.3
 *@control treble label="Treble" taper=lin default=0.5
 *@control output label="Output" taper=lin default=0.5

@@ -12,6 +12,7 @@ import photoVibe from '../../pedals/photo-vibe.cir?raw';
 import orangePhaser from '../../pedals/orange-phaser.cir?raw';
 import octaveFuzz from '../../pedals/octave-fuzz.cir?raw';
 import rodent from '../../pedals/rodent.cir?raw';
+import { withNames } from './names.ts';
 
 export interface PedalControl {
   name: string;
@@ -23,6 +24,8 @@ export interface PedalControl {
 export interface PedalInfo {
   id: string;
   name: string;
+  /** The original it models (the *@pedal based= value), named only to say so. */
+  basedOn?: string;
   netlist: string;
   controls: PedalControl[];
   /** Your own pedals (the designer): the pedal it was forked from, whose
@@ -32,16 +35,17 @@ export interface PedalInfo {
 
 export function info(id: string, netlist: string): PedalInfo {
   const name = /^\*@pedal\b.*?name="([^"]+)"/im.exec(netlist)?.[1] ?? id;
+  const basedOn = /^\*@pedal\b.*?based="([^"]+)"/im.exec(netlist)?.[1];
   const controls = [...netlist.matchAll(/^\*@control\s+(\S+)(.*)$/gim)].map(([, ctl, rest]) => ({
     name: ctl.toLowerCase(),
     label: /label="([^"]+)"/i.exec(rest)?.[1] ?? ctl,
     defaultValue: Number(/default=([\d.]+)/i.exec(rest)?.[1] ?? 0.5),
     positions: /positions="([^"]+)"/i.exec(rest)?.[1].split(','),
   }));
-  return { id, name, netlist, controls };
+  return { id, name, basedOn, netlist, controls };
 }
 
-export const factoryPedals: PedalInfo[] = [
+export const factoryPedals: PedalInfo[] = withNames([
   info('classic-wah', classicWah),
   info('clean-boost', cleanBoost),
   info('treble-boost', trebleBoost),
@@ -54,7 +58,7 @@ export const factoryPedals: PedalInfo[] = [
   info('orange-phaser', orangePhaser),
   info('photo-vibe', photoVibe),
   info('ram-fuzz', ramFuzz),
-];
+]);
 
 // Your pedals: forks made in the designer, kept in this browser as their
 // netlists (the same files the engine and ngspice read).

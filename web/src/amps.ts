@@ -13,12 +13,15 @@ import hotRod100 from '../../amps/hotrod-100.cir?raw';
 import boutiqueOds from '../../amps/boutique-ods.cir?raw';
 import classA30 from '../../amps/classa-30.cir?raw';
 import type { PedalControl } from './pedals.ts';
+import { withNames } from './names.ts';
 
 export type Face = 'tweed' | 'blackpanel' | 'plexi' | 'brit800' | 'classa' | 'britclean' | 'boutique' | 'graphic' | 'hotrod';
 
 export interface AmpInfo {
   id: string;
   name: string;
+  /** The original it models (the *@amp based= value), named only to say so. */
+  basedOn?: string;
   model: string; // the line on the faceplate
   face: Face;
   netlist?: string; // absent: the built-in tweed stages
@@ -32,6 +35,7 @@ export interface AmpInfo {
 
 function circuitAmp(id: string, netlist: string, model: string, cab: AmpInfo['cab']): AmpInfo {
   const name = /^\*@amp\b.*?name="([^"]+)"/im.exec(netlist)?.[1] ?? id;
+  const basedOn = /^\*@amp\b.*?based="([^"]+)"/im.exec(netlist)?.[1];
   const face = (/^\*@amp\b.*?face=(\w+)/im.exec(netlist)?.[1] ?? 'tweed') as Face;
   const controls = [...netlist.matchAll(/^\*@control\s+(\S+)(.*)$/gim)].map(([, ctl, rest]) => ({
     name: ctl.toLowerCase(),
@@ -39,14 +43,14 @@ function circuitAmp(id: string, netlist: string, model: string, cab: AmpInfo['ca
     defaultValue: Number(/default=([\d.]+)/i.exec(rest)?.[1] ?? 0.5),
     positions: /positions="([^"]+)"/i.exec(rest)?.[1].split(','),
   }));
-  return { id, name, model, face, netlist, controls, cab };
+  return { id, name, basedOn, model, face, netlist, controls, cab };
 }
 
 // Cabinet hints for your own IR files (matched on their names).
 const ir4x12 = /4 ?x ?12|412/i;
 const ir2x12 = /2 ?x ?12|212/i;
 
-export const amps: AmpInfo[] = [
+export const amps: AmpInfo[] = withNames([
   circuitAmp('tweed-bass', tweedBass, "Tweed 4x10 · '59 bass circuit", { builtin: 0 }),
   circuitAmp('blackpanel-22', blackPanel22, "Black panel · 22 W · '60s reverb circuit", { builtin: 2 }),
   circuitAmp('blackpanel-410', blackPanel410, "Black panel · 4x10 · '60s reverb circuit", { builtin: 0 }),
@@ -59,4 +63,4 @@ export const amps: AmpInfo[] = [
   { ...circuitAmp('hotrod-100', hotRod100, "Hot rod · 100 W · '87 super-lead circuit", { userIR: ir4x12, builtin: 1 }), experimental: true },
   circuitAmp('boutique-ods', boutiqueOds, "Boutique · 100 W · overdrive-special circuit", { builtin: 2 }),
   circuitAmp('classa-30', classA30, "Class A · 30 W · '60s top-boost circuit", { userIR: ir2x12, builtin: 2 }),
-];
+]);
