@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "green-drive") (type "KiCad") (uri "${KIPRJMOD}/green-drive.pretty") (options "") (descr "Green Drive footprints"))
+)

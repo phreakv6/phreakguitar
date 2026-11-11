@@ -29,3 +29,7 @@ captures/
 
 # Generated into web/public (engine build, alphaTab assets)
 web/public/
+
+# KiCad local state
+*.lck
+*.kicad_prl

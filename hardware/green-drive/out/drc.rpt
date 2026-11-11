@@ -1,0 +1,22 @@
+** Drc report for green-drive.kicad_pcb **
+** Created on 2026-11-10T09:36:40 **
+** Report includes: Errors **
+
+** Found 1 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(100.0000 mm, 100.0000 mm): Zone 'GND bottom' [/GND] on B.Cu, priority 0
+    @(134.9250 mm, 123.4950 mm): PTH pad 4 [/GND] of U1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

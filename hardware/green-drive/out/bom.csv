@@ -1,0 +1,37 @@
+Qty,Part,Value,References,Notes
+1,Resistor 1/4 W metal film,100,R14,
+1,Resistor 1/4 W metal film,220,R9,
+4,Resistor 1/4 W metal film,1k,"R1, R7, R8, R10",
+1,Resistor 1/4 W metal film,2.2k,R21,
+1,Resistor 1/4 W metal film,4.7k,R6,
+7,Resistor 1/4 W metal film,10k,"R3, R4, R18, R13, R15, R16, R17",
+1,Resistor 1/4 W metal film,15k,R20,only with a linear Level pot
+1,Resistor 1/4 W metal film,51k,R5,
+1,Resistor 1/4 W metal film,510k,R2,
+2,Resistor 1/4 W metal film,1M,"R19, R12",pull-down (not in the .cir)
+1,Film capacitor (polyester box),22n,C1,.cir: 20n
+1,Film capacitor (polyester box),47n,C3,
+1,Film capacitor (polyester box),100n,C7,
+2,Film capacitor (polyester box),220n,"C6, C10",
+1,Ceramic capacitor,47p,C11,.cir: 51p
+1,Ceramic capacitor,100n,C13,
+2,"Electrolytic capacitor, 25 V+",1u,"C2, C5",
+1,"Electrolytic capacitor, 25 V+",10u,C8,
+1,"Electrolytic capacitor, 25 V+",47u,C9,
+1,"Electrolytic capacitor, 25 V+",100u,C12,
+2,Diode,1N4148,"D1, D3",
+1,Schottky diode,1N5819,D4,reverse-polarity protection
+2,NPN transistor (pins E-C-B),2SC1815,"Q1, Q2",
+1,"Dual op-amp, DIP-8",JRC4558D,U1,or RC4558P / TL072
+1,"Pot, 16 mm, PCB legs",B20K,RV2,
+1,"Pot, 16 mm, PCB legs",B100K,RV3,A100K if you find one
+1,"Pot, 16 mm, PCB legs",B500K,RV1,A500K if you find one
+1,LED,red 5mm,LED1,
+1,8-pin DIP socket,,,for U1
+1,3PDT footswitch (Daier PBS-24-302P),,,true bypass + LED
+2,"1/4"" jack (CK-6.35-03, stereo is fine)",,,input and output
+1,"2.1 x 5.5 mm DC jack, panel mount",,,"centre negative, like Boss"
+3,"Knob, 6 mm shaft",,,
+1,24 AWG hook-up wire,,,a couple of colours
+4,M3 x 5 mm brass heat-set insert,,,bottom plate
+4,M3 x 6 mm countersunk screw,,,bottom plate

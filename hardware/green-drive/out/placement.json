@@ -1,0 +1,1376 @@
+{
+ "board": [
+  64.0,
+  66.0
+ ],
+ "parts": [
+  {
+   "ref": "C1",
+   "value": "22n",
+   "footprint": "C_Film_P5_P10",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    29.905,
+    33.585,
+    43.595,
+    40.075
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 31.75,
+     "y": 36.83,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 36.75,
+     "y": 36.83,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 41.75,
+     "y": 36.83,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C10",
+   "value": "220n",
+   "footprint": "C_Film_P5_P10",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    38.16,
+    22.155,
+    51.85,
+    28.645
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 40.005,
+     "y": 25.4,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 45.005,
+     "y": 25.4,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 50.005,
+     "y": 25.4,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C11",
+   "value": "47p",
+   "footprint": "C_Disc_P2.5_P5",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    48.75,
+    29.42,
+    56.74,
+    32.81
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 55.245,
+     "y": 31.115,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 52.745,
+     "y": 31.115,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 50.245,
+     "y": 31.115,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C12",
+   "value": "100u",
+   "footprint": "CP_Radial_D6.3mm_P2.50mm",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    39.102,
+    9.908,
+    45.99,
+    16.802
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 42.545,
+     "y": 14.605,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 42.545,
+     "y": 12.105,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C13",
+   "value": "100n",
+   "footprint": "C_Disc_P2.5_P5",
+   "back": false,
+   "rot": -90.0,
+   "box": [
+    1.48,
+    2.95,
+    4.87,
+    10.94
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 3.175,
+     "y": 4.445,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 3.175,
+     "y": 6.945,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 3.175,
+     "y": 9.445,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C2",
+   "value": "1u",
+   "footprint": "CP_Radial_D5.0mm_P2.00mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    55.993,
+    34.038,
+    61.58,
+    39.622
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 57.785,
+     "y": 36.83,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 59.785,
+     "y": 36.83,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C3",
+   "value": "47n",
+   "footprint": "C_Film_P5_P10",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    45.78,
+    50.095,
+    59.47,
+    56.585
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 47.625,
+     "y": 53.34,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 52.625,
+     "y": 53.34,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 57.625,
+     "y": 53.34,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C5",
+   "value": "1u",
+   "footprint": "CP_Radial_D5.0mm_P2.00mm",
+   "back": false,
+   "rot": -90.0,
+   "box": [
+    15.623,
+    30.593,
+    21.21,
+    36.177
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 18.415,
+     "y": 32.385,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 18.415,
+     "y": 34.385,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C6",
+   "value": "220n",
+   "footprint": "C_Film_P5_P10",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    7.55,
+    21.81,
+    14.04,
+    35.5
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 10.795,
+     "y": 33.655,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 10.795,
+     "y": 28.655,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 10.795,
+     "y": 23.655,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C7",
+   "value": "100n",
+   "footprint": "C_Film_P5_P10",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    45.78,
+    42.475,
+    59.47,
+    48.965
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 47.625,
+     "y": 45.72,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 52.625,
+     "y": 45.72,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 57.625,
+     "y": 45.72,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C8",
+   "value": "10u",
+   "footprint": "CP_Radial_D5.0mm_P2.00mm",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    23.513,
+    43.563,
+    29.1,
+    49.147
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 27.305,
+     "y": 46.355,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 25.305,
+     "y": 46.355,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "C9",
+   "value": "47u",
+   "footprint": "CP_Radial_D5.0mm_P2.00mm",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    19.703,
+    4.193,
+    25.29,
+    9.777
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 23.495,
+     "y": 6.985,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 21.495,
+     "y": 6.985,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "D1",
+   "value": "1N4148",
+   "footprint": "D_DO-35_SOD27_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    3.785,
+    27.48,
+    6.375,
+    37.29
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 5.08,
+     "y": 36.195,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 5.08,
+     "y": 28.575,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "D3",
+   "value": "1N4148",
+   "footprint": "D_DO-35_SOD27_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    12.875,
+    36.805,
+    22.685,
+    39.395
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 21.59,
+     "y": 38.1,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 13.97,
+     "y": 38.1,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "D4",
+   "value": "1N5819",
+   "footprint": "D_DO-41_SOD81_P10.16mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    45.595,
+    2.8,
+    58.545,
+    6.09
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 46.99,
+     "y": 4.445,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 57.15,
+     "y": 4.445,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "J1",
+   "value": "IN",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    4.155,
+    60.875,
+    7.845,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 6.0,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "J2",
+   "value": "OUT",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    35.355,
+    60.875,
+    39.045,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 37.2,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "J3",
+   "value": "9V",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    56.155,
+    60.875,
+    59.845,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 58.0,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "J4",
+   "value": "GND",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    45.755,
+    60.875,
+    49.445,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 47.6,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "J5",
+   "value": "GND",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    14.555,
+    60.875,
+    18.245,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 16.4,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "J6",
+   "value": "LED-",
+   "footprint": "SolderWire-0.5sqmm_1x01_D0.9mm_OD2.1mm",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    24.955,
+    60.875,
+    28.645,
+    64.125
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 26.8,
+     "y": 62.5,
+     "square": true
+    }
+   ]
+  },
+  {
+   "ref": "LED1",
+   "value": "red 5mm",
+   "footprint": "LED_D5.0mm",
+   "back": true,
+   "rot": 180.0,
+   "box": [
+    28.755,
+    52.265,
+    35.235,
+    58.735
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 33.27,
+     "y": 55.5,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 30.73,
+     "y": 55.5,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "Q1",
+   "value": "2SC1815",
+   "footprint": "TO-92_Inline",
+   "back": false,
+   "rot": -90.0,
+   "box": [
+    23.98,
+    37.23,
+    28.81,
+    42.78
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 26.035,
+     "y": 38.735,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 26.035,
+     "y": 40.005,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 26.035,
+     "y": 41.275,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "Q2",
+   "value": "2SC1815",
+   "footprint": "TO-92_Inline",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    7.385,
+    49.93,
+    12.935,
+    54.76
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 8.89,
+     "y": 52.705,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 10.16,
+     "y": 52.705,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 11.43,
+     "y": 52.705,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R1",
+   "value": "1k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    30.655,
+    41.0,
+    40.465,
+    44.09
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 39.37,
+     "y": 42.545,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 31.75,
+     "y": 42.545,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R10",
+   "value": "1k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    12.24,
+    44.175,
+    22.05,
+    47.265
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 20.955,
+     "y": 45.72,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 13.335,
+     "y": 45.72,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R12",
+   "value": "1M",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    30.02,
+    44.81,
+    39.83,
+    47.9
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 31.115,
+     "y": 46.355,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 38.735,
+     "y": 46.355,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R13",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": -90.0,
+   "box": [
+    13.695,
+    49.07,
+    16.785,
+    58.88
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 15.24,
+     "y": 50.165,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 15.24,
+     "y": 57.785,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R14",
+   "value": "100",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    17.955,
+    49.89,
+    27.765,
+    52.98
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 26.67,
+     "y": 51.435,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 19.05,
+     "y": 51.435,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R15",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    20.68,
+    10.97,
+    23.77,
+    20.78
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 22.225,
+     "y": 19.685,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 22.225,
+     "y": 12.065,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R16",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    1.445,
+    42.27,
+    11.255,
+    45.36
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 2.54,
+     "y": 43.815,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 10.16,
+     "y": 43.815,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R17",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    2.08,
+    38.46,
+    11.89,
+    41.55
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 10.795,
+     "y": 40.005,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 3.175,
+     "y": 40.005,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R18",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    9.065,
+    1.63,
+    18.875,
+    4.72
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 10.16,
+     "y": 3.175,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 17.78,
+     "y": 3.175,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R19",
+   "value": "1M",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    41.635,
+    41.45,
+    44.725,
+    51.26
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 43.18,
+     "y": 50.165,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 43.18,
+     "y": 42.545,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R2",
+   "value": "510k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    12.875,
+    40.365,
+    22.685,
+    43.455
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 21.59,
+     "y": 41.91,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 13.97,
+     "y": 41.91,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R20",
+   "value": "15k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    1.445,
+    46.08,
+    11.255,
+    49.17
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 10.16,
+     "y": 47.625,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 2.54,
+     "y": 47.625,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R21",
+   "value": "2.2k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    17.955,
+    53.7,
+    27.765,
+    56.79
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 26.67,
+     "y": 55.245,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 19.05,
+     "y": 55.245,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R3",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    41.0,
+    52.245,
+    44.09,
+    62.055
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 42.545,
+     "y": 60.96,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 42.545,
+     "y": 53.34,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R4",
+   "value": "10k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    44.625,
+    34.015,
+    54.435,
+    37.105
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 45.72,
+     "y": 35.56,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 53.34,
+     "y": 35.56,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R5",
+   "value": "51k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    38.275,
+    29.57,
+    48.085,
+    32.66
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 39.37,
+     "y": 31.115,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 46.99,
+     "y": 31.115,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R6",
+   "value": "4.7k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    37.19,
+    49.07,
+    40.28,
+    58.88
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 38.735,
+     "y": 57.785,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 38.735,
+     "y": 50.165,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R7",
+   "value": "1k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    14.78,
+    21.95,
+    24.59,
+    25.04
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 23.495,
+     "y": 23.495,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 15.875,
+     "y": 23.495,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R8",
+   "value": "1k",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 90.0,
+   "box": [
+    21.95,
+    26.21,
+    25.04,
+    36.02
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 23.495,
+     "y": 34.925,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 23.495,
+     "y": 27.305,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "R9",
+   "value": "220",
+   "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+   "back": false,
+   "rot": 0.0,
+   "box": [
+    45.26,
+    37.825,
+    55.07,
+    40.915
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 46.355,
+     "y": 39.37,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 53.975,
+     "y": 39.37,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "RV1",
+   "value": "B500K",
+   "footprint": "Pot_WH148_16mm",
+   "back": true,
+   "rot": 180.0,
+   "box": [
+    43.725,
+    3.725,
+    60.275,
+    20.6
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 57.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 52.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 47.0,
+     "y": 19.5,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "RV2",
+   "value": "B20K",
+   "footprint": "Pot_WH148_16mm",
+   "back": true,
+   "rot": 180.0,
+   "box": [
+    23.725,
+    3.725,
+    40.275,
+    20.6
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 37.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 32.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 27.0,
+     "y": 19.5,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "RV3",
+   "value": "B100K",
+   "footprint": "Pot_WH148_16mm",
+   "back": true,
+   "rot": 180.0,
+   "box": [
+    3.725,
+    3.725,
+    20.275,
+    20.6
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 17.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "2",
+     "x": 12.0,
+     "y": 19.5,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 7.0,
+     "y": 19.5,
+     "square": false
+    }
+   ]
+  },
+  {
+   "ref": "U1",
+   "value": "JRC4558D",
+   "footprint": "DIP-8_W7.62mm_Socket",
+   "back": false,
+   "rot": 180.0,
+   "box": [
+    25.74,
+    21.87,
+    36.49,
+    32.74
+   ],
+   "pads": [
+    {
+     "num": "1",
+     "x": 34.925,
+     "y": 31.115,
+     "square": true
+    },
+    {
+     "num": "2",
+     "x": 34.925,
+     "y": 28.575,
+     "square": false
+    },
+    {
+     "num": "3",
+     "x": 34.925,
+     "y": 26.035,
+     "square": false
+    },
+    {
+     "num": "4",
+     "x": 34.925,
+     "y": 23.495,
+     "square": false
+    },
+    {
+     "num": "5",
+     "x": 27.305,
+     "y": 23.495,
+     "square": false
+    },
+    {
+     "num": "6",
+     "x": 27.305,
+     "y": 26.035,
+     "square": false
+    },
+    {
+     "num": "7",
+     "x": 27.305,
+     "y": 28.575,
+     "square": false
+    },
+    {
+     "num": "8",
+     "x": 27.305,
+     "y": 31.115,
+     "square": false
+    }
+   ]
+  }
+ ]
+}
