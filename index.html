@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhreakGuitar</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23e2b04a'/%3E%3Cline x1='16' y1='16' x2='16' y2='6' stroke='%2317130f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/assets/index-2LWB7Eaj.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-2HSi12Sz.css">
+  </head>
+  <body>
+    <!-- Always on screen: what you reach for while playing. -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand">Phreak<span>Guitar</span></div>
+        <div id="status" data-kind="idle">Standby</div>
+        <div class="topbar-right">
+          <button id="tabs-btn" class="tuner-btn" aria-pressed="false" title="Tabs beside the rig">Tabs</button>
+          <button id="tuner-btn" class="tuner-btn" disabled title="Tuner (power on first)">Tuner</button>
+          <button id="stage-btn" class="tuner-btn" title="Stage view: big presets and footswitches (S)">Stage</button>
+          <button id="settings-btn" class="tuner-btn icon" aria-controls="settings" aria-expanded="false" title="Settings: audio devices, levels, latency">⚙</button>
+          <button id="power" class="power" aria-pressed="false" aria-label="Power: off" title="Power: off (click to switch on)">
+            <span class="power-jewel" aria-hidden="true"></span>
+            <span class="power-toggle" aria-hidden="true"><span class="power-bat"></span></span>
+            <span class="power-legend" aria-hidden="true"><b class="on">On</b><b class="off">Off</b></span>
+          </button>
+        </div>
+      </div>
+      <div class="topbar-row rigbar">
+        <div class="presetbar" aria-label="Presets">
+          <button id="preset-prev" class="nav" aria-label="Previous preset" title="Previous preset (←)">◀</button>
+          <select id="preset" aria-label="Preset"></select>
+          <button id="preset-next" class="nav" aria-label="Next preset" title="Next preset (→)">▶</button>
+          <span id="preset-edited" class="preset-edited" hidden>edited</span>
+          <button id="preset-ab" class="ab" hidden title="Flip between the saved preset (A) and your edit (B)">A / B</button>
+          <span id="preset-level" class="preset-level" title="Preset volume, on top of Master"></span>
+          <button id="preset-save">Save as mine</button>
+          <span id="preset-saving" class="preset-saving" hidden>
+            <input id="preset-name" type="text" maxlength="60" placeholder="Name" aria-label="Preset name" />
+            <button id="preset-save-ok">Save</button>
+            <button id="preset-save-cancel" class="link">Cancel</button>
+          </span>
+          <button id="preset-delete" class="link" hidden>Delete</button>
+        </div>
+        <div class="outbar">
+          <div id="master-slot" class="master-slot"></div>
+          <div class="meter mini" id="meter-out" title="Output level"><span class="meter-name">Out</span><div class="meter-bar"><div class="meter-fill"></div></div><span class="meter-readout">–∞</span></div>
+          <span id="limit-led" class="limit-led" title="Limiter (ceiling −1 dBFS): lights when it is holding the level down"></span>
+        </div>
+      </div>
+    </header>
+    <div id="tuner-slot"></div>
+
+    <main>
+      <p id="preset-notes" class="preset-notes" hidden></p>
+
+      <!-- Tabs, and beside them on a wide screen, the compact rig. -->
+      <div id="practice" class="practice">
+        <div id="tabs-slot"></div>
+        <div id="mini-slot"></div>
+      </div>
+
+      <section class="board-row" aria-label="Before the amp">
+        <h2 class="row-title">Before the amp <span class="row-note">guitar → gate → comp → 1 → 2 → 3 → 4 → amp</span> <span id="board-status" class="hint"></span></h2>
+        <div id="board" class="board"></div>
+      </section>
+
+      <section id="circuit-panel" class="card circuit" hidden aria-label="Pedal circuit">
+        <h2>Circuit · <span id="circuit-title"></span> <button id="pedal-rename" class="link" hidden>Rename</button></h2>
+        <p id="circuit-based" class="hint" hidden></p>
+        <div id="circuit-view" class="circuit-view"></div>
+        <p id="circuit-hint" class="hint">The exact circuit the engine solves, part for part. Hover a part for its name; click to zoom.</p>
+        <div id="circuit-probe" class="probe"></div>
+        <div id="circuit-design"></div>
+      </section>
+
+      <section class="amp" aria-label="Amplifier">
+        <div class="amp-picker">
+          <label>Amp <select id="amp-type"></select></label>
+          <button id="amp-rename" class="link" hidden>Rename</button>
+          <span id="amp-based" class="hint"></span>
+          <span id="amp-status" class="hint"></span>
+        </div>
+        <div id="amp-face"></div>
+      </section>
+
+      <section class="fxrow" aria-label="After the amp">
+        <h2 class="row-title">After the amp <span class="row-note">amp → cab → EQ → delay → reverb → looper</span></h2>
+        <div id="fx-boards" class="fx-boards"></div>
+      </section>
+    </main>
+    <footer class="site-foot hint">
+      Product names are trademarks of their owners, named only to say which circuit each model
+      studies. PhreakGuitar isn't affiliated with or endorsed by any of them.
+    </footer>
+
+    <!-- Set once: devices, levels, latency, backups. -->
+    <aside id="settings" class="drawer" hidden aria-label="Settings">
+      <div class="drawer-head">
+        <h2>Settings</h2>
+        <button id="settings-close" class="link" aria-label="Close settings">Close ✕</button>
+      </div>
+
+      <section class="drawer-sec" aria-label="Audio devices">
+        <h3>Audio devices</h3>
+        <div id="device-access" class="device-access" hidden>
+          <p class="hint">Browsers list your audio interface only once you've allowed the microphone.</p>
+          <button id="device-allow">Show my audio devices</button>
+        </div>
+        <label class="field">Input
+          <select id="input-device"><option value="">System default</option></select>
+        </label>
+        <label class="field">Channel
+          <select id="input-channel">
+            <option value="0">1</option>
+            <option value="1">2</option>
+          </select>
+        </label>
+        <label class="field">Output
+          <select id="output-device"><option value="">System default</option></select>
+        </label>
+      </section>
+
+      <section class="drawer-sec meters" aria-label="Levels">
+        <h3>Levels</h3>
+        <div id="level-knobs" class="knob-row small"></div>
+        <div class="meter" id="meter-in"><span class="meter-name">In</span><div class="meter-bar"><div class="meter-fill"></div></div><span class="meter-readout">–∞</span></div>
+        <div class="meter limit" id="meter-limit"><span class="meter-name">Limit</span><div class="meter-bar"><div class="meter-fill"></div></div><span class="meter-readout">0 dB</span></div>
+        <p class="hint">Input sets how hard your guitar hits the rig; Master (top bar) is the room volume. Limiter ceiling −1 dBFS, always on.</p>
+      </section>
+
+      <section class="drawer-sec latency" aria-label="Latency">
+        <h3>Latency</h3>
+        <label class="field">Buffer
+          <select id="buffer">
+            <option value="standard">Standard (more margin)</option>
+            <option value="low">Low (≈3 ms less)</option>
+          </select>
+        </label>
+        <div class="stat"><span>Estimated</span><strong id="lat-estimate">—</strong></div>
+        <p id="lat-breakdown" class="hint"></p>
+        <div class="stat"><span>Measured</span><strong id="lat-measured">—</strong></div>
+        <p id="lat-measured-note" class="hint">Patch the interface's output into its input with a cable, turn the volume down, then measure.</p>
+        <button id="measure" disabled>Measure loopback</button>
+        <div class="stat" title="Estimated from audio-clock slips; Web Audio does not report underruns directly."><span>Dropouts*</span><strong id="dropouts">—</strong><button id="dropouts-reset" class="link">reset</button></div>
+      </section>
+
+      <section id="capture-sec" class="drawer-sec" aria-label="Capture">
+        <h3>Send to Claude</h3>
+        <button id="send-capture" disabled title="Saves the last 30 s (your dry guitar, what you heard, and every knob move) into the project's captures folder">Send last 30 s to Claude</button>
+        <p id="capture-status" class="hint"></p>
+      </section>
+
+      <section class="drawer-sec" aria-label="Preset backup">
+        <h3>Your presets</h3>
+        <span class="preset-files">
+          <button id="preset-export">Export</button>
+          <button id="preset-import">Import</button>
+          <input id="preset-file" type="file" accept=".json,application/json" hidden />
+        </span>
+        <p id="preset-note" class="hint">A JSON file of your own presets: a backup, or to move them to another browser.</p>
+      </section>
+
+      <section class="drawer-sec" aria-label="Keyboard shortcuts">
+        <h3>Keys</h3>
+        <dl class="keys">
+          <dt>← →</dt><dd>previous / next preset</dd>
+          <dt>1–4</dt><dd>pedal 1–4 on / off</dd>
+          <dt>G · C</dt><dd>gate · compressor</dd>
+          <dt>E · D · R</dt><dd>EQ · delay · reverb</dd>
+          <dt>L · K · U</dt><dd>looper: record / play / overdub · stop · undo</dd>
+          <dt>T</dt><dd>tuner</dd>
+          <dt>S</dt><dd>stage view</dd>
+          <dt>Space</dt><dd>play / pause the tab (Tabs open)</dd>
+          <dt>Esc</dt><dd>close what's open</dd>
+        </dl>
+      </section>
+    </aside>
+    <div id="drawer-scrim" class="scrim" hidden></div>
+
+    <div id="stage" class="stage" hidden aria-label="Stage view"></div>
+
+  </body>
+</html>
