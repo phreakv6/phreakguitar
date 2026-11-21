@@ -15,6 +15,7 @@ import { buildFace } from './faces.ts';
 import { rename, renameMode } from './names.ts';
 import { buildTubes, type TubeView } from './tubes.ts';
 import { Tuner } from './tuner.ts';
+import { demoNames, renderDemo, type DemoKind } from './demo.ts';
 import { forgetIR, loadSavedIR, saveIR, savedIRNames } from './irstore.ts';
 import { allEffects, compressor, postEffects, type PostFxInfo } from './postfx.ts';
 import { factoryPresets, isPreset, loadUserPresets, saveUserPresets, type Preset } from './presets.ts';
@@ -330,7 +331,7 @@ async function showDevices(): Promise<void> {
 $('#device-allow').addEventListener('click', () => void showDevices());
 
 function refreshChannelOptions(): void {
-  const count = rig?.inputChannelCount() ?? 2;
+  const count = rig?.hasInput ? rig.inputChannelCount() : 2;
   [...channelSel.options].forEach((o) => (o.disabled = Number(o.value) >= count));
   if (Number(channelSel.value) >= count) channelSel.value = '0';
 }
@@ -389,9 +390,17 @@ function micDialog(kind: 'ask' | 'blocked'): Promise<boolean> {
   });
 }
 
+function showPlaying(): void {
+  if (!rig) return;
+  const from = demoKind ? `demo guitar (${demoNames[demoKind].toLowerCase()})` : rig.inputLabel() || 'default input';
+  setStatus(`Playing · ${from} · ${rig.ctx.sampleRate / 1000} kHz`, 'on');
+}
+
 let stillPlaying = 0;
-async function powerOn(): Promise<void> {
-  if (!(await micGranted())) {
+/** `demo`: start with no input open (and so no microphone prompt), for
+    the demo guitar alone. */
+async function powerOn(demo = false): Promise<void> {
+  if (!demo && !(await micGranted())) {
     const go = await micDialog('ask');
     track('mic_explained', { choice: go ? 'continue' : 'not now' });
     if (!go) { settings.powered = false; saveSettings(); return; }
@@ -405,6 +414,7 @@ async function powerOn(): Promise<void> {
       inputChannel: settings.inputChannel,
       outputDeviceId: settings.outputDeviceId || undefined,
       buffer: settings.buffer,
+      noInput: demo,
       onContext: (ctx) => {
         // Without a click since the page loaded (powering up after a
         // reload), the browser holds audio back: the first click or key
@@ -445,7 +455,7 @@ async function powerOn(): Promise<void> {
     tunerBtn.disabled = false;
     tunerBtn.title = 'Tuner';
     $<HTMLButtonElement>('#send-capture').disabled = !import.meta.env.DEV;
-    setStatus(`Playing · ${rig.inputLabel() || 'default input'} · ${rig.ctx.sampleRate / 1000} kHz`, 'on');
+    showPlaying();
     poweredAt = performance.now();
     // Most people close the tab rather than switch off: a ping now and
     // then (and one as the tab closes) says how long they played.
@@ -454,7 +464,7 @@ async function powerOn(): Promise<void> {
     track('power_on', {
       sample_rate: rig.ctx.sampleRate,
       latency_ms: Math.round((rig.ctx.baseLatency + (rig.ctx.outputLatency || 0)) * 1000),
-      buffer: settings.buffer, amp: settings.amp, preset: settings.preset ?? null,
+      buffer: settings.buffer, amp: settings.amp, preset: settings.preset ?? null, demo,
     });
   } catch (err) {
     await rig?.stop();
@@ -482,6 +492,8 @@ async function powerOff(): Promise<void> {
   tunerBtn.title = 'Tuner (power on first)';
   await rig?.stop();
   rig = null;
+  demoKind = null;
+  showDemo();
   document.body.classList.remove('powered');
   showPower(false);
   measureBtn.disabled = true;
@@ -518,7 +530,7 @@ inputSel.addEventListener('change', async () => {
     try {
       await rig.setInput(settings.inputDeviceId, settings.inputChannel);
       refreshChannelOptions();
-      setStatus(`Playing · ${rig.inputLabel()}`, 'on');
+      showPlaying();
     } catch (err) {
       setStatus(describeError(err), 'error');
     }
@@ -1264,8 +1276,10 @@ bufferSel.addEventListener('change', async () => {
   settings.buffer = bufferSel.value === 'low' ? 'low' : 'standard';
   saveSettings();
   if (rig) {
+    const demo = demoKind, demoOnly = !rig.hasInput;
     await powerOff();
-    await powerOn();
+    await powerOn(demoOnly);
+    if (demo) await playDemo(demo);
   }
 });
 
@@ -1287,6 +1301,66 @@ tabsBtn.addEventListener('click', () => {
   logEvent('tabs.open', tabs.isOpen());
   if (tabs.isOpen()) track('tabs_opened');
   layoutPractice();
+});
+
+// --- demo guitar ----------------------------------------------------------------
+
+// A dry guitar part (demo.ts) looped into the front of the rig in place of
+// the input: for trying sounds with no guitar plugged in. From standby it
+// starts the rig with no input at all, so nothing asks for the microphone.
+let demoKind: DemoKind | null = null;
+const demoParts = new Map<string, Float32Array>();
+const demoBtn = $<HTMLButtonElement>('#demo-btn');
+const demoEl = document.createElement('section');
+demoEl.className = 'demo';
+demoEl.hidden = true;
+demoEl.setAttribute('aria-label', 'Demo guitar');
+demoEl.innerHTML = `
+  <span class="demo-title">Demo guitar</span>
+  <div class="demo-kinds">
+    ${(Object.keys(demoNames) as DemoKind[]).map((k) => `<button data-kind="${k}" aria-pressed="false">▶ ${demoNames[k]}</button>`).join('')}
+    <button class="demo-stop" disabled>■ Stop</button>
+  </div>
+  <p class="hint">A dry guitar part, looped through the rig in place of your input: try the amps, pedals and
+    presets with no guitar plugged in. It doesn't need the microphone.</p>`;
+$('#demo-slot').replaceWith(demoEl);
+const demoStop = demoEl.querySelector<HTMLButtonElement>('.demo-stop')!;
+
+function showDemo(): void {
+  demoEl.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach((b) =>
+    b.setAttribute('aria-pressed', String(b.dataset.kind === demoKind)));
+  demoStop.disabled = !demoKind;
+  demoBtn.setAttribute('aria-pressed', String(!demoEl.hidden || demoKind !== null));
+}
+
+async function playDemo(kind: DemoKind): Promise<void> {
+  if (!rig) await powerOn(true);
+  if (!rig) return;
+  const key = `${kind}@${rig.ctx.sampleRate}`;
+  if (!demoParts.has(key)) demoParts.set(key, renderDemo(kind, rig.ctx.sampleRate));
+  rig.playSample(demoParts.get(key)!);
+  demoKind = kind;
+  showDemo();
+  showPlaying();
+  track('demo_played', { kind, with_input: rig.hasInput });
+}
+
+/** Back to the input; with none open (the demo started the rig), to standby. */
+async function stopDemo(): Promise<void> {
+  if (!rig || !demoKind) return;
+  if (!rig.hasInput) return powerOff();
+  rig.playSample(null);
+  demoKind = null;
+  showDemo();
+  showPlaying();
+}
+
+demoEl.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach((b) =>
+  b.addEventListener('click', () => void playDemo(b.dataset.kind as DemoKind)));
+demoStop.addEventListener('click', () => void stopDemo());
+demoBtn.addEventListener('click', () => {
+  demoEl.hidden = !demoEl.hidden;
+  showDemo();
 });
 
 // --- tuner --------------------------------------------------------------------
@@ -1880,6 +1954,7 @@ function showWelcome(): void {
     </ul>
     <div class="welcome-actions">
       <button class="welcome-devices">Choose my interface</button>
+      <button class="welcome-demo">No guitar handy? Hear a demo</button>
       <button class="link welcome-ok">Got it</button>
     </div>`;
   if (onPhone) card.querySelector('ul')!.insertAdjacentHTML('afterbegin',
@@ -1892,6 +1967,12 @@ function showWelcome(): void {
     track('welcome_done', { choice: 'devices' });
     openDrawer(true);
     if (!deviceAccess.hidden) void showDevices();
+  });
+  card.querySelector('.welcome-demo')!.addEventListener('click', () => {
+    done();
+    track('welcome_done', { choice: 'demo' });
+    demoEl.hidden = false;
+    void playDemo('rhythm');
   });
   $('main').prepend(card);
 }

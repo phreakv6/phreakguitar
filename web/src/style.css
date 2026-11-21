@@ -267,6 +267,18 @@ input[type='text']:focus { outline: none; border-color: var(--accent); }
 .mic-dialog .welcome-actions { margin-top: 14px; }
 .welcome-phone { color: var(--accent); }
 
+/* --- demo guitar ------------------------------------------------------------ */
+
+.demo {
+  width: min(1048px, calc(100% - 32px)); margin: 14px auto 0; padding: 12px 20px; box-sizing: border-box;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+}
+.demo-title { font: 600 15px Oswald, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+.demo-kinds { display: flex; gap: 8px; }
+.demo-kinds button[aria-pressed='true'] { border-color: var(--ok); color: var(--ok); }
+.demo .hint { margin: 0; flex: 1 1 260px; }
+
 /* --- tuner ---------------------------------------------------------------- */
 
 .tuner-btn { font: 600 13px Oswald, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }

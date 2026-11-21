@@ -6,6 +6,9 @@
 //                                                                         ▼
 //                                     interface out ◄─ [phreak-amp post] ◄┘
 //
+// The demo guitar (demo.ts), while it plays, takes the interface's place
+// at the front; the rig can also start with no interface input at all.
+//
 // pre/post are two instances of the same WASM engine (engine/amp/AmpChain),
 // split around the cab exactly like the native HostChain.
 
@@ -56,6 +59,9 @@ export interface RigOptions {
   /** 'low' asks Chrome for its smallest buffer (latencyHint 0): about 3 ms
       less on a Mac, with less margin before dropouts. */
   buffer: 'standard' | 'low';
+  /** Start without opening an input (no microphone prompt): for the demo
+      guitar. setInput opens one later. */
+  noInput?: boolean;
   /** Called with the new AudioContext before anything waits on it: after a
       reload the browser keeps it suspended until the page gets a click,
       so the caller can resume it from one. */
@@ -87,6 +93,7 @@ export class Rig {
   private source: MediaStreamAudioSourceNode | null = null;
   private splitter: ChannelSplitterNode | null = null;
   private tuner: AnalyserNode | null = null;
+  private sample: AudioBufferSourceNode | null = null;
   private readonly pre: AudioWorkletNode;
   private readonly post: AudioWorkletNode;
   private readonly cab: ConvolverNode;
@@ -200,7 +207,7 @@ export class Rig {
   static async start(opts: RigOptions): Promise<Rig> {
     // Run at the interface's own rate. A mismatch (e.g. Scarlett at 44.1 kHz,
     // context at 48 kHz) makes Chrome resample both ways: measured +5.5 ms.
-    const sampleRate = await deviceSampleRate(opts.inputDeviceId);
+    const sampleRate = opts.noInput ? undefined : await deviceSampleRate(opts.inputDeviceId);
     const ctx: SinkContext = new AudioContext({ latencyHint: opts.buffer === 'low' ? 0 : 'interactive', sampleRate });
     opts.onContext?.(ctx);
     const wasm = await fetch(`${import.meta.env.BASE_URL}engine.wasm`).then((r) => {
@@ -231,7 +238,7 @@ export class Rig {
     const rig = new Rig(ctx, pre.node, post.node, pre.latency);
 
     if (opts.outputDeviceId) await rig.setOutputDevice(opts.outputDeviceId);
-    await rig.setInput(opts.inputDeviceId, opts.inputChannel);
+    if (!opts.noInput) await rig.setInput(opts.inputDeviceId, opts.inputChannel);
     await ctx.resume();
     return rig;
   }
@@ -253,8 +260,45 @@ export class Rig {
     this.splitter = new ChannelSplitterNode(this.ctx, { numberOfOutputs: Math.max(2, this.inputChannelCount()) });
     this.source.connect(this.splitter);
     this.inputChannel = Math.min(channel, this.inputChannelCount() - 1);
-    this.splitter.connect(this.pre, this.inputChannel);
-    if (this.tuner) this.splitter.connect(this.tuner, this.inputChannel);
+    if (!this.sample) this.feed(this.pre);
+    if (this.tuner && !this.sample) this.feed(this.tuner);
+  }
+
+  /** Whether an interface input is open (not so after a noInput start). */
+  get hasInput(): boolean { return this.stream !== null; }
+
+  /** Connects what the rig is listening to (the demo guitar while it
+      plays, else the chosen input channel) to `dest`. */
+  private feed(dest: AudioNode): void {
+    if (this.sample) this.sample.connect(dest);
+    else this.splitter?.connect(dest, this.inputChannel);
+  }
+
+  private unfeed(dest: AudioNode): void {
+    try {
+      if (this.sample) this.sample.disconnect(dest);
+      else this.splitter?.disconnect(dest);
+    } catch { /* wasn't connected */ }
+  }
+
+  /** Loops `samples` (mono, at the context's rate) into the front of the
+      rig in place of the input, which is silenced meanwhile; null goes
+      back to the input. */
+  playSample(samples: Float32Array | null): void {
+    this.unfeed(this.pre);
+    if (this.tuner) this.unfeed(this.tuner);
+    if (this.sample) {
+      this.sample.stop();
+      this.sample = null;
+    }
+    if (samples) {
+      const buffer = new AudioBuffer({ numberOfChannels: 1, length: samples.length, sampleRate: this.ctx.sampleRate });
+      buffer.getChannelData(0).set(samples);
+      this.sample = new AudioBufferSourceNode(this.ctx, { buffer, loop: true });
+      this.sample.start();
+    }
+    this.feed(this.pre);
+    if (this.tuner) this.feed(this.tuner);
   }
 
   /** The dry guitar (before gate and pedals) for the tuner: read it with
@@ -262,15 +306,13 @@ export class Rig {
   startTuner(): AnalyserNode {
     if (!this.tuner) {
       this.tuner = new AnalyserNode(this.ctx, { fftSize: 4096 });
-      this.splitter?.connect(this.tuner, this.inputChannel);
+      this.feed(this.tuner);
     }
     return this.tuner;
   }
 
   stopTuner(): void {
-    if (this.tuner && this.splitter) {
-      try { this.splitter.disconnect(this.tuner); } catch { /* already gone with the old input */ }
-    }
+    if (this.tuner) this.unfeed(this.tuner);
     this.tuner = null;
   }
 

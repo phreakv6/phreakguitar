@@ -27,6 +27,8 @@ netlists a SPICE simulator runs, checked against ngspice.
   with a cursor, slow it down, loop a section, mute your part.
 - **Stage view**, keyboard shortcuts, a tuner, cab IRs (built-in or your
   own WAV files), and a latency readout with a loopback measurement.
+- **A demo guitar**: a rhythm part and a lead part (synthesized, dry) to
+  play through the rig when no guitar is plugged in. No microphone needed.
 
 ## Using it
 
