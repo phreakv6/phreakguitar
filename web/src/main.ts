@@ -746,7 +746,9 @@ const fxState = (fx: PostFxInfo) => ((settings.fx ??= {})[fx.id] ??= { on: false
 const fxValue = (fx: PostFxInfo, i: number) => fxState(fx).values[fx.controls[i].name] ?? fx.controls[i].defaultValue;
 
 function renderPostFx(): void {
-  $('#fx-boards').replaceChildren(cabTile, ...postEffects.map(fxBox), looperView.el);
+  // Patch cables between the boxes, and a lead in and out.
+  const boxes = [cabTile, ...postEffects.map(fxBox), looperView.el];
+  $('#fx-boards').replaceChildren(cable(), ...boxes.flatMap((b) => [b, cable()]));
 }
 
 // --- the looper (last, after the effects) -------------------------------------
@@ -889,15 +891,21 @@ const slotKnobValue = (slot: number, p: PedalInfo, i: number) =>
   slotState(slot)?.knobs[p.controls[i].name] ?? p.controls[i].defaultValue;
 const slotStatus: string[] = Array(numPedalSlots).fill('');
 
+/** A patch cable: a plug into the box on each side. */
+function cable(): HTMLElement {
+  return Object.assign(document.createElement('div'), { className: 'cable', ariaHidden: 'true' });
+}
+
 function renderBoard(): void {
   // The compressor sits first, on the raw guitar, then the four slots.
   const comp = fxBox(compressor);
   comp.classList.add('stomp-comp');
-  const parts: HTMLElement[] = [gateBox(), Object.assign(document.createElement('div'), { className: 'cable', ariaHidden: 'true' }), comp];
+  const parts: HTMLElement[] = [cable(), gateBox(), cable(), comp];
   for (let slot = 0; slot < numPedalSlots; slot++) {
-    parts.push(Object.assign(document.createElement('div'), { className: 'cable', ariaHidden: 'true' }));
+    parts.push(cable());
     parts.push(renderStomp(slot));
   }
+  parts.push(cable());
   board.replaceChildren(...parts);
   renderCircuit();
 }

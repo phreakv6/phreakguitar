@@ -161,95 +161,97 @@ input[type='text']:focus { outline: none; border-color: var(--accent); }
   box-shadow: 0 0 14px 3px rgba(240, 70, 40, 0.55);
 }
 
-/* Power: an amp's power switch on a small brushed-metal plate. A jewel
-   pilot lamp, a chrome bat-handle toggle (down = off, up = on) and an
-   engraved On / Off legend. Off: the lamp is dark, Off is lit red and the
-   plate breathes a red halo so it's the first thing you find. On: the
-   lever flips up and the lamp and On glow green. Powering up: amber. */
+/* Power: an old amp's power switch on a brushed chrome plate. A red jewel
+   pilot lamp in its bezel, a bat-handle toggle on a hex nut (down = off,
+   up = on) and the engraved On / Off beside it. Off: the lamp is dark
+   ruby. On: the lever is up and the lamp glows. Powering up: it warms
+   from amber. */
 .power {
-  --glow: rgba(255, 70, 40, 0.55);
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 5px 12px 5px 10px;
-  border: 1px solid #050505;
-  border-radius: 6px;
-  color: #8a8172;
+  position: relative; display: inline-flex; align-items: center; gap: 11px;
+  height: 46px; padding: 0 14px 0 13px; box-sizing: border-box;
+  border: none; border-radius: 4px; color: #1c1a17;
   background:
-    radial-gradient(circle at 5px 50%, #8c8c90 0 1.5px, #2a2a2c 2px, transparent 2.6px),
-    radial-gradient(circle at calc(100% - 5px) 50%, #8c8c90 0 1.5px, #2a2a2c 2px, transparent 2.6px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, #3a3a3d, #1c1c1e 60%, #141415);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-    0 2px 4px rgba(0, 0, 0, 0.6), 0 0 14px 1px var(--glow);
-  animation: power-breathe 2.4s ease-in-out infinite;
-  transition: box-shadow 0.3s;
+    radial-gradient(circle at 6px 6px, #f8f8f8 0 1px, #77797d 1.6px, #3c3d40 2.2px, transparent 2.8px),
+    radial-gradient(circle at calc(100% - 6px) 6px, #f8f8f8 0 1px, #77797d 1.6px, #3c3d40 2.2px, transparent 2.8px),
+    radial-gradient(circle at 6px calc(100% - 6px), #f8f8f8 0 1px, #77797d 1.6px, #3c3d40 2.2px, transparent 2.8px),
+    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), #f8f8f8 0 1px, #77797d 1.6px, #3c3d40 2.2px, transparent 2.8px),
+    var(--tx-brushed),
+    linear-gradient(180deg, #f7f7f5, #c9cacb 40%, #a9abad 58%, #dcdddc);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 2px 5px rgba(0, 0, 0, 0.7);
+  transition: filter 0.2s;
 }
-.power:not(:disabled):hover { border-color: #050505; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14),
-  inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 22px 3px var(--glow); }
-@keyframes power-breathe {
-  50% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-    0 2px 4px rgba(0, 0, 0, 0.6), 0 0 24px 4px var(--glow); }
-}
+.power:not(:disabled):hover { filter: brightness(1.07); }
+.power:not(:disabled):active { filter: brightness(0.96); }
 
-/* the jewel: faceted glass, dark until lit */
+/* the jewel: faceted red glass in a chrome bezel, dark until lit */
 .power-jewel {
-  width: 18px; height: 18px; flex: none; border-radius: 50%;
+  width: 17px; height: 17px; margin: 0 4px; flex: none; border-radius: 50%;
   background:
-    repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.10) 0 30deg, rgba(0, 0, 0, 0.18) 30deg 60deg),
-    radial-gradient(circle at 38% 35%, #4a5a48, #1d2a1c 60%, #0d140c);
-  box-shadow: 0 0 0 2px #b8b8bc, 0 0 0 3px #3a3a3c, inset 0 0 4px rgba(0, 0, 0, 0.9);
-  transition: background 0.3s, box-shadow 0.3s;
+    repeating-conic-gradient(from 8deg, rgba(255, 255, 255, 0.16) 0 15deg, rgba(0, 0, 0, 0.16) 15deg 30deg),
+    radial-gradient(circle at 38% 32%, #8a2a20, #4a100b 55%, #230604);
+  box-shadow: 0 0 0 1px #2a2a2c, 0 0 0 4px #e4e5e6, 0 0 0 5px #6d6f72, 0 2px 3px 5px rgba(0, 0, 0, 0.35),
+    inset 0 0 4px rgba(0, 0, 0, 0.85);
+  transition: background 0.35s, box-shadow 0.35s;
 }
 
-/* the toggle: a chrome nut with a bat handle pivoting on it */
-.power-toggle { position: relative; width: 18px; height: 30px; flex: none; }
-.power-toggle::before { /* the nut */
-  content: ''; position: absolute; left: 2px; top: 8px; width: 14px; height: 14px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #fafafa, #a9a9ae 45%, #55555a 80%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 0 0 2px rgba(0, 0, 0, 0.15);
+/* the toggle: a hex nut, a collar, and the bat handle seen from the front */
+.power-toggle { position: relative; width: 26px; height: 38px; flex: none; }
+.power-toggle::before { /* the hex nut */
+  content: ''; position: absolute; left: 2px; top: 8px; width: 22px; height: 22px;
+  background: conic-gradient(from 30deg, #f4f4f4, #7f8286, #fbfbfb, #6c6f73, #dedfe0, #83868a, #f4f4f4);
+  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+}
+.power-toggle::after { /* the collar the lever comes out of */
+  content: ''; position: absolute; left: 7px; top: 13px; width: 12px; height: 12px; border-radius: 50%;
+  background: radial-gradient(circle, #1a1a1a 0 34%, #6f7276 40%, #e9eaeb 62%, #8a8d91 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 .power-bat {
-  position: absolute; left: 6px; top: 1px; width: 6px; height: 14px;
-  border-radius: 3px 3px 2px 2px;
-  background: linear-gradient(90deg, #6d6d72, #f4f4f6 40%, #b5b5ba 60%, #5b5b60);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-  transform-origin: 50% 14px; /* the nut's centre */
-  transform: rotate(180deg) scaleY(0.92);
-  transition: transform 0.16s cubic-bezier(0.3, 1.6, 0.5, 1);
+  position: absolute; z-index: 1; left: 8.5px; top: 0; width: 9px; height: 19px;
+  clip-path: polygon(0 16%, 18% 3%, 50% 0, 82% 3%, 100% 16%, 78% 100%, 22% 100%);
+  background: linear-gradient(90deg, #6a6c70, #d9dadb 22%, #ffffff 40%, #b9bbbe 62%, #77797d 86%, #55575a);
+  transform-origin: 50% 19px; /* the collar's centre */
+  transform: rotate(180deg);
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.55));
+  transition: transform 0.14s cubic-bezier(0.3, 1.5, 0.5, 1), filter 0.14s;
 }
-.power-bat::before { /* the rounded tip */
-  content: ''; position: absolute; left: -1px; top: -2px; width: 8px; height: 6px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #ffffff, #b8b8bd 60%, #6a6a70);
-}
+.power-bat::before { content: none; }
 
 /* the engraved legend */
-.power-legend { display: grid; gap: 1px; font: 600 11px/1.05 Oswald, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
-.power-legend b { font-weight: 600; color: #6c6559; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); transition: color 0.3s, text-shadow 0.3s; }
-.power-legend .off { color: #ff6a4f; text-shadow: 0 0 6px rgba(255, 80, 50, 0.9), 0 1px 0 rgba(0, 0, 0, 0.8); }
+.power-legend {
+  display: grid; gap: 7px; font: 600 9.5px/1 Jost, Oswald, sans-serif; letter-spacing: 0.16em; text-transform: uppercase;
+  text-align: left;
+}
+.power-legend b { font-weight: 600; color: rgba(28, 26, 23, 0.42); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7); transition: color 0.3s; }
+.power-legend .off { color: #1c1a17; }
 
 /* on */
-.powered .power { --glow: rgba(70, 230, 110, 0.4); animation: none; }
-.powered .power-bat { transform: rotate(0deg); }
+.powered .power-bat { transform: rotate(0deg); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55)); }
 .powered .power-jewel {
   background:
-    repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.18) 0 30deg, rgba(0, 0, 0, 0.08) 30deg 60deg),
-    radial-gradient(circle at 38% 35%, #e9ffe9, #5cf07a 35%, #17a13a 75%, #0b5a1f);
-  box-shadow: 0 0 0 2px #c8c8cc, 0 0 0 3px #3a3a3c, 0 0 12px 3px rgba(80, 240, 120, 0.7);
+    repeating-conic-gradient(from 8deg, rgba(255, 255, 255, 0.3) 0 15deg, rgba(120, 0, 0, 0.12) 15deg 30deg),
+    radial-gradient(circle at 40% 34%, #fff4ee, #ff6a48 34%, #e0301a 62%, #8e1408);
+  box-shadow: 0 0 0 1px #2a2a2c, 0 0 0 4px #f0e6e2, 0 0 0 5px #6d6f72, 0 0 16px 7px rgba(255, 80, 45, 0.55),
+    inset 0 0 3px rgba(120, 0, 0, 0.6);
 }
-.powered .power-legend .on { color: #7dff98; text-shadow: 0 0 6px rgba(90, 255, 130, 0.9), 0 1px 0 rgba(0, 0, 0, 0.8); }
-.powered .power-legend .off { color: #6c6559; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); }
+.powered .power-legend .on { color: #1c1a17; }
+.powered .power-legend .off { color: rgba(28, 26, 23, 0.42); }
 
-/* powering up: lever already up, the lamp warms amber */
-.power.starting { --glow: rgba(240, 170, 50, 0.45); opacity: 1; animation: none; }
-.power.starting .power-bat { transform: rotate(0deg); }
+/* powering up: lever already up, the lamp warms from amber */
+.power.starting { opacity: 1; }
+.power.starting .power-bat { transform: rotate(0deg); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55)); }
 .power.starting .power-jewel {
-  background: radial-gradient(circle at 38% 35%, #fff2c8, #f0b23c 40%, #8a5a10);
+  background:
+    repeating-conic-gradient(from 8deg, rgba(255, 255, 255, 0.25) 0 15deg, rgba(120, 60, 0, 0.12) 15deg 30deg),
+    radial-gradient(circle at 40% 34%, #fff2c8, #f0a03c 40%, #8a4a10);
   animation: power-warm 0.7s ease-in-out infinite alternate;
 }
-@keyframes power-warm { from { opacity: 0.5; } to { opacity: 1; } }
-.power:disabled:not(.starting) { animation: none; --glow: transparent; }
+@keyframes power-warm { from { filter: brightness(0.6); } to { filter: brightness(1.1); } }
+.power:disabled:not(.starting) { filter: saturate(0.7) brightness(0.8); }
 
 @media (prefers-reduced-motion: reduce) {
-  .power, .power.starting .power-jewel { animation: none; }
+  .power.starting .power-jewel { animation: none; }
   .power-bat { transition: none; }
 }
 
@@ -1305,7 +1307,8 @@ body.staging { overflow: hidden; }
 .welcome p, .welcome ul { margin: 0; }
 .welcome ul { padding-left: 20px; display: grid; gap: 4px; }
 .welcome-actions { display: flex; gap: 14px; align-items: center; }
-.power.starting .power-legend .off { color: #6c6559; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); }
+.power.starting .power-legend .off { color: rgba(28, 26, 23, 0.42); }
+.power.starting .power-legend .on { color: #1c1a17; }
 .device-access { display: grid; gap: 8px; padding: 10px 12px; border: 1px dashed var(--accent); border-radius: 8px; }
 .device-access button { justify-self: start; }
 
@@ -1314,12 +1317,30 @@ body.staging { overflow: hidden; }
 /* A pedal is its menu, then the enclosure at the real one's proportions
    (--w by --h; knobs --k across), then the circuit link. They stand on the
    floor together, so the row lines up along the bottom. */
-.board, .fx-boards { align-items: flex-end; }
+.board, .fx-boards { align-items: center; gap: 14px 0; }
+.board > :not(.cable), .fx-boards > :not(.cable) { position: relative; z-index: 1; }
+/* Patch cables: a plug going into the side of each box, the lead between. */
+.cable {
+  position: relative; z-index: 0; flex: none; align-self: center; width: 36px; height: 16px; margin: 0 -4px; border-radius: 0;
+  background: linear-gradient(180deg, #3a3a3a, #0b0b0b) center / 100% 6px no-repeat;
+}
+.board .cable { top: 7px; }
+.cable::before, .cable::after {
+  content: ''; position: absolute; top: 0; width: 13px; height: 16px; border-radius: 2px;
+  background:
+    linear-gradient(90deg, transparent 0 8px, #101010 8px 13px),
+    linear-gradient(180deg, #f6f6f6, #a2a5a9 42%, #6d7074 56%, #dcdde0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.cable::before { left: 0; }
+.cable::after { right: 0; transform: scaleX(-1); }
+.cable:first-child::before, .cable:last-child::after { display: none; }
+.cable:first-child, .cable:last-child { width: 26px; }
 .stomp {
   width: auto; padding: 0; border-radius: 0; background: none; box-shadow: none; color: var(--text);
   display: grid; grid-template-rows: auto auto auto auto; justify-items: center; align-content: end; gap: 6px;
 }
-.stomp-head { width: 100%; min-width: 150px; max-width: 250px; }
+.stomp-head { width: 0; min-width: 100%; }
 .stomp .hint { color: var(--muted); min-height: 0; }
 .stomp .hint:empty { display: none; }
 .stomp .circuit-toggle { color: var(--muted); font-size: 11px; }
@@ -1341,14 +1362,14 @@ body.staging { overflow: hidden; }
 .stomp-body .knob svg, .fx-red-comp .knob svg, .fx-delay .knob svg, .fx-reverb .knob svg {
   width: calc(var(--k) * 1.667); height: calc(var(--k) * 1.667); margin: calc(var(--k) * -0.3) calc(var(--k) * -0.28) calc(var(--k) * -0.26);
 }
-.stomp-body .knob-track, .stomp-body .knob-arc, .fxbox:not(.gate-box) .knob-track, .fxbox:not(.gate-box) .knob-arc { display: none; }
-.stomp-body .knob-shadow, .fxbox .knob-shadow { display: block; fill: rgba(0, 0, 0, 0.5); filter: blur(2.5px); }
-.stomp-body .knob-body, .fxbox:not(.gate-box) .knob-body { fill: url(#knob-black); stroke: #000; stroke-width: 1.5; }
-.stomp-body .knob-pointer, .fxbox .knob-pointer { stroke: #f4f4f0; stroke-width: 4.5; }
-.stomp-body .knob-label, .fxbox:not(.gate-box) .knob-label {
+.stomp-body .knob-track, .stomp-body .knob-arc, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-track, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-arc { display: none; }
+.stomp-body .knob-shadow, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-shadow { display: block; fill: rgba(0, 0, 0, 0.5); filter: blur(2.5px); }
+.stomp-body .knob-body, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-body { fill: url(#knob-black); stroke: #000; stroke-width: 1.5; }
+.stomp-body .knob-pointer, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-pointer { stroke: #f4f4f0; stroke-width: 4.5; }
+.stomp-body .knob-label, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-label {
   font: 600 8.5px Jost, Oswald, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: inherit; margin-top: 3px; white-space: nowrap;
 }
-.stomp-body .knob-value, .fxbox:not(.gate-box) .knob-value { color: inherit; font-size: 9px; opacity: 0.75; }
+.stomp-body .knob-value, .fxbox:is(.fx-red-comp, .fx-eq7, .fx-delay, .fx-reverb) .knob-value { color: inherit; font-size: 9px; opacity: 0.75; }
 .stomp-art, .stomp-foot { display: grid; justify-items: center; align-content: center; }
 .stomp-foot:empty, .stomp-art:empty { display: none; }
 .stomp-body .fx-switch button, .fx-delay .fx-switch button, .fx-reverb .fx-switch button { padding: 3px 6px; font-size: 10px; }
@@ -1393,7 +1414,7 @@ body.staging { overflow: hidden; }
 }
 .fx-brand { display: contents; }
 .fx-brand > * { text-align: center; line-height: 1.1; }
-.fxbox.gate-box .fx-brand, .fxbox.cab-tile .fx-brand { display: grid; justify-items: center; }
+.fxbox.gate-box .fx-brand, .fxbox.cab-tile .fx-brand, .fxbox.looper-box .fx-brand { display: grid; justify-items: center; }
 .fx-red-comp .fx-controls { order: -1; flex-wrap: nowrap; }
 .fx-red-comp .knob-label { font-size: 7.5px; letter-spacing: 0.02em; }
 .fx-red-comp .fx-maker {
@@ -1655,6 +1676,7 @@ body.staging { overflow: hidden; }
 
 @media (max-width: 760px) {
   .board, .fx-boards { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 10px; }
+  .cable { display: none; }
   .board .stomp, .board .fxbox, .fx-boards .fxbox { width: auto; }
   .board .fxbox.fx-red-comp, .fx-boards .fxbox.fx-eq7, .fx-boards .fxbox.fx-delay, .fx-boards .fxbox.fx-reverb { width: var(--w); }
   .stomp-body, .fxbox.fx-red-comp, .fxbox.fx-eq7, .fxbox.fx-delay, .fxbox.fx-reverb { zoom: 0.86; }
