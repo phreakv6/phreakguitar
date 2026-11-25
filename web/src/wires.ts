@@ -1,0 +1,60 @@
+// The leads between the rows: out of the last box before the amp, down the
+// right-hand margin into the amp's side, out of its other side and down the
+// left-hand margin into the first box after it. Drawn on an overlay from
+// where those things are on the page, and redrawn when the page reflows.
+
+const NS = 'http://www.w3.org/2000/svg';
+const R = 9; // corner radius, and how far out in the margin the lead runs
+
+export function setupWires(main: HTMLElement, board: HTMLElement, ampFace: HTMLElement, after: HTMLElement): void {
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'wires');
+  svg.setAttribute('aria-hidden', 'true');
+  main.append(svg);
+  const narrow = matchMedia('(max-width: 760px)');
+
+  const draw = () => {
+    const m = main.getBoundingClientRect();
+    const box = (el: Element | null) => {
+      if (!(el instanceof HTMLElement) || !el.offsetParent) return null;
+      const r = el.getBoundingClientRect();
+      return { left: r.left - m.left, right: r.right - m.left, top: r.top - m.top, mid: r.top - m.top + r.height / 2, height: r.height };
+    };
+    const out = box(board.lastElementChild);
+    const amp = box(ampFace.querySelector('.face'));
+    const inn = box(after.firstElementChild);
+    const side = !!main.querySelector('.practice.side') || document.body.classList.contains('staging');
+    if (!out || !amp || !inn || narrow.matches || side || amp.top < out.top || inn.top < amp.top) {
+      svg.replaceChildren();
+      return;
+    }
+    const xr = amp.right + R, xl = amp.left - R;
+    const ya = amp.top + Math.min(amp.height / 2, 110);
+    const fromX = Math.min(out.right - 2, xr - R);
+    const toAmp = `M ${fromX} ${out.mid} H ${xr - R} Q ${xr} ${out.mid} ${xr} ${out.mid + R} V ${ya - R} Q ${xr} ${ya} ${xr - R} ${ya} H ${amp.right - 3}`;
+    const toX = Math.max(inn.left + 2, xl + R);
+    const fromAmp = `M ${amp.left + 3} ${ya} H ${xl + R} Q ${xl} ${ya} ${xl} ${ya + R} V ${inn.mid - R} Q ${xl} ${inn.mid} ${xl + R} ${inn.mid} H ${toX}`;
+    const lead = (d: string) => `<path class="wire" d="${d}" /><path class="wire-shine" d="${d}" />`;
+    const plug = (x: number) => `<rect class="wire-plug" x="${x}" y="${ya - 8}" width="11" height="16" rx="2" />`;
+    svg.innerHTML = `<defs><linearGradient id="wire-chrome" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f6f6f6" /><stop offset="0.42" stop-color="#a2a5a9" /><stop offset="0.56" stop-color="#6d7074" /><stop offset="1" stop-color="#dcdde0" />
+      </linearGradient></defs>
+      ${lead(toAmp)}${lead(fromAmp)}${plug(amp.right - 4)}${plug(amp.left - 7)}`;
+  };
+
+  let queued = false;
+  const redraw = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; draw(); });
+  };
+  const sizes = new ResizeObserver(redraw);
+  for (const el of [main, board, ampFace, after]) sizes.observe(el);
+  const changes = new MutationObserver(redraw);
+  for (const el of [board, ampFace, after]) changes.observe(el, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'class'] });
+  changes.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  addEventListener('resize', redraw);
+  narrow.addEventListener('change', redraw);
+  void document.fonts?.ready.then(redraw);
+  redraw();
+}

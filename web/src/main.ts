@@ -13,6 +13,7 @@ import type { LooperStatus } from './engine.ts';
 import { amps, type AmpInfo } from './amps.ts';
 import { buildFace } from './faces.ts';
 import { pedalArt } from './pedalfaces.ts';
+import { setupWires } from './wires.ts';
 import { rename, renameMode } from './names.ts';
 import { buildTubes, type TubeView } from './tubes.ts';
 import { Tuner } from './tuner.ts';
@@ -2058,6 +2059,10 @@ if (unsupported) {
   powerBtn.disabled = true;
   track('unsupported_browser');
 } else if (firstVisit && !settings.welcomed) showWelcome();
+
+
+// The leads from the pedals into the amp and from the amp to what follows it.
+setupWires($('main'), board, $('#amp-face'), $('#fx-boards'));
 
 // Last, once everything above exists: power back up if it was on.
 // ?nopower in the URL skips it (a second tab, or a look without sound).
