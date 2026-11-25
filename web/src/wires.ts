@@ -1,4 +1,4 @@
-// The leads between the rows: out of the last box before the amp, down the
+// The leads between the rows: out of the last box before the amp, along the
 // right-hand margin into the amp's side, out of its other side and down the
 // left-hand margin into the first box after it. Drawn on an overlay from
 // where those things are on the page, and redrawn when the page reflows.
@@ -24,7 +24,7 @@ export function setupWires(main: HTMLElement, board: HTMLElement, ampFace: HTMLE
     const amp = box(ampFace.querySelector('.face'));
     const inn = box(after.firstElementChild);
     const side = !!main.querySelector('.practice.side') || document.body.classList.contains('staging');
-    if (!out || !amp || !inn || narrow.matches || side || amp.top < out.top || inn.top < amp.top) {
+    if (!out || !amp || !inn || narrow.matches || side || inn.top < amp.top) {
       svg.replaceChildren();
       return;
     }
@@ -35,8 +35,10 @@ export function setupWires(main: HTMLElement, board: HTMLElement, ampFace: HTMLE
     const y0 = out.mid, y1 = inn.mid;
     const fromX = Math.min(out.right - 2, xr - R);
     const run = xr - fromX, dropA = ya - y0, dropB = y1 - ya;
-    const toAmp = `M ${fromX} ${y0} C ${fromX + run * 0.55} ${y0 + Math.min(34, run * 0.12 + 8)}, ${xr + 5} ${y0 - 4}, ${xr + 3} ${y0 + dropA * 0.42}`
-      + ` S ${xr + 7} ${ya + 3}, ${amp.right + 6} ${ya}`;
+    // (The pedals may sit above the amp or below it: the lead climbs or drops.)
+    const up = dropA < 0 ? -1 : 1;
+    const toAmp = `M ${fromX} ${y0} C ${fromX + run * 0.55} ${y0 + Math.min(34, run * 0.12 + 8)}, ${xr + 5} ${y0 + up * 4}, ${xr + 3} ${y0 + dropA * 0.42}`
+      + ` S ${xr + 7} ${ya - up * 3}, ${amp.right + 6} ${ya}`;
     const toX = Math.max(inn.left + 2, xl + R);
     const fromAmp = `M ${amp.left - 6} ${ya} C ${xl - 7} ${ya + 3}, ${xl - 1} ${ya + dropB * 0.3}, ${xl - 3} ${ya + dropB * 0.6}`
       + ` S ${xl - 5} ${y1 + 9}, ${toX} ${y1}`;

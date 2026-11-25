@@ -69,6 +69,16 @@
         <div id="mini-slot"></div>
       </div>
 
+      <section class="amp" aria-label="Amplifier">
+        <div class="amp-picker">
+          <label>Amp <select id="amp-type"></select></label>
+          <button id="amp-rename" class="link" hidden>Rename</button>
+          <span id="amp-based" class="hint"></span>
+          <span id="amp-status" class="hint"></span>
+        </div>
+        <div id="amp-face"></div>
+      </section>
+
       <section class="board-row" aria-label="Before the amp">
         <h2 class="row-title">Before the amp <span class="row-note">guitar → gate → comp → 1 → 2 → 3 → 4 → amp</span> <span id="board-status" class="hint"></span></h2>
         <div id="board" class="board"></div>
@@ -81,16 +91,6 @@
         <p id="circuit-hint" class="hint">The exact circuit the engine solves, part for part. Hover a part for its name; click to zoom.</p>
         <div id="circuit-probe" class="probe"></div>
         <div id="circuit-design"></div>
-      </section>
-
-      <section class="amp" aria-label="Amplifier">
-        <div class="amp-picker">
-          <label>Amp <select id="amp-type"></select></label>
-          <button id="amp-rename" class="link" hidden>Rename</button>
-          <span id="amp-based" class="hint"></span>
-          <span id="amp-status" class="hint"></span>
-        </div>
-        <div id="amp-face"></div>
       </section>
 
       <section class="fxrow" aria-label="After the amp">
