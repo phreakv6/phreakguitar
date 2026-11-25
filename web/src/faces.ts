@@ -113,7 +113,7 @@ export function buildFace(amp: AmpInfo, knobs: HTMLElement[]): HTMLElement {
       // Soldano SLO-100: black covering and grille, the chrome script, a
       // brushed panel with black lettering.
       face.append(
-        div('so-front', `<div class="so-logo">Soldano</div>`),
+        div('so-front', `<div class="so-logo">soldano</div>`),
         panel('so-panel',
           `${jacks(['INPUT'])}`,
           `<div class="face-stack"><div class="so-plate"><b>SLO-100</b><small>SUPER LEAD OVERDRIVE</small></div>${lamp()}</div>`));

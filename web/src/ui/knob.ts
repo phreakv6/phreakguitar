@@ -58,6 +58,8 @@ function shareGradients(): void {
   document.body.insertAdjacentHTML('beforeend', `<svg id="knob-defs" width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
     ${lit('knob-black', ['#5a5a5a', '#222', '#0a0a0a', '#000'])}
     ${lit('knob-cream', ['#fffaf0', '#efe3c4', '#bfae86'])}
+    ${lit('knob-oxblood', ['#b0525a', '#6a1c26', '#3a0c12', '#22060a'])}
+    ${lit('knob-teal', ['#8fe0e4', '#2f9aa3', '#17646c', '#0c4047'])}
     ${brushed('knob-gold', ['#fbeeb8', '#d9b45a', '#f1d98c', '#a37c26', '#d6b25c'])}
     ${brushed('knob-silver', ['#ffffff', '#b9bdc3', '#eef0f2', '#7d8187', '#c9ccd1'])}
   </defs></svg>`);

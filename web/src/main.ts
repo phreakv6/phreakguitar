@@ -12,6 +12,7 @@ import { buildLooper, looperLabel } from './looperui.ts';
 import type { LooperStatus } from './engine.ts';
 import { amps, type AmpInfo } from './amps.ts';
 import { buildFace } from './faces.ts';
+import { pedalArt } from './pedalfaces.ts';
 import { rename, renameMode } from './names.ts';
 import { buildTubes, type TubeView } from './tubes.ts';
 import { Tuner } from './tuner.ts';
@@ -624,9 +625,16 @@ const currentAmp = (): AmpInfo => amps.find((a) => a.id === ampSel.value) ?? amp
 const ampKnobValue = (a: AmpInfo, i: number) =>
   settings.ampKnobs?.[a.id]?.[a.controls[i].name] ?? a.controls[i].defaultValue;
 
+/** Which circuit an amp or pedal is, when its name doesn't already say. */
+function circuitNote(it: { name: string; basedOn?: string }): string {
+  const plain = (t: string) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return it.basedOn && !plain(it.basedOn).includes(plain(it.name)) && !plain(it.name).includes(plain(it.basedOn))
+    ? `Circuit: ${it.basedOn}` : '';
+}
+
 function renderAmp(): void {
   const a = currentAmp();
-  $('#amp-based').textContent = a.basedOn ? `Based on the ${a.basedOn}` : '';
+  $('#amp-based').textContent = circuitNote(a);
   let faceKnobs: HTMLElement[];
   if (!a.netlist) {
     // The built-in tweed stages (no circuit file): their knobs.
@@ -792,7 +800,7 @@ function fxBox(fx: PostFxInfo): HTMLElement {
   {
     const box = document.createElement('div');
     box.className = `fxbox fx-${fx.id}`;
-    box.innerHTML = `<div class="fx-brand"><b>${fx.name}</b><small>${fx.maker}</small></div>
+    box.innerHTML = `<div class="fx-brand"><span class="fx-maker">${fx.maker}</span><b>${fx.print}</b><small>${fx.name}</small></div>
       <div class="fx-controls"></div>
       <button class="footswitch" aria-pressed="false"><span class="led" aria-hidden="true"></span><span class="fs-label"></span></button>`;
     const controls = box.querySelector('.fx-controls')!;
@@ -917,6 +925,7 @@ function renderStomp(slot: number): HTMLElement {
   const box = document.createElement('div');
   box.className = `stomp${p ? '' : ' empty'}`;
   box.dataset.pedal = p ? lookOf(p, allPedals()) : '';
+  const art = pedalArt(box.dataset.pedal);
   box.innerHTML = `
     <div class="stomp-head">
       <button class="slot-move" data-dir="-1" aria-label="Move pedal ${slot + 1} earlier" title="Move earlier" ${slot === 0 || !p ? 'disabled' : ''}>◀</button>
@@ -925,7 +934,9 @@ function renderStomp(slot: number): HTMLElement {
       <button class="slot-move" data-dir="1" aria-label="Move pedal ${slot + 1} later" title="Move later" ${slot === numPedalSlots - 1 || !p ? 'disabled' : ''}>▶</button>
     </div>
     <div class="knob-row small"></div>
+    <div class="stomp-art" aria-hidden="true">${art.art}</div>
     <button class="footswitch" aria-pressed="false"><span class="led" aria-hidden="true"></span><span class="fs-label"></span></button>
+    <div class="stomp-foot" aria-hidden="true">${art.foot}</div>
     <button class="link-light circuit-toggle" aria-controls="circuit-panel"></button>
     <div class="hint slot-status"></div>`;
 
@@ -1037,8 +1048,8 @@ function renderCircuit(): void {
     return;
   }
   $('#circuit-title').textContent = `${p.name} (pedal ${slot! + 1})`;
-  $('#circuit-based').textContent = p.basedOn ? `Based on the ${p.basedOn}` : '';
-  $('#circuit-based').hidden = !p.basedOn;
+  $('#circuit-based').textContent = circuitNote(p);
+  $('#circuit-based').hidden = !circuitNote(p);
   $('#pedal-rename').hidden = !renameMode || p.id.startsWith('my-');
   if (probe && (probe.slot !== slot || probe.pedal !== p.id)) stopProbe();
   circuitSvg = hasSchematic(p) ? renderSchematic(p, { onNode: (n, at) => onWire(slot!, n, at) }) : null;
@@ -1819,7 +1830,7 @@ const fxKeys: Record<string, string> = { eq7: 'E', delay: 'D', 'reverb': 'R' };
 function stageItems(): StageItem[] {
   const items: StageItem[] = [
     { id: 'gate', label: 'Gate', on: settings.gateOn, key: 'G' },
-    { id: 'comp', label: 'Red Comp', on: fxState(compressor).on, key: 'C' },
+    { id: 'comp', label: compressor.name, on: fxState(compressor).on, key: 'C' },
   ];
   for (let s = 0; s < numPedalSlots; s++) {
     const p = pedalInfo(s);

@@ -362,93 +362,7 @@ input[type='text']:focus { outline: none; border-color: var(--accent); }
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.5);
   color: #fbe9d6;
 }
-.stomp[data-pedal='green-drive'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.18), transparent 45%),
-    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.25), transparent 50%),
-    #3f8a4a;
-}
-.stomp[data-pedal='gold-horse'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.35), transparent 45%),
-    radial-gradient(circle at 70% 80%, rgba(80, 50, 0, 0.25), transparent 50%),
-    #c9a85c;
-  color: #2c1f05;
-}
-.stomp[data-pedal='gold-horse'] .knob-label { color: #2c1f05; }
-.stomp[data-pedal='gold-horse'] .hint { color: #4a3a17; }
-.stomp[data-pedal='ram-fuzz'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1), transparent 45%),
-    linear-gradient(180deg, #161616, #0b0b0b);
-  color: #e23b2e;
-  border: 2px solid #b5261c;
-}
-.stomp[data-pedal='ram-fuzz'] .knob-label { color: #e23b2e; }
-.stomp[data-pedal='photo-vibe'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.12), transparent 45%),
-    linear-gradient(180deg, #141414 0 62%, #b9b9b5 62% 66%, #141414 66%);
-  color: #e9e9e4;
-}
-.stomp[data-pedal='photo-vibe'] .knob-label { color: #e9e9e4; }
-.stomp[data-pedal='octave-fuzz'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55), transparent 50%),
-    repeating-radial-gradient(circle at 40% 60%, rgba(0, 0, 0, 0.05) 0 2px, transparent 2px 6px),
-    linear-gradient(160deg, #d9dbde, #a5a9ae 60%, #c6c9cd);
-  color: #b3201b;
-}
-.stomp[data-pedal='octave-fuzz'] .knob-label { color: #1a1a1a; }
-.stomp[data-pedal='octave-fuzz'] .hint { color: #222; }
-.stomp[data-pedal='orange-phaser'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.25), transparent 45%),
-    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.18), transparent 50%),
-    #ef6c1a;
-  color: #1a1a1a;
-}
-.stomp[data-pedal='orange-phaser'] .knob-label { color: #1a1a1a; }
-.stomp[data-pedal='orange-phaser'] .hint { color: #2a1a0d; }
 .stomp .fx-switch { align-self: center; }
-.stomp[data-pedal='classic-wah'] {
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 7px),
-    linear-gradient(180deg, #2a2a2a 0 70%, #c9c9c6 70% 74%, #1d1d1d 74%);
-  color: #f0f0f0;
-}
-.stomp[data-pedal='classic-wah'] .knob-label { color: #f0f0f0; }
-.stomp[data-pedal='treble-boost'] {
-  background:
-    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.35), transparent 45%),
-    repeating-radial-gradient(circle at 60% 40%, rgba(0, 0, 0, 0.06) 0 2px, transparent 2px 5px),
-    linear-gradient(160deg, #a9adb0, #7d8185 60%, #9a9ea2);
-  color: #121212;
-}
-.stomp[data-pedal='treble-boost'] .knob-label { color: #121212; }
-.stomp[data-pedal='treble-boost'] .hint { color: #222; }
-.stomp[data-pedal='round-fuzz-ge'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.22), transparent 45%),
-    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.25), transparent 50%),
-    #5f6f7c;
-}
-.stomp[data-pedal='clean-boost'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.6), transparent 50%),
-    linear-gradient(160deg, #d8d8d4, #9a9a96 55%, #c4c4c0);
-  color: #1b1b1b;
-}
-.stomp[data-pedal='clean-boost'] .knob-label { color: #b3121b; }
-.stomp[data-pedal='clean-boost'] .hint { color: #333; }
-.stomp[data-pedal='rodent'] {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 45%),
-    linear-gradient(180deg, #1a1a1a, #0d0d0d);
-  color: #f2f2f2;
-  border: 2px solid #2b2b2b;
-}
-.stomp[data-pedal='rodent'] .knob-label { color: #f2f2f2; letter-spacing: 0.18em; }
 .stomp.empty { background: var(--surface); box-shadow: none; border: 1px dashed var(--line); }
 .stomp-head { display: flex; align-items: center; gap: 4px; width: 100%; min-width: 0; }
 .stomp-head select { flex: 1; min-width: 0; background: rgba(0, 0, 0, 0.35); border-color: rgba(0, 0, 0, 0.4); color: inherit; }
@@ -470,27 +384,6 @@ input[type='text']:focus { outline: none; border-color: var(--accent); }
 .stomp .hint { color: #f1cfc0; min-height: 1.2em; text-align: center; }
 .stomp.empty .hint { color: var(--muted); }
 
-.footswitch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  padding: 8px 16px;
-  background: linear-gradient(180deg, #d9d9d9, #8f8f8f);
-  color: #1a1a1a;
-  border: 1px solid #555;
-  font: 600 12px Oswald, sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.footswitch .led {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #4a1612;
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
-}
-.footswitch[aria-pressed='true'] .led { background: #ff4a33; box-shadow: 0 0 8px 2px rgba(255, 74, 51, 0.6); }
 .stomp.empty .footswitch { visibility: hidden; }
 
 /* --- circuit view --------------------------------------------------------- */
@@ -825,6 +718,11 @@ button.link {
     inset 0 1px 0 rgba(255, 255, 255, 0.65), inset 0 -2px 3px rgba(0, 0, 0, 0.35);
   margin: 0 9px 9px;
 }
+.face[data-amp='brit-45'] .mar-logo {
+  background: linear-gradient(180deg, #fff3c2, #e3bb55 42%, #a07a26 56%, #ecca6c);
+  -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+  filter: drop-shadow(0 1px 0 #3a2608) drop-shadow(0 5px 6px rgba(0, 0, 0, 0.85));
+}
 .mar-plate { display: grid; justify-items: center; flex: none; color: var(--ink); }
 .mar-plate b { font: 700 19px Jost, sans-serif; letter-spacing: 0.04em; white-space: nowrap; }
 .mar-plate small { font: 600 8.5px Jost, sans-serif; letter-spacing: 0.16em; text-align: center; line-height: 1.25; }
@@ -845,10 +743,10 @@ button.link {
    black panel with white engraved lettering, chrome-capped knobs. */
 .hw-front { display: grid; place-items: center; padding: 30px 16px 34px; }
 .hw-logo {
-  font: 700 40px Jost, sans-serif; letter-spacing: 0.2em; line-height: 1; color: #121212;
-  padding: 7px 14px 7px 24px; border-radius: 7px;
-  background: linear-gradient(180deg, #ffffff, #e4e4df 70%, #c9c9c3);
-  box-shadow: 0 0 0 2px #121212, 0 0 0 5px #f1f1ec, 0 6px 10px rgba(0, 0, 0, 0.8);
+  font: 700 36px Jost, sans-serif; letter-spacing: 0.06em; line-height: 1; color: #f4f4ef;
+  padding: 7px 18px 6px 20px; border-radius: 2px; transform: scaleX(1.2);
+  background: linear-gradient(180deg, #1c1c1c, #0a0a0a);
+  box-shadow: 0 0 0 3px #f4f4ef, 0 6px 10px rgba(0, 0, 0, 0.8);
 }
 .hw-panel {
   --ink: #f3f3ee; --paper: #141414; border-radius: 2px; margin: 0 5px 5px;
@@ -951,8 +849,8 @@ button.link {
   box-shadow: inset 0 0 0 1px #000, inset 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 0 50px rgba(0, 0, 0, 0.4);
 }
 .vox-logo {
-  position: absolute; left: 50%; top: 14px; transform: translateX(-50%) scaleX(1.3);
-  font: 44px Righteous, sans-serif; letter-spacing: 0.1em; line-height: 1; padding-left: 0.1em;
+  position: absolute; left: 44px; top: 14px; transform: scaleX(1.3); transform-origin: left;
+  font: 40px Righteous, sans-serif; letter-spacing: 0.1em; line-height: 1;
   background: linear-gradient(180deg, #fff3c2, #e3bb55 40%, #9c7423 56%, #e9c768);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 1px 0 #3a2608) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.75));
@@ -983,7 +881,7 @@ button.link {
   box-shadow: inset 0 0 0 1px #000, inset 0 8px 16px rgba(0, 0, 0, 0.7);
 }
 .so-logo {
-  font: 82px Yellowtail, cursive; line-height: 1.1; padding: 0 16px;
+  font: 78px Righteous, sans-serif; line-height: 1.1; padding: 0 16px; letter-spacing: -0.01em;
   background: var(--chrome); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 1px 0 #3d3d3d) drop-shadow(0 4px 4px rgba(0, 0, 0, 0.8));
 }
@@ -993,6 +891,12 @@ button.link {
   box-shadow: inset 0 1px 0 #fff, inset 0 -2px 3px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.6);
 }
 .face-hotrod .knob-label { font-size: 9.5px; letter-spacing: 0.05em; }
+.so-front {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 46px, #101010 46px 60px),
+    repeating-linear-gradient(0deg, #050505 0 9px, #1b1b1b 9px 11px, #262626 11px 20px),
+    #111;
+}
 .so-plate { display: grid; justify-items: center; gap: 2px; flex: none; color: var(--ink); }
 .so-plate b { font: 700 16px Jost, sans-serif; letter-spacing: 0.08em; white-space: nowrap; }
 .so-plate small { font: 600 6.5px Jost, sans-serif; letter-spacing: 0.16em; white-space: nowrap; }
@@ -1029,7 +933,8 @@ button.link {
   .so-front, .du-front { height: 110px; }
   .bf-grille, .tw-grille, .vox-grille { height: 120px; }
   .bf-logo { font-size: 38px; left: 22px; }
-  .hw-logo { font-size: 30px; }
+  .hw-logo { font-size: 26px; }
+  .vox-logo { left: 22px; font-size: 32px; }
   .or-logo { font-size: 36px; }
   .jcm-plate { align-self: center; margin: 0; padding: 4px 12px; }
 }
@@ -1099,73 +1004,6 @@ button.link {
 }
 .fx-switch button[aria-checked='true'] { background: rgba(0, 0, 0, 0.6); color: #fff; }
 
-/* 7-band EQ: brushed steel, seven sliders and Level. */
-.fx-eq7 {
-  width: 320px;
-  background: linear-gradient(180deg, #fbfbf8, #e3e2dc);
-  color: #1d2a5a;
-  border-bottom: 34px solid #1b1b1b;
-}
-.fx-eq7 .fx-brand b { font: 700 26px Oswald, sans-serif; letter-spacing: 0.04em; }
-.fx-eq7 .fx-brand small { font: 600 10px Oswald, sans-serif; letter-spacing: 0.2em; }
-.fx-eq7 .fx-controls { flex-wrap: nowrap; gap: 2px; align-items: stretch; }
-.eq-band { display: grid; justify-items: center; gap: 4px; width: 34px; cursor: pointer; }
-.eq-band input[type='range'] {
-  writing-mode: vertical-lr; direction: rtl; width: 22px; height: 110px; margin: 0;
-  accent-color: #1d2a5a;
-}
-.eq-db { font: 500 9px 'IBM Plex Mono', monospace; color: #4a5585; min-height: 1.2em; }
-.eq-label { font: 600 10px Oswald, sans-serif; letter-spacing: 0.04em; }
-.eq-band:last-child { margin-left: 8px; }
-
-/* Red Comp: small red box, two knobs, first on the board. */
-.fx-red-comp.stomp-comp {
-  width: 150px; flex: none; align-content: start;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.2), transparent 45%),
-    #c4161c;
-  color: #fff;
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25), 0 8px 22px rgba(0, 0, 0, 0.5);
-}
-.fx-red-comp .fx-brand { order: -1; }
-.fx-red-comp .fx-brand b { font: 700 italic 24px Georgia, serif; text-transform: lowercase; }
-.fx-red-comp .fx-brand small { font: 800 12px Oswald, sans-serif; letter-spacing: 0.3em; }
-.fx-red-comp .knob { width: 58px; }
-.fx-red-comp .knob svg { width: 46px; height: 46px; }
-.fx-red-comp .knob-label { color: #fff; font-size: 9px; }
-.fx-red-comp .knob-value { color: #ffd9d9; }
-.fx-red-comp .knob-body { fill: #151515; stroke: #000; }
-.fx-red-comp .knob-pointer { stroke: #f2f2f2; }
-.fx-red-comp .knob-arc { stroke: #fff; }
-
-/* Digital delay: deep blue, black knobs. */
-.fx-delay {
-  background: linear-gradient(180deg, #fbfbf8, #e3e2dc);
-  color: #1d2a5a;
-  border-bottom: 34px solid #1b1b1b;
-}
-.fx-delay .fx-brand b { font: 700 26px Oswald, sans-serif; letter-spacing: 0.04em; }
-.fx-delay .fx-brand small { font: 600 10px Oswald, sans-serif; letter-spacing: 0.2em; }
-.fx-delay .knob-body { fill: #151515; stroke: #000; }
-.fx-delay .knob-pointer { stroke: #f2f2f2; }
-.fx-delay .knob-label, .fx-delay .knob-value { color: #1d2a5a; }
-.fx-delay .knob-arc { stroke: #3a57b8; }
-.fx-delay .knob-track { stroke: rgba(0, 0, 0, 0.12); }
-
-/* Reverb: brushed steel, blue lettering. */
-.fx-reverb {
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 3px),
-    linear-gradient(160deg, #d8dde3, #9aa3ad 55%, #c9cfd6);
-  color: #17306e;
-}
-.fx-reverb .fx-brand b { font: 700 italic 26px Georgia, serif; }
-.fx-reverb .fx-brand small { font: 600 10px Oswald, sans-serif; letter-spacing: 0.12em; }
-.fx-reverb .knob-body { fill: #1a1a1a; stroke: #000; }
-.fx-reverb .knob-pointer { stroke: #f2f2f2; }
-.fx-reverb .knob-label, .fx-reverb .knob-value { color: #17306e; }
-.fx-reverb .knob-arc { stroke: #2f55c4; }
-.fx-reverb .knob-track { stroke: rgba(0, 0, 0, 0.12); }
 .fxbox .footswitch { margin-top: 2px; align-self: end; }
 
 
@@ -1460,29 +1298,6 @@ body.staging { overflow: hidden; }
 .looper-box[data-state='overdubbing'] .looper-main { border-color: #ffb347; }
 @media (max-width: 760px) { .fx-boards .looper-box { grid-column: 1 / -1; width: auto; } }
 
-/* EQ and delay: their own enclosures (no treadles). */
-.fx-eq7 {
-  border-bottom: none;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 3px),
-    linear-gradient(160deg, #c9ced4, #8e959d 55%, #b4bac1);
-  color: #13233f;
-}
-.fx-delay {
-  border-bottom: none;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.16), transparent 45%),
-    linear-gradient(180deg, #1f3c6e, #142a52);
-  color: #e3ecff;
-}
-.fx-delay .knob-label, .fx-delay .knob-value { color: #e3ecff; }
-.fx-delay .knob-arc { stroke: #8fb6ff; }
-.fx-delay .knob-track { stroke: rgba(255, 255, 255, 0.12); }
-.fx-delay .fx-switch button[aria-checked='true'] { background: rgba(0, 0, 0, 0.55); color: #fff; }
-.fx-red-comp .fx-brand b { font: 600 20px Oswald, sans-serif; font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; }
-.fx-red-comp .fx-brand small { letter-spacing: 0.2em; font-size: 10px; text-transform: uppercase; }
-.fx-reverb .fx-brand b { font: 600 24px Oswald, sans-serif; font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; }
-
 /* --- first visit ---------------------------------------------------------------- */
 
 .welcome { border-color: var(--accent); gap: 8px; }
@@ -1493,3 +1308,358 @@ body.staging { overflow: hidden; }
 .power.starting .power-legend .off { color: #6c6559; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); }
 .device-access { display: grid; gap: 8px; padding: 10px 12px; border: 1px dashed var(--accent); border-radius: 8px; }
 .device-access button { justify-self: start; }
+
+/* --- pedals and effects, after the real ones ------------------------------------------ */
+
+/* The footswitch: a chrome stomp switch, its LED above it. */
+.footswitch {
+  position: relative; width: 46px; height: 46px; padding: 0; margin-top: 22px; border: none; border-radius: 50%; flex: none;
+  background:
+    radial-gradient(circle at 50% 42%, #ffffff 0 14%, #cfd1d4 24%, #8d9095 31%, transparent 32%),
+    conic-gradient(from 20deg, #f4f4f4, #8a8d91, #ededed, #777a7e, #e2e2e2, #8a8d91, #f4f4f4);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 0 0 7px rgba(255, 255, 255, 0.12);
+}
+.footswitch:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.35); }
+.footswitch .led {
+  position: absolute; left: 50%; top: -19px; margin-left: -5px; width: 10px; height: 10px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #7a2a20, #3a0d08);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), inset 0 0 2px rgba(0, 0, 0, 0.8);
+}
+.footswitch[aria-pressed='true'] .led {
+  background: radial-gradient(circle at 35% 30%, #fff0ea, #ff4a33 45%, #b01c0c);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 10px 3px rgba(255, 74, 51, 0.7);
+}
+.footswitch .fs-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.fxbox .footswitch { margin-top: 22px; align-self: end; }
+
+.stomp { grid-template-rows: auto auto 1fr auto auto auto auto; position: relative; }
+.stomp-art, .stomp-foot { display: grid; justify-items: center; align-content: center; width: 100%; }
+.stomp-foot:empty, .stomp-art:empty { display: none; }
+.stomp .knob svg, .fxbox:not(.gate-box) .knob svg { width: 54px; height: 54px; margin: 2px 0; }
+.stomp .knob-track, .stomp .knob-arc, .fxbox:not(.gate-box) .knob-track, .fxbox:not(.gate-box) .knob-arc { display: none; }
+.stomp .knob-shadow, .fxbox .knob-shadow { display: block; fill: rgba(0, 0, 0, 0.5); filter: blur(2.5px); }
+.stomp .knob-body, .fxbox:not(.gate-box) .knob-body { fill: url(#knob-black); stroke: #000; stroke-width: 1.5; }
+.stomp .knob-pointer, .fxbox .knob-pointer { stroke: #f4f4f0; stroke-width: 4.5; }
+.stomp .knob-label, .fxbox:not(.gate-box) .knob-label {
+  font: 600 10px Jost, Oswald, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: inherit;
+}
+.stomp .knob-value, .fxbox:not(.gate-box) .knob-value { color: inherit; }
+.stomp .hint, .stomp .circuit-toggle { color: inherit; }
+.stomp .circuit-toggle { opacity: 0.8; font-size: 11px; }
+.stomp-head { color: inherit; }
+.stomp.empty { grid-template-rows: none; }
+
+/* Ibanez TS808 Tube Screamer: seafoam green, the small Tone knob set lower
+   between the two big ones, the square switch plate. */
+.stomp[data-pedal='green-drive'] {
+  background:
+    radial-gradient(circle at 28% 12%, rgba(255, 255, 255, 0.22), transparent 42%),
+    linear-gradient(180deg, #5cc08f, #44a877 60%, #3b9a6b);
+  color: #f6fffa;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='green-drive'] .knob:nth-child(2) { transform: translateY(16px) scale(0.82); }
+.stomp[data-pedal='green-drive'] .knob-row { margin-bottom: 10px; }
+.ts-name {
+  display: grid; justify-items: center; width: 92%; padding: 7px 0 5px; margin-top: 4px;
+  border: 2px solid rgba(246, 255, 250, 0.9); border-radius: 4px;
+}
+.ts-name b { font: 500 25px Oswald, sans-serif; letter-spacing: 0.03em; line-height: 1; transform: scaleY(1.15); }
+.ts-name small { font: 500 10px Jost, sans-serif; letter-spacing: 0.06em; margin-top: 5px; }
+.ts-name i { font-style: normal; margin-left: 12px; }
+.stomp[data-pedal='green-drive'] .footswitch {
+  width: 64px; height: 50px; border-radius: 5px; margin-top: 20px;
+  background: linear-gradient(180deg, #fafafa, #c9cbce 45%, #a5a8ac 55%, #dcdde0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 0 0 5px rgba(255, 255, 255, 0.35), inset 0 0 0 6px rgba(0, 0, 0, 0.18);
+}
+.ts-maker { font: italic 700 21px Georgia, 'Times New Roman', serif; letter-spacing: 0.02em; margin-top: 4px; }
+
+/* Klon Centaur: the gold casting, oxblood knobs, serif lettering. */
+.stomp[data-pedal='gold-horse'] {
+  background:
+    var(--tx-brushed),
+    radial-gradient(circle at 26% 10%, rgba(255, 244, 200, 0.5), transparent 46%),
+    linear-gradient(170deg, #d9b061, #c0913f 55%, #a9792e);
+  background-blend-mode: soft-light, normal, normal;
+  color: #3a2408;
+  box-shadow: inset 0 0 0 2px rgba(60, 35, 0, 0.35), inset 0 2px 0 rgba(255, 240, 190, 0.5), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='gold-horse'] .knob-body { fill: url(#knob-oxblood); stroke: #1c0407; }
+.stomp[data-pedal='gold-horse'] .knob-pointer { stroke: #f1dcae; stroke-width: 3; }
+.stomp[data-pedal='gold-horse'] .knob-label { font: 600 9px Georgia, serif; letter-spacing: 0.06em; }
+.stomp[data-pedal='gold-horse'] .knob svg { width: 58px; height: 58px; }
+.stomp[data-pedal='gold-horse'] .footswitch { margin-left: 70px; }
+.klon-name { display: flex; justify-content: space-between; width: 90%; margin-top: 6px; }
+.klon-name b { font: 600 12px Georgia, serif; letter-spacing: 0.24em; }
+
+/* ProCo RAT: the black box, white lettering, the boxed logo. */
+.stomp[data-pedal='rodent'] {
+  background:
+    var(--tx-grain),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.1), transparent 44%),
+    linear-gradient(180deg, #1f1f1f, #0c0c0c);
+  color: #f3f3f3;
+  box-shadow: inset 0 0 0 2px #000, inset 0 2px 0 rgba(255, 255, 255, 0.12), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='rodent'] .knob-label { order: -1; font-size: 9.5px; letter-spacing: 0.06em; }
+.rat-logo {
+  display: flex; align-items: stretch; gap: 6px; padding: 4px 8px 4px 5px; margin: 8px 0 2px;
+  border: 2.5px solid #f3f3f3; border-radius: 2px;
+}
+.rat-logo i {
+  font: 700 9.5px/1 Jost, sans-serif; font-style: normal; padding: 3px 3px 2px; border: 2px solid #f3f3f3;
+  display: grid; align-content: center; text-align: center;
+}
+.rat-logo b { font: 700 34px/0.95 Jost, sans-serif; letter-spacing: 0.04em; transform: scaleX(1.25); transform-origin: left; margin-right: 22px; }
+
+/* MXR Phase 90 (script logo): orange, one big knob, black script. */
+.stomp[data-pedal='orange-phaser'] {
+  background:
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.28), transparent 44%),
+    linear-gradient(180deg, #f07f24, #e36a14 60%, #d25f10);
+  color: #17110b;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.28), inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='orange-phaser'] .knob { width: 96px; }
+.stomp[data-pedal='orange-phaser'] .knob svg { width: 84px; height: 84px; }
+.stomp[data-pedal='orange-phaser'] .knob-body { stroke: #c9ccd1; stroke-width: 3; }
+.mxr-script { font: 42px Yellowtail, cursive; line-height: 1; }
+.mxr-model { font: 30px Yellowtail, cursive; line-height: 1.1; }
+
+/* Electro-Harmonix LPB-1: bare steel, the black label with yellow lettering. */
+.stomp[data-pedal='clean-boost'], .stomp[data-pedal='ram-fuzz'] {
+  background:
+    var(--tx-brushed),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.6), transparent 46%),
+    linear-gradient(170deg, #e2e3e4, #a9abae 55%, #c9cacc);
+  color: #151515;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3), inset 0 2px 0 #fff, 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='clean-boost'] .knob-label { color: #c0161d; font-weight: 700; }
+.stomp[data-pedal='clean-boost'] .knob svg { width: 64px; height: 64px; }
+.lpb-label { display: grid; justify-items: center; width: 92%; padding: 10px 0 8px; background: #141414; border-radius: 3px; margin-top: 6px; }
+.lpb-label b {
+  font: italic 700 36px/1 Jost, sans-serif; color: #f6d51f; letter-spacing: 0.02em;
+  text-shadow: 2px 2px 0 #141414, 3px 3px 0 #f6d51f;
+}
+.lpb-label small { font: 700 7.5px Jost, sans-serif; letter-spacing: 0.14em; color: #f6d51f; margin-top: 6px; }
+.ehx-maker { font: 500 15px Jost, sans-serif; letter-spacing: 0.01em; margin-top: 4px; }
+
+/* Big Muff Pi: steel with the red lettering, the black field round the switch. */
+.stomp[data-pedal='ram-fuzz'] .knob-label { order: -1; font-size: 9px; }
+.bm-logo { display: grid; justify-items: center; line-height: 1; margin-top: 2px; }
+.bm-logo b {
+  font: 700 37px/1 Oswald, sans-serif; letter-spacing: 0.04em; color: #d3222a; white-space: nowrap;
+  -webkit-text-stroke: 1px #151515; text-shadow: 0 0 0 #fff, 2px 2px 0 #151515;
+}
+.bm-logo i { font: 700 30px/0.8 Georgia, serif; font-style: normal; color: #d3222a; -webkit-text-stroke: 1px #151515; position: relative; z-index: 1; }
+.bm-black { width: calc(100% + 4px); height: 92px; margin-top: 6px; background: linear-gradient(180deg, #1a1a1a, #0b0b0b); border-radius: 3px; }
+.stomp[data-pedal='ram-fuzz'] .footswitch { margin-top: -78px; margin-bottom: 26px; z-index: 1; }
+
+/* Dallas Rangemaster: grey hammertone, one knob. */
+.stomp[data-pedal='treble-boost'], .stomp[data-pedal='round-fuzz-ge'] {
+  background:
+    var(--tx-tolex),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.35), transparent 46%),
+    linear-gradient(165deg, #a4a9ad, #7c8186 60%, #8f9498);
+  color: #131313;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='treble-boost'] .knob svg { width: 64px; height: 64px; }
+.rm-name { display: grid; justify-items: center; line-height: 1.1; }
+.rm-name i { font: italic 700 20px Georgia, serif; }
+.rm-name b { font: 700 19px Jost, sans-serif; letter-spacing: 0.08em; }
+.rm-name small { font: 600 9px Jost, sans-serif; letter-spacing: 0.24em; margin-top: 3px; }
+
+/* Dallas Arbiter Fuzz Face: the round casting (red for silicon, grey
+   hammertone for germanium), the black smile, the arched name. */
+.stomp[data-pedal='round-fuzz'], .stomp[data-pedal='round-fuzz-ge'] {
+  width: 250px; border-radius: 50%; padding: 26px 24px 30px; gap: 4px; overflow: hidden; color: #f3ead2;
+}
+.stomp[data-pedal='round-fuzz'] {
+  background:
+    radial-gradient(circle at 30% 14%, rgba(255, 255, 255, 0.28), transparent 44%),
+    radial-gradient(circle at 50% 50%, #c9302c, #a8201e 70%, #861616);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.3), inset 0 4px 0 rgba(255, 255, 255, 0.25), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.stomp[data-pedal='round-fuzz-ge'] {
+  background:
+    var(--tx-tolex),
+    radial-gradient(circle at 30% 14%, rgba(255, 255, 255, 0.25), transparent 44%),
+    linear-gradient(165deg, #6c7176, #4c5054 60%, #5b5f63);
+  color: #f3ead2;
+}
+.stomp[data-pedal='round-fuzz-ge'] { box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.3), inset 0 4px 0 rgba(255, 255, 255, 0.3), 0 8px 22px rgba(0, 0, 0, 0.5); }
+.stomp[data-pedal^='round-fuzz']::before {
+  content: ''; position: absolute; left: 8%; right: 8%; top: 47%; bottom: -4%;
+  clip-path: polygon(50% 0, 100% 62%, 100% 100%, 0 100%, 0 62%);
+  background: repeating-linear-gradient(90deg, #0b0b0b 0 3px, #1e1e1e 3px 5px);
+}
+.stomp[data-pedal^='round-fuzz'] > * { position: relative; }
+.stomp[data-pedal^='round-fuzz'] .stomp-head { width: 74%; }
+.stomp[data-pedal^='round-fuzz'] .stomp-name span { font-size: 12px; }
+.stomp[data-pedal^='round-fuzz'] .knob-row { width: 100%; justify-content: space-between; }
+.stomp[data-pedal^='round-fuzz'] .knob:first-child { order: 2; }
+.stomp[data-pedal^='round-fuzz'] .knob-label, .stomp[data-pedal^='round-fuzz'] .knob-value { color: #f3ead2; }
+.stomp[data-pedal^='round-fuzz'] .stomp-art { margin-top: -44px; pointer-events: none; }
+.ff-name { width: 76%; overflow: visible; }
+.ff-name text { font: 700 21px Jost, sans-serif; letter-spacing: 0.1em; text-anchor: middle; fill: #f3ead2; }
+.stomp[data-pedal^='round-fuzz'] .footswitch { margin-top: 26px; }
+.ff-maker {
+  font: 700 6.5px Jost, sans-serif; letter-spacing: 0.12em; color: #151515; background: #efe6cc; padding: 3px 10px; border-radius: 0 0 40px 40px / 0 0 14px 14px;
+  margin-top: 6px;
+}
+.stomp[data-pedal^='round-fuzz'] .circuit-toggle, .stomp[data-pedal^='round-fuzz'] .hint { color: #f3ead2; }
+
+/* Tycobrahe Octavia: bare aluminium, red name. */
+.stomp[data-pedal='octave-fuzz'] {
+  background:
+    var(--tx-brushed),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.55), transparent 46%),
+    linear-gradient(165deg, #d9dbde, #a5a9ae 60%, #c6c9cd);
+  color: #141414;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3), inset 0 2px 0 #fff, 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.oct-name { display: grid; justify-items: center; margin-top: 4px; }
+.oct-name b { font: 700 30px/1 Jost, sans-serif; letter-spacing: 0.14em; color: #b3201b; padding-left: 0.14em; }
+.oct-name small { font: 600 7px Jost, sans-serif; letter-spacing: 0.2em; margin-top: 4px; }
+
+/* Shin-ei Uni-Vibe: the black panel in its grey case, the white script. */
+.stomp[data-pedal='photo-vibe'] {
+  background:
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.1), transparent 44%),
+    linear-gradient(180deg, #1c1c1c, #0d0d0d);
+  color: #f1f1ec;
+  box-shadow: inset 0 0 0 5px #8f9296, inset 0 0 0 6px #2c2c2c, inset 0 6px 0 #c9cbce, 0 8px 22px rgba(0, 0, 0, 0.5);
+  padding: 14px 14px 16px;
+}
+.stomp[data-pedal='photo-vibe'] .stomp-art { order: -1; }
+.stomp[data-pedal='photo-vibe'] .stomp-head { order: -2; }
+.stomp[data-pedal='photo-vibe'] { grid-template-rows: auto auto 1fr auto auto auto auto; }
+.uv-name { font: 38px Yellowtail, cursive; line-height: 1.1; }
+.stomp[data-pedal='photo-vibe'] .fx-switch { border-color: rgba(255, 255, 255, 0.4); }
+.stomp[data-pedal='photo-vibe'] .fx-switch button[aria-checked='true'] { background: #f1f1ec; color: #111; }
+
+/* Vox V846 wah: the black rocker with its ribbed rubber tread. */
+.stomp[data-pedal='classic-wah'] {
+  background:
+    var(--tx-tolex),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.12), transparent 44%),
+    linear-gradient(180deg, #262626, #101010);
+  color: #f0f0f0;
+  box-shadow: inset 0 0 0 2px #000, inset 0 0 0 4px #9a9da1, inset 0 0 0 5px #000, 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.wah-tread {
+  width: 74%; height: 96px; margin-top: 6px; border-radius: 8px; display: grid; place-items: center;
+  background: repeating-linear-gradient(0deg, #0a0a0a 0 4px, #2b2b2b 4px 7px);
+  box-shadow: inset 0 0 0 2px #000, 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+.wah-tread span {
+  font: 20px Righteous, sans-serif; letter-spacing: 0.14em; padding: 1px 10px 1px 13px; border-radius: 2px;
+  background: var(--chrome); color: #111; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.wah-model { font: 600 8px Jost, sans-serif; letter-spacing: 0.2em; margin-top: 4px; }
+
+/* The effects' printing: the maker, the words on the pedal, the model. */
+.fx-brand { display: contents; }
+.fx-brand > * { text-align: center; line-height: 1.1; }
+.fxbox.gate-box .fx-brand, .fxbox.cab-tile .fx-brand { display: grid; justify-items: center; }
+
+/* MXR Dyna Comp: red, two knobs, the boxed logo, the name at the foot. */
+.fx-red-comp.stomp-comp {
+  width: 160px; flex: none; align-content: start; gap: 8px; color: #fff;
+  background:
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.25), transparent 44%),
+    linear-gradient(180deg, #d5262d, #bd1a21 60%, #a9141b);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.28), inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.fx-red-comp .knob { width: 60px; }
+.fx-red-comp .fx-controls { order: -1; flex-wrap: nowrap; gap: 4px; }
+.fx-red-comp .knob-label { font-size: 8.5px; letter-spacing: 0.04em; }
+.fx-red-comp .fx-maker {
+  font: 700 21px/1 Jost, sans-serif; letter-spacing: 0.06em; padding: 3px 9px 2px 11px; border: 2.5px solid #fff; border-radius: 7px;
+  transform: scaleX(1.15); margin-top: 6px;
+}
+.fx-red-comp .fx-brand small { display: none; }
+.fx-red-comp .fx-brand b { order: 5; font: 500 23px Jost, sans-serif; letter-spacing: 0.02em; margin-top: 6px; }
+
+/* BOSS compacts (GE-7, DD-3): controls in the black top panel, the name on
+   the body, the rubber pedal that is the switch. */
+.fx-eq7, .fx-delay {
+  gap: 8px; padding: 10px 10px 10px; color: #111;
+  background:
+    radial-gradient(circle at 28% 8%, rgba(255, 255, 255, 0.5), transparent 40%),
+    linear-gradient(180deg, #e9e7df, #d6d3c8);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.25), inset 0 2px 0 #fff, 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.fx-eq7 { width: 320px; }
+.fx-eq7 .fx-controls, .fx-delay .fx-controls {
+  order: -1; width: 100%; box-sizing: border-box; padding: 10px 6px 8px; border-radius: 6px; color: #f2f2f2;
+  background: linear-gradient(180deg, #232323, #101010); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 3px rgba(0, 0, 0, 0.4);
+}
+.fx-eq7 .fx-controls { flex-wrap: nowrap; gap: 2px; align-items: stretch; justify-content: space-around; }
+.fx-eq7 .fx-maker, .fx-delay .fx-maker { display: none; }
+.fx-eq7 .fx-brand b, .fx-delay .fx-brand b { font: 600 30px/1 Jost, sans-serif; letter-spacing: -0.01em; margin-top: 6px; }
+.fx-eq7 .fx-brand small, .fx-delay .fx-brand small { font: 500 17px/1 Jost, sans-serif; margin: -4px 0 0 40%; }
+.fx-delay .fx-brand b, .fx-delay .fx-brand small { color: #2a93b8; }
+.fx-eq7 .footswitch, .fx-delay .footswitch {
+  width: 100%; height: 118px; margin-top: 18px; border-radius: 6px 6px 10px 10px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #2a2a2a, #151515);
+  box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 rgba(255, 255, 255, 0.12), 0 3px 5px rgba(0, 0, 0, 0.5);
+}
+.fx-eq7 .footswitch::after, .fx-delay .footswitch::after {
+  content: 'BOSS'; font: italic 700 32px Jost, sans-serif; letter-spacing: 0.04em; color: #303030;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.22), 0 -1px 0 #000;
+}
+.fx-eq7 .footswitch .led, .fx-delay .footswitch .led { top: -14px; }
+.eq-band { display: grid; justify-items: center; gap: 4px; width: 34px; cursor: pointer; }
+.eq-band input[type='range'] { writing-mode: vertical-lr; direction: rtl; width: 22px; height: 110px; margin: 0; accent-color: #f4f4f0; }
+.eq-db { font: 500 9px 'IBM Plex Mono', monospace; color: #b9bcc2; min-height: 1.2em; }
+.eq-label { font: 600 10px Jost, sans-serif; letter-spacing: 0.02em; }
+.eq-band:last-child { margin-left: 8px; }
+.fx-delay .knob-body { fill: url(#knob-teal); stroke: #0a3338; }
+.fx-delay .knob-pointer { stroke: #fff; }
+.fx-delay .knob-label { font-size: 9px; letter-spacing: 0.04em; }
+.fx-delay .knob { width: 60px; }
+.fx-delay .fx-switch { border-color: rgba(255, 255, 255, 0.35); }
+.fx-delay .fx-switch button[aria-checked='true'] { background: #f2f2f2; color: #111; }
+
+/* Electro-Harmonix Holy Grail: steel, blue script. */
+.fx-reverb {
+  color: #17306e;
+  background:
+    var(--tx-brushed),
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.6), transparent 46%),
+    linear-gradient(165deg, #dfe3e8, #a3abb4 55%, #c9cfd6);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3), inset 0 2px 0 #fff, 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.fx-reverb .fx-brand b { order: -1; font: 46px Yellowtail, cursive; line-height: 1; color: #1b3f9c; text-shadow: 1px 1px 0 #fff; }
+.fx-reverb .fx-brand small { display: none; }
+.fx-reverb .knob svg { width: 64px; height: 64px; }
+.fx-reverb .fx-maker { order: 5; font: 500 16px Jost, sans-serif; color: #151515; }
+.fx-reverb .fx-switch button[aria-checked='true'] { background: #17306e; color: #fff; }
+
+@media (max-width: 760px) {
+  .board .stomp[data-pedal^='round-fuzz'] { width: auto; border-radius: 46%; padding: 22px 14px 26px; }
+  .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .board .stomp, .board .fxbox { min-width: 0; overflow: hidden; }
+  .stomp[data-pedal^='round-fuzz'] .stomp-art { margin-top: -14px; }
+  .stomp .knob { width: auto; flex: 1 1 0; min-width: 0; }
+  .stomp .knob svg, .stomp[data-pedal='gold-horse'] .knob svg { width: 44px; height: 44px; }
+  .stomp .knob-label, .stomp[data-pedal='rodent'] .knob-label { font-size: 8px; letter-spacing: 0.02em; }
+  .stomp .knob-row { width: 100%; }
+  .stomp[data-pedal='gold-horse'] .footswitch { margin-left: 40px; }
+  .rat-logo b { margin-right: 14px; }
+  .lpb-label b { font-size: 28px; }
+  .oct-name b { font-size: 22px; }
+  .stomp .fx-switch button { padding: 4px 4px; font-size: 10px; }
+  .stomp .knob-row { flex-wrap: wrap; justify-content: center; }
+  .stomp .knob-row .fx-switch { margin: 4px auto 0; }
+  .stomp .knob { flex: 1 1 30%; }
+  .fx-boards .fxbox { min-width: 0; }
+  .rat-logo b { font-size: 26px; }
+  .bm-logo b { font-size: 28px; }
+  .ts-name b { font-size: 20px; }
+}
