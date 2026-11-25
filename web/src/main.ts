@@ -45,6 +45,7 @@ interface Settings {
   powered?: boolean; // the rig was on when the page was last used: power up on load
   presetLevel?: number; // dB on top of Master (the preset's volume)
   welcomed?: boolean; // the first-visit card was seen
+  tubesHidden?: boolean; // the tube chassis hidden altogether (saves the height)
   tubesOpen?: boolean; // the amp's tube chassis drawn full size (else a strip)
   looperOn?: boolean; // the looper is switched on (its memory reserved)
   looperDb?: number; // the loop's playback level
@@ -632,6 +633,11 @@ function circuitNote(it: { name: string; basedOn?: string }): string {
     ? `Circuit: ${it.basedOn}` : '';
 }
 
+// "Show tubes" by the amp menu, while the tube panel is hidden.
+const tubesShow = Object.assign(document.createElement('button'), { className: 'link tubes-show', textContent: 'Show tubes', hidden: true });
+tubesShow.addEventListener('click', () => showTubes(true));
+$('.amp-picker').append(tubesShow);
+
 function renderAmp(): void {
   const a = currentAmp();
   $('#amp-based').textContent = circuitNote(a);
@@ -690,11 +696,24 @@ function renderAmp(): void {
       label();
     });
     label();
-    t.append(b);
+    const hide = document.createElement('button');
+    hide.className = 'link tubes-hide';
+    hide.textContent = 'Hide';
+    hide.title = 'Hide the tubes and power supply (bring them back with "Show tubes" by the amp menu)';
+    hide.addEventListener('click', () => showTubes(false));
+    t.append(b, hide);
+    t.hidden = !!settings.tubesHidden;
   }
+  tubesShow.hidden = !tubeView || !settings.tubesHidden;
   $('#amp-face').replaceChildren(buildFace(a, faceKnobs), ...(tubeView ? [tubeView.el] : []));
 }
 let tubeView: TubeView | null = null;
+function showTubes(show: boolean): void {
+  settings.tubesHidden = !show;
+  saveSettings();
+  if (tubeView) tubeView.el.hidden = !show;
+  tubesShow.hidden = !tubeView || show;
+}
 let responseKnob: HTMLElement | undefined;
 
 async function applyAmp(): Promise<void> {
@@ -747,7 +766,7 @@ const fxValue = (fx: PostFxInfo, i: number) => fxState(fx).values[fx.controls[i]
 
 function renderPostFx(): void {
   // Patch cables between the boxes, and a lead in and out.
-  const boxes = [cabTile, ...postEffects.map(fxBox), looperView.el];
+  const boxes = [cabTile, ...postEffects.map(fxBox)];
   $('#fx-boards').replaceChildren(cable(), ...boxes.flatMap((b) => [b, cable()]));
 }
 
@@ -775,6 +794,8 @@ function looperCommand(cmd: number): void {
   logEvent('looper', ['press', 'stop', 'undo', 'clear'][cmd]);
   if (cmd === 0 && (!looperStatus || looperStatus.state === 'empty')) track('looper_recorded');
 }
+// The looper is shelved: not on the page, and never switched on.
+settings.looperOn = false;
 const looperView = buildLooper({
   enabled: () => !!settings.looperOn,
   setEnabled: (on) => {
@@ -891,6 +912,21 @@ const slotKnobValue = (slot: number, p: PedalInfo, i: number) =>
   slotState(slot)?.knobs[p.controls[i].name] ?? p.controls[i].defaultValue;
 const slotStatus: string[] = Array(numPedalSlots).fill('');
 
+const occupied = (slot: number) => !!pedalInfo(slot);
+/** The slot the "+" fills: -1 when the board is full. */
+function freeSlot(): number {
+  let last = -1;
+  for (let s = 0; s < numPedalSlots; s++) if (occupied(s)) last = s;
+  for (let s = last + 1; s < numPedalSlots; s++) if (!occupied(s)) return s;
+  for (let s = 0; s < numPedalSlots; s++) if (!occupied(s)) return s;
+  return -1;
+}
+/** The nearest slot with a pedal before (dir -1) or after (dir 1) `slot`, or -1. */
+function neighbour(slot: number, dir: number): number {
+  for (let s = slot + dir; s >= 0 && s < numPedalSlots; s += dir) if (occupied(s)) return s;
+  return -1;
+}
+
 /** A patch cable: a plug into the box on each side. */
 function cable(): HTMLElement {
   return Object.assign(document.createElement('div'), { className: 'cable', ariaHidden: 'true' });
@@ -902,8 +938,17 @@ function renderBoard(): void {
   comp.classList.add('stomp-comp');
   const parts: HTMLElement[] = [cable(), gateBox(), cable(), comp];
   for (let slot = 0; slot < numPedalSlots; slot++) {
+    if (!pedalInfo(slot)) continue;
     parts.push(cable());
     parts.push(renderStomp(slot));
+  }
+  // One "+" at the end, while there's a free slot: it fills the first free
+  // slot after the last pedal (or, with none there, a free one earlier, and
+  // the new pedal then moves to the end).
+  const free = freeSlot();
+  if (free >= 0) {
+    parts.push(cable());
+    parts.push(renderStomp(free));
   }
   parts.push(cable());
   board.replaceChildren(...parts);
@@ -933,13 +978,14 @@ function renderStomp(slot: number): HTMLElement {
   const box = document.createElement('div');
   box.className = `stomp${p ? '' : ' empty'}`;
   box.dataset.pedal = p ? lookOf(p, allPedals()) : '';
+  box.dataset.slot = String(slot);
   const art = pedalArt(box.dataset.pedal);
   box.innerHTML = `
     <div class="stomp-head">
-      <button class="slot-move" data-dir="-1" aria-label="Move pedal ${slot + 1} earlier" title="Move earlier" ${slot === 0 || !p ? 'disabled' : ''}>◀</button>
+      <button class="slot-move" data-dir="-1" aria-label="Move pedal ${slot + 1} earlier" title="Move earlier" ${!p || neighbour(slot, -1) < 0 ? 'disabled' : ''}>◀</button>
       <label class="stomp-name" title="${p ? `${p.name.replace(/"/g, '')}${p.basedOn ? ` (based on the ${p.basedOn.replace(/"/g, '')})` : ''}: change pedal` : 'Add a pedal'}"><span>${p ? p.name.replace(/[&<>"]/g, '') : '+'}</span>${p ? '<i aria-hidden="true">▾</i>' : ''}
         <select aria-label="Pedal ${slot + 1}"></select></label>
-      <button class="slot-move" data-dir="1" aria-label="Move pedal ${slot + 1} later" title="Move later" ${slot === numPedalSlots - 1 || !p ? 'disabled' : ''}>▶</button>
+      <button class="slot-move" data-dir="1" aria-label="Move pedal ${slot + 1} later" title="Move later" ${!p || neighbour(slot, 1) < 0 ? 'disabled' : ''}>▶</button>
     </div>
     <div class="stomp-body">
       <div class="knob-row small"></div>
@@ -967,10 +1013,13 @@ function renderStomp(slot: number): HTMLElement {
     track('pedal_changed', { slot, pedal: sel.value.startsWith('my-') ? 'my-pedal' : sel.value });
     renderBoard();
     await applySlot(slot);
+    // A pedal added from the "+" goes last in the chain.
+    const after = sel.value !== 'none' && !p ? Math.max(...settings.board!.map((b, i) => (b ? i : -1))) : -1;
+    if (after > slot) movePedal(slot, after);
   });
 
   box.querySelectorAll<HTMLButtonElement>('.slot-move').forEach((b) =>
-    b.addEventListener('click', () => movePedal(slot, slot + Number(b.dataset.dir))));
+    b.addEventListener('click', () => movePedal(slot, neighbour(slot, Number(b.dataset.dir)))));
 
   if (p && st) {
     const setValue = (c: PedalControl, i: number, v: number) => {
@@ -1017,7 +1066,7 @@ function renderStomp(slot: number): HTMLElement {
 
 function setSlotStatus(slot: number, text: string): void {
   slotStatus[slot] = text;
-  const el = board.querySelectorAll('.stomp')[slot]?.querySelector('.slot-status');
+  const el = board.querySelector(`.stomp[data-slot="${slot}"] .slot-status`);
   if (el) el.textContent = text;
 }
 

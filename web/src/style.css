@@ -1208,6 +1208,9 @@ body.staging { overflow: hidden; }
 
 .tubes { position: relative; }
 .tubes-toggle { position: absolute; top: 8px; right: 12px; }
+.tubes-hide { position: absolute; top: 8px; right: 66px; }
+.tubes[hidden] { display: none; }
+.tubes-show { margin-left: auto; }
 .tubes.compact { padding: 8px 18px 6px; gap: 6px 22px; align-items: center; }
 .tubes.compact .tube { height: 44px; width: auto; }
 .tubes.compact .tube-cell figcaption { font-size: 9px; }
@@ -1345,10 +1348,13 @@ body.staging { overflow: hidden; }
 .stomp .hint:empty { display: none; }
 .stomp .circuit-toggle { color: var(--muted); font-size: 11px; }
 .stomp.empty {
-  width: 64px; min-height: 220px; padding: 10px 4px; border-radius: 14px; align-self: stretch;
+  width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; align-self: center; top: 7px;
   background: var(--surface); border: 1px dashed var(--line); grid-template-rows: none; align-content: center;
 }
 .stomp.empty .stomp-body { display: none; }
+.stomp.empty .stomp-name { height: 44px; min-height: 0; padding: 0; border-radius: 50%; }
+.stomp.empty .stomp-name span { font-size: 22px; }
+.stomp.empty .stomp-head { width: 100%; min-width: 0; }
 .stomp-body, .fxbox.fx-red-comp, .fxbox.fx-eq7, .fxbox.fx-delay, .fxbox.fx-reverb {
   --w: 200px; --h: 300px; --k: 48px;
   position: relative; box-sizing: border-box; width: var(--w); height: var(--h); flex: none;
@@ -1680,5 +1686,6 @@ body.staging { overflow: hidden; }
   .board .stomp, .board .fxbox, .fx-boards .fxbox { width: auto; }
   .board .fxbox.fx-red-comp, .fx-boards .fxbox.fx-eq7, .fx-boards .fxbox.fx-delay, .fx-boards .fxbox.fx-reverb { width: var(--w); }
   .stomp-body, .fxbox.fx-red-comp, .fxbox.fx-eq7, .fxbox.fx-delay, .fxbox.fx-reverb { zoom: 0.86; }
-  .board .stomp.empty { width: 64px; min-height: 120px; }
+  .board .stomp.empty { width: 44px; }
+  .board .stomp.empty .stomp-name { min-height: 0; }
 }
