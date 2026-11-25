@@ -647,6 +647,7 @@ $('.amp-picker').append(tubesShow);
 
 function renderAmp(): void {
   const a = currentAmp();
+  document.documentElement.dataset.amp = a.face; // the page's colours follow the amp
   $('#amp-based').textContent = circuitNote(a);
   let faceKnobs: HTMLElement[];
   if (!a.netlist) {

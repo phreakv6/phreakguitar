@@ -21,9 +21,24 @@
    display: grid, which otherwise keeps a hidden panel on screen). */
 [hidden] { display: none !important; }
 
+/* The page takes its colours from the amp in view (main.ts sets data-amp
+   to the amp's face). */
+:root[data-amp='blackpanel'] { --bg: #0f1214; --surface: #181c1f; --surface-2: #21262a; --line: #343c42; --text: #eef1f2; --muted: #96a2aa; --accent: #8fd0d2; }
+:root[data-amp='plexi'], :root[data-amp='brit800'] { --bg: #100f0c; --surface: #1b1914; --surface-2: #25221b; --line: #3d3729; --text: #f4f1ea; --muted: #a59c85; --accent: #dbb85c; }
+:root[data-amp='brit800'] { --accent: #e9cf7c; --bg: #0d0d0c; }
+:root[data-amp='classa'] { --bg: #16100c; --surface: #221812; --surface-2: #2d2018; --line: #442f20; --text: #f4e7d8; --muted: #b0957c; --accent: #dd8f54; }
+:root[data-amp='britclean'] { --bg: #0e0f10; --surface: #181a1b; --surface-2: #222526; --line: #373b3d; --text: #f1f2f1; --muted: #9a9fa1; --accent: #e3e6e4; }
+:root[data-amp='graphic'] { --bg: #170f09; --surface: #24170d; --surface-2: #301f11; --line: #4a321d; --text: #f6e9da; --muted: #b3987c; --accent: #f08530; }
+:root[data-amp='hotrod'] { --bg: #0c0d11; --surface: #16181e; --surface-2: #1f222a; --line: #32363f; --text: #eef0f4; --muted: #979daa; --accent: #a9c3ea; }
+:root[data-amp='boutique'] { --bg: #0f0e0d; --surface: #1a1917; --surface-2: #24221f; --line: #3b3832; --text: #f2ecdc; --muted: #a39c8a; --accent: #ece2c6; }
+
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(1100px 520px at 50% -160px, color-mix(in srgb, var(--accent) 16%, transparent), transparent 72%),
+    radial-gradient(900px 700px at 100% 100%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   font: 15px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
   min-height: 100vh;
@@ -62,12 +77,21 @@ body {
 .limit-led.on { background: #ff4a33; box-shadow: 0 0 10px 2px rgba(255, 74, 51, 0.7); }
 .tuner-btn.icon { font: 18px/1 system-ui, sans-serif; padding: 6px 10px; }
 
-.brand {
-  font: 600 22px/1 Oswald, sans-serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+/* The logo: a pick carrying a wave that clips, and the name in a brush
+   script with a tail under it. It takes the amp's colour. */
+.brand { display: flex; align-items: center; gap: 9px; flex: none; }
+.brand-mark { width: 27px; height: 31px; flex: none; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); }
+.brand-pick { fill: var(--accent); stroke: color-mix(in srgb, var(--accent) 55%, #000); stroke-width: 1; }
+.brand-wave { fill: none; stroke: var(--bg); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.brand-word {
+  position: relative; font: 27px/1.15 'Kaushan Script', Yellowtail, cursive; color: var(--text); white-space: nowrap;
+  padding: 0 6px 3px 0; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 3px 5px rgba(0, 0, 0, 0.45);
 }
-.brand span { color: var(--accent); }
+.brand-word b { font-weight: 400; color: var(--accent); }
+.brand-word::after {
+  content: ''; position: absolute; left: 14%; right: 0; bottom: 0; height: 3px; border-radius: 3px 60% 60% 3px / 3px 100% 100% 3px;
+  background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent)); transform: rotate(-1.5deg);
+}
 
 #status {
   font: 13px 'IBM Plex Mono', monospace;
