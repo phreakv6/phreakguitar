@@ -4,7 +4,7 @@
 // where those things are on the page, and redrawn when the page reflows.
 
 const NS = 'http://www.w3.org/2000/svg';
-const R = 9; // corner radius, and how far out in the margin the lead runs
+const R = 9; // how far out in the margin the lead runs
 
 export function setupWires(main: HTMLElement, board: HTMLElement, ampFace: HTMLElement, after: HTMLElement): void {
   const svg = document.createElementNS(NS, 'svg');
@@ -28,12 +28,18 @@ export function setupWires(main: HTMLElement, board: HTMLElement, ampFace: HTMLE
       svg.replaceChildren();
       return;
     }
+    // Cables, not conduit: each hangs a little and swings out into the margin
+    // before it turns, and meets its plug straight on.
     const xr = amp.right + R, xl = amp.left - R;
     const ya = amp.top + Math.min(amp.height / 2, 110);
+    const y0 = out.mid, y1 = inn.mid;
     const fromX = Math.min(out.right - 2, xr - R);
-    const toAmp = `M ${fromX} ${out.mid} H ${xr - R} Q ${xr} ${out.mid} ${xr} ${out.mid + R} V ${ya - R} Q ${xr} ${ya} ${xr - R} ${ya} H ${amp.right - 3}`;
+    const run = xr - fromX, dropA = ya - y0, dropB = y1 - ya;
+    const toAmp = `M ${fromX} ${y0} C ${fromX + run * 0.55} ${y0 + Math.min(34, run * 0.12 + 8)}, ${xr + 5} ${y0 - 4}, ${xr + 3} ${y0 + dropA * 0.42}`
+      + ` S ${xr + 7} ${ya + 3}, ${amp.right + 6} ${ya}`;
     const toX = Math.max(inn.left + 2, xl + R);
-    const fromAmp = `M ${amp.left + 3} ${ya} H ${xl + R} Q ${xl} ${ya} ${xl} ${ya + R} V ${inn.mid - R} Q ${xl} ${inn.mid} ${xl + R} ${inn.mid} H ${toX}`;
+    const fromAmp = `M ${amp.left - 6} ${ya} C ${xl - 7} ${ya + 3}, ${xl - 1} ${ya + dropB * 0.3}, ${xl - 3} ${ya + dropB * 0.6}`
+      + ` S ${xl - 5} ${y1 + 9}, ${toX} ${y1}`;
     const lead = (d: string) => `<path class="wire" d="${d}" /><path class="wire-shine" d="${d}" />`;
     const plug = (x: number) => `<rect class="wire-plug" x="${x}" y="${ya - 8}" width="11" height="16" rx="2" />`;
     svg.innerHTML = `<defs><linearGradient id="wire-chrome" x1="0" y1="0" x2="0" y2="1">

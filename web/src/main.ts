@@ -45,6 +45,9 @@ interface Settings {
   preset?: string; // 'factory:<i>' | 'user:<id>': the last one picked
   powered?: boolean; // the rig was on when the page was last used: power up on load
   presetLevel?: number; // dB on top of Master (the preset's volume)
+  /** Your own volume for a preset, as dB on top of its saved level: turn
+      Level with a preset picked and it's kept for that preset. */
+  presetTrims?: Record<string, number>;
   welcomed?: boolean; // the first-visit card was seen
   tubesHidden?: boolean; // the tube chassis hidden altogether (saves the height)
   tubesOpen?: boolean; // the amp's tube chassis drawn full size (else a strip)
@@ -118,13 +121,16 @@ const knobSpecs: Record<string, KnobSpec> = {
   presetLevel: { label: 'Level', min: -30, max: 30, value: 0, defaultValue: 0, step: 0.5, format: db },
 };
 
+let rememberTrim = () => {}; // the presets section hooks in (your own volume for each preset)
 const knobs: Record<string, Knob> = {};
 for (const [id, spec] of Object.entries(knobSpecs)) {
   const saved = id === 'presetLevel' ? settings.presetLevel : settings.knobs[id];
   const k = new Knob({ ...spec, value: saved ?? spec.value });
   k.onChange = () => {
-    if (id === 'presetLevel') settings.presetLevel = k.value;
-    else settings.knobs[id] = k.value;
+    if (id === 'presetLevel') {
+      settings.presetLevel = k.value;
+      rememberTrim();
+    } else settings.knobs[id] = k.value;
     saveSettings();
     applyKnob(id);
     logEvent(`amp.${id}`, k.value);
@@ -1473,6 +1479,22 @@ const presetById = (key: string | undefined): Preset | undefined =>
   key?.startsWith('factory:') ? factoryPresets[Number(key.slice(8))]
     : key?.startsWith('user:') ? userPresets.find((p) => p.id === key.slice(5)) : undefined;
 
+// Your volume for each preset: what you add to (or take off) its saved
+// level with the Level knob, kept by itself so the preset needn't be saved.
+// Factory presets go by name (their order can change), yours by id.
+const trimKey = (): string | undefined => {
+  const p = presetById(settings.preset);
+  return !p ? undefined : settings.preset!.startsWith('factory:') ? `factory:${p.name}` : settings.preset;
+};
+const presetTrim = (): number => settings.presetTrims?.[trimKey() ?? ''] ?? 0;
+rememberTrim = () => {
+  const key = trimKey(), p = presetById(settings.preset);
+  if (!key || !p) return;
+  const trim = Math.round((knobs.presetLevel.value - (p.level ?? 0)) * 10) / 10;
+  if (trim) (settings.presetTrims ??= {})[key] = trim;
+  else delete settings.presetTrims?.[key];
+};
+
 // A preset with every knob spelled out (defaults filled in), rounded, so two
 // presets that sound the same compare equal.
 function normalized(p: Preset): string {
@@ -1538,7 +1560,8 @@ function renderPresets(): void {
 
 function presetEdited(): boolean {
   const p = presetById(settings.preset);
-  return !!p && normalized(p) !== normalized(currentTone(p.name));
+  // Your own volume for it doesn't count as an edit.
+  return !!p && normalized({ ...p, level: (p.level ?? 0) + presetTrim() }) !== normalized(currentTone(p.name));
 }
 function showPresetEdited(): void {
   const edited = presetEdited();
@@ -1565,7 +1588,7 @@ async function applyPreset(p: Preset): Promise<void> {
   settings.gateOn = p.gate.on;
   knobs.gateDb.set(p.gate.db, false);
   settings.knobs.gateDb = knobs.gateDb.value;
-  knobs.presetLevel.set(p.level ?? 0, false);
+  knobs.presetLevel.set((p.level ?? 0) + (p === presetById(settings.preset) ? presetTrim() : 0), false);
   settings.presetLevel = knobs.presetLevel.value;
   saveSettings();
   logEvent('preset', p.name);
@@ -1601,8 +1624,10 @@ const presetSaving = $('#preset-saving');
 const userPresetNow = () => settings.preset?.startsWith('user:') ? userPresets.find((p) => `user:${p.id}` === settings.preset) : undefined;
 function savePreset(name: string): void {
   const existing = userPresetNow();
-  if (existing) Object.assign(existing, currentTone(name));
-  else {
+  if (existing) {
+    Object.assign(existing, currentTone(name));
+    delete settings.presetTrims?.[settings.preset!]; // the saved level now includes it
+  } else {
     const id = Date.now().toString(36);
     userPresets.push({ ...currentTone(name), id });
     settings.preset = `user:${id}`;
