@@ -1,7 +1,6 @@
-// Amp faceplates: each amp family's look (tweed, black panel, gold panel,
-// copper top, white piping, cream-and-orange, boutique black, chrome), with
-// the amp's own name where a maker's logo would sit. Plain HTML/CSS; the
-// knobs are the rig's own.
+// Amp faceplates, drawn to look like the amps the circuits come from: the
+// cabinet covering, the panel and its lettering, the maker's logo where it
+// sits on the real one. Plain HTML/CSS; the knobs are the rig's own.
 import type { AmpInfo } from './amps.ts';
 
 const div = (cls: string, html = '') => {
@@ -10,80 +9,147 @@ const div = (cls: string, html = '') => {
   d.innerHTML = html;
   return d;
 };
-const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+const jewel = '<span class="jewel" aria-hidden="true"></span>';
+const jack = '<span class="jack"></span>';
+const toggle = '<span class="toggle"></span>';
+const rocker = '<span class="rocker"></span>';
+const screw = '<span class="screw"></span>';
+
+/** A block of jacks with a caption under each column. */
+const jacks = (cols: string[], rows = 1) =>
+  `<div class="face-jacks" style="--cols:${cols.length}">${jack.repeat(cols.length * rows)}${cols.map((c) => `<small>${c}</small>`).join('')}</div>`;
+
+/** Switches with a caption each, and the pilot lamp beside them. */
+const switches = (labels: string[], sw = toggle) =>
+  `<div class="face-switches" style="--cols:${labels.length}">${sw.repeat(labels.length)}${labels.map((l) => `<small>${l}</small>`).join('')}</div>`;
+
+const lamp = (caption = '') => `<div class="face-lamp">${jewel}${caption ? `<small>${caption}</small>` : ''}</div>`;
+
+// What each amp's panel says.
+const plates: Record<string, string> = {
+  'tweed-bass': 'Bassman',
+  'blackpanel-22': 'Deluxe Reverb-Amp',
+  'blackpanel-410': 'Super Reverb-Amp',
+  'blackpanel-100': 'Twin Reverb-Amp',
+  'brit-45': 'JTM 45',
+  'brit-plexi': 'Super Lead',
+  'brit-800': 'JCM 800',
+  'brit-clean-100': 'Custom Hiwatt 100',
+  'graphic-120': 'Graphic 120',
+  'hotrod-100': 'Super Lead Overdrive',
+  'boutique-ods': 'Overdrive Special',
+  'classa-30': 'AC30',
+};
 
 /** Builds the face for `amp` around its knob elements. */
 export function buildFace(amp: AmpInfo, knobs: HTMLElement[]): HTMLElement {
   const face = div(`face face-${amp.face}`);
+  face.dataset.amp = amp.id;
   const row = div('face-knobs');
   row.append(...knobs);
-  const jewel = '<span class="jewel" aria-hidden="true"></span>';
-  const name = esc(amp.name);
-  const model = esc(amp.model);
-  const maker = '<small class="face-maker">PhreakGuitar</small>';
-  const jacks = (labels: string[]) =>
-    `<div class="face-inputs">${labels.map(() => '<span class="jack"></span>').join('')}${labels.map((l) => `<small>${l}</small>`).join('')}</div>`;
+  const plate = plates[amp.id] ?? amp.name;
+  const panel = (cls: string, before: string, after: string) => {
+    const p = div(`face-panel ${cls}`, before);
+    p.append(row);
+    p.insertAdjacentHTML('beforeend', after);
+    return p;
+  };
 
   switch (amp.face) {
-    case 'plexi':
+    case 'plexi': {
+      // Marshall plexi head: black levant, the white script, gold beading
+      // over a brushed-gold panel. Switches left, the four inputs right.
+      const jtm = amp.id === 'brit-45';
+      face.append(
+        div('mar-front', `<div class="mar-logo">Marshall</div>`),
+        panel('mar-panel',
+          `${switches(['POWER', 'STANDBY'])}${lamp()}
+           <div class="mar-plate">${jtm ? '<b>JTM 45</b><small>MK II</small>' : '<b>JMP</b><small>SUPER LEAD<br>100W</small>'}</div>`,
+          jacks(['I', 'II'], 2)));
+      break;
+    }
     case 'brit800': {
-      // Brushed gold panel over black: two inputs, standby and power, the lamp.
-      const panel = div('px-panel', jacks(amp.face === 'brit800' ? ['HIGH', 'LOW'] : ['HIGH', 'NORMAL']));
-      panel.append(row, div('px-switches', `<span class="toggle"></span><span class="toggle"></span>
-          <small>STANDBY</small><small>ON</small>${jewel}`));
-      face.append(panel, div('px-front', `<div class="px-logo">${name}</div><div class="px-model">${model}</div>${maker}`));
+      // JCM800 2203: the same head, a framed panel, red rockers, the badge.
+      face.append(
+        div('mar-front', `<div class="mar-logo">Marshall</div>`),
+        panel('mar-panel',
+          `${switches(['POWER', 'STANDBY'], rocker)}`,
+          `${jacks(['HIGH', 'LOW'])}
+           <div class="jcm-plate"><b>JCM 800</b><small>LEAD SERIES</small><i>MODEL 2203 · MASTER VOLUME</i></div>`));
       break;
     }
     case 'classa': {
-      // Copper top panel, diamond grille.
-      const panel = div('ca-panel', `<div class="ca-panel-label"><b>${name}</b></div>`);
-      panel.append(row, div('ca-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('ca-grille', `<div class="ca-logo">${name}</div>${maker}`));
+      // Vox AC30: the copper control panel on top, black covering with gold
+      // beading, brown diamond cloth, the gold logo.
+      face.append(
+        panel('vox-panel',
+          `<div class="vox-plate"><b>VOX</b><small>AC30 · TOP BOOST</small></div>${jacks(['BRILLIANT', 'NORMAL'], 2)}`,
+          `${switches(['STANDBY', 'MAINS'])}${lamp()}`),
+        div('vox-band', ''),
+        div('vox-grille', `<div class="vox-logo">VOX</div>`));
       break;
     }
     case 'britclean': {
-      // Black panel, white engraved lettering, white piping.
-      const panel = div('bc-panel', jacks(['NORMAL', 'BRILLIANT']));
-      panel.append(row, div('bc-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('bc-front', `<div class="bc-logo">${name}</div>${maker}`));
+      // Hiwatt DR103: black covering, the logo plate, white piping round a
+      // black panel with white engraved lettering.
+      face.append(
+        div('hw-front', `<div class="hw-logo">HIWATT</div>`),
+        panel('hw-panel',
+          jacks(['NORMAL', 'BRILL'], 2),
+          `<div class="face-stack"><div class="hw-plate"><b>CUSTOM HIWATT 100</b><small>HYLIGHT ELECTRONICS · ENGLAND</small></div>
+           <div class="face-side">${switches(['STANDBY', 'MAINS'])}${lamp()}</div></div>`));
       break;
     }
     case 'graphic': {
-      // Cream panel, orange covering, basketweave grille.
-      const panel = div('gr-panel', `<div class="gr-inputs"><span class="jack"></span><span class="jack"></span></div>`);
-      panel.append(row, div('gr-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('gr-front', `<div class="gr-logo">${name}</div>${maker}`));
+      // Orange Graphic: orange covering, the white panel in its black frame,
+      // the logo across the top of it.
+      const p = panel('or-panel', jacks(['HI', 'LO']), `${switches(['STANDBY', 'POWER'])}${lamp()}`);
+      p.insertAdjacentHTML('afterbegin', `<div class="or-head"><span class="or-logo">Orange</span><small>GRAPHIC 120</small></div>`);
+      face.append(p);
       break;
     }
     case 'hotrod': {
-      // Chrome panel, black lettering, black grille.
-      const panel = div('hr-panel', `<div class="hr-inputs"><span class="jack"></span><small>INPUT</small></div>`);
-      panel.append(row, div('hr-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('hr-front', `<div class="hr-logo">${name}</div>${maker}`));
+      // Soldano SLO-100: black covering and grille, the chrome script, a
+      // brushed panel with black lettering.
+      face.append(
+        div('so-front', `<div class="so-logo">Soldano</div>`),
+        panel('so-panel',
+          `${jacks(['INPUT'])}`,
+          `<div class="face-stack"><div class="so-plate"><b>SLO-100</b><small>SUPER LEAD OVERDRIVE</small></div>${lamp()}</div>`));
       break;
     }
     case 'boutique': {
-      // Black panel, cream lettering, a single input.
-      const panel = div('bq-panel', `<div class="bq-inputs"><span class="jack"></span><small>INPUT</small></div>`);
-      panel.append(row, div('bq-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('bq-front', `<div class="bq-logo">${name}</div>${maker}`));
+      // Dumble Overdrive Special: black covering, the cream script, a black
+      // panel with white lettering and a single input.
+      face.append(
+        div('du-front', `<div class="du-logo">Dumble</div><div class="du-plate">Overdrive Special</div>`),
+        panel('du-panel', `${jacks(['INPUT'])}`, lamp()));
       break;
     }
     case 'blackpanel': {
-      // Black panel, silver grille.
-      const panel = div('bp-panel', `<div class="bp-inputs"><span class="jack"></span><span class="jack"></span>
-          <small>VIBRATO</small></div>`);
-      panel.append(row, div('bp-lamp', `${jewel}<small>${model}</small>`));
-      face.append(panel, div('bp-grille', `<div class="bp-logo">${name}</div>${maker}`));
+      // Fender blackface combo: black covering, the black panel with white
+      // lettering and the model in script, silver sparkle cloth, the raised
+      // chrome logo at the top left of it.
+      face.append(
+        panel('bf-panel',
+          `${jacks(['1', '2'])}`,
+          `${lamp()}<div class="bf-plate"><b>${plate}</b><small>FENDER ELECT. INST. CO.</small></div>`),
+        div('bf-grille', `<div class="bf-logo">Fender</div>`));
+      face.querySelector('.face-jacks')!.insertAdjacentHTML('afterbegin', '<em>VIBRATO</em>');
       break;
     }
     default: {
-      // Tweed: lacquered tweed, chrome control strip.
-      const panel = div('tw-panel', `<div class="tw-label"><span class="tw-logo">${name}</span>
-          <small>${model}</small></div>`);
-      panel.append(row, div('tw-lamp', jewel));
-      face.append(div('tw-tweed', ''), panel);
+      // Fender tweed Bassman: lacquered tweed, the chrome panel, oxblood
+      // cloth with the script nameplate.
+      face.append(
+        panel('tw-panel',
+          `${switches(['POWER', 'STANDBY'])}${lamp()}`,
+          `${jacks(['BRIGHT', 'NORMAL'], 2)}
+           <div class="tw-plate"><b>${plate}</b><small>FENDER ELECTRIC<br>INSTRUMENT CO.</small></div>`),
+        div('tw-grille', `<div class="tw-logo"><span>Fender</span></div>`));
     }
   }
+  face.querySelectorAll('.face-panel').forEach((p) => p.insertAdjacentHTML('beforeend', screw.repeat(4)));
   return face;
 }

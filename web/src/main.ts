@@ -632,8 +632,12 @@ function renderAmp(): void {
     // The built-in tweed stages (no circuit file): their knobs.
     faceKnobs = ['drive', 'bass', 'mid', 'treble'].map((id) => knobs[id].el);
   } else {
+    // The knobs each amp wears, and the numbers round them.
     const cap = a.face === 'plexi' || a.face === 'brit800' || a.face === 'britclean' ? 'goldcap'
-      : a.face === 'classa' ? 'chicken' : a.face === 'blackpanel' || a.face === 'boutique' ? 'skirted' : 'disc';
+      : a.face === 'classa' || a.face === 'tweed' ? 'chicken'
+      : a.face === 'blackpanel' || a.face === 'boutique' ? 'skirted' : 'disc';
+    const dial: [number, number] = a.face === 'tweed' ? [1, 12] : a.face === 'hotrod' ? [1, 11]
+      : a.face === 'blackpanel' || a.face === 'boutique' || a.face === 'classa' ? [1, 10] : [0, 10];
     responseKnob = undefined;
     faceKnobs = a.controls.flatMap((c, i) => {
       const set = (v: number) => {
@@ -651,7 +655,7 @@ function renderAmp(): void {
         return [wrap];
       }
       const k = new Knob({ label: c.label, min: 0, max: 10, value: ampKnobValue(a, i) * 10,
-                           defaultValue: c.defaultValue * 10, step: 0.01, format: panel, cap });
+                           defaultValue: c.defaultValue * 10, step: 0.01, format: panel, cap, dial });
       k.onChange = () => set(k.value / 10);
       // Response isn't on a real amp's face: it lives with the power supply
       // on the chassis.
