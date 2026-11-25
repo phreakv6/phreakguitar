@@ -933,10 +933,12 @@ function renderStomp(slot: number): HTMLElement {
         <select aria-label="Pedal ${slot + 1}"></select></label>
       <button class="slot-move" data-dir="1" aria-label="Move pedal ${slot + 1} later" title="Move later" ${slot === numPedalSlots - 1 || !p ? 'disabled' : ''}>▶</button>
     </div>
-    <div class="knob-row small"></div>
-    <div class="stomp-art" aria-hidden="true">${art.art}</div>
-    <button class="footswitch" aria-pressed="false"><span class="led" aria-hidden="true"></span><span class="fs-label"></span></button>
-    <div class="stomp-foot" aria-hidden="true">${art.foot}</div>
+    <div class="stomp-body">
+      <div class="knob-row small"></div>
+      <div class="stomp-art" aria-hidden="true">${art.art}</div>
+      <button class="footswitch" aria-pressed="false"><span class="led" aria-hidden="true"></span><span class="fs-label"></span></button>
+      <div class="stomp-foot" aria-hidden="true">${art.foot}</div>
+    </div>
     <button class="link-light circuit-toggle" aria-controls="circuit-panel"></button>
     <div class="hint slot-status"></div>`;
 

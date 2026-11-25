@@ -12,7 +12,7 @@ export function pedalArt(look: string): PedalArt {
   switch (look) {
     case 'green-drive':
       return {
-        art: `<div class="ts-name"><b>TUBE SCREAMER</b><small>Overdrive Pro<i>TS808</i></small></div>`,
+        art: `<div class="ts-frame"></div><div class="ts-name"><b>TUBE SCREAMER</b><small>Overdrive Pro<i>TS808</i></small></div>`,
         foot: `<span class="ts-maker">Ibanez</span>`,
       };
     case 'gold-horse':
@@ -32,9 +32,12 @@ export function pedalArt(look: string): PedalArt {
     case 'round-fuzz-ge': {
       const id = `ff-arc-${arcs++}`;
       return {
-        art: `<svg class="ff-name" viewBox="0 0 200 54" aria-hidden="true"><path id="${id}" d="M14 50 Q100 2 186 50" fill="none" />
-                <text><textPath href="#${id}" startOffset="50%">FUZZ FACE</textPath></text></svg>`,
-        foot: `<span class="ff-maker">DALLAS · ARBITER · ENGLAND</span>`,
+        art: `<div class="ff-smile"></div>
+              <svg class="ff-name" viewBox="0 0 200 200" aria-hidden="true"><path id="${id}" d="M50 110 Q100 76 150 110" fill="none" />
+                <text><textPath href="#${id}" startOffset="50%">FUZZ FACE</textPath></text>
+                <path id="${id}b" d="M52 150 Q100 178 148 150" fill="none" /><path class="ff-badge" d="M50 143 Q100 171 150 143 L152 153 Q100 183 48 153 Z" />
+                <text class="ff-maker"><textPath href="#${id}b" startOffset="50%">DALLAS · ARBITER · ENGLAND</textPath></text></svg>`,
+        foot: '',
       };
     }
     case 'octave-fuzz':
